@@ -2807,7 +2807,7 @@ function closeEmailGate(){
 }
 
 // ── REPLACE THIS WITH YOUR GOOGLE APPS SCRIPT URL ──────────────────────────
-var WELME_SHEET_URL = 'PASTE_YOUR_SCRIPT_URL_HERE';
+var WELME_SHEET_URL = 'https://script.google.com/macros/s/AKfycbyIf3r7EZ2TaE1p4roGzh6bj-2l_5uLim-H34uwzi-Hb2PCNekRt63pYFcceo8WzdFs/exec';
 // ────────────────────────────────────────────────────────────────────────────
 
 function submitEmailAndDownload(){
@@ -2821,7 +2821,7 @@ function submitEmailAndDownload(){
   document.getElementById('emailGate').style.display='none';
 
   // Send email + protocol to Google Sheets (fire-and-forget)
-  if(WELME_SHEET_URL && WELME_SHEET_URL !== 'PASTE_YOUR_SCRIPT_URL_HERE'){
+  if(WELME_SHEET_URL && WELME_SHEET_URL !== 'https://script.google.com/macros/s/AKfycbyIf3r7EZ2TaE1p4roGzh6bj-2l_5uLim-H34uwzi-Hb2PCNekRt63pYFcceo8WzdFs/exec'){
     try{
       fetch(WELME_SHEET_URL,{
         method:'POST',
