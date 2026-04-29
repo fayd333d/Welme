@@ -2396,8 +2396,8 @@ function buildResults(){
     '</div>';
     var cdata={name:sup.name,dose:sup_getDose(sup,profile),ih:ih,az:az};
     var cjson=encodeURIComponent(JSON.stringify(cdata));
-    var ihBtn=ih?'<button class="buy-btn buy-ih" onclick="wcPickStore(\''+k+'\',\''+cjson+'\',\'ih\')">🌿 iHerb</button>':'';
-    var azBtn=az?'<button class="buy-btn buy-amz" onclick="wcPickStore(\''+k+'\',\''+cjson+'\',\'amz\')">📦 Amazon</button>':'';
+    var ihBtn = '<button class="buy-btn buy-ih" onclick="trackPurchaseClick(\'iHerb\', \''+k+'\'); wcPickStore(\''+k+'\', \''+cjson+'\', \'ih\')"> iHerb</button>';
+    var azBtn = '<button class="buy-btn buy-amz" onclick="trackPurchaseClick(\'Amazon\', \''+k+'\'); wcPickStore(\''+k+'\', \''+cjson+'\', \'amz\')"> Amazon</button>';
     return'<div class="atc-row" id="atc-row-'+k+'">'+
       courseHTML+
       '<div class="atc-btns">'+ihBtn+azBtn+'</div>'+
