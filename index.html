@@ -2919,5 +2919,18 @@ function trackPurchaseClick(store, productKey) {
   }
 }
 </script>   
+
+<script>
+function trackPurchaseClick(store, productKey) {
+  if (typeof gtag === 'function') {
+    gtag('event', 'purchase_click', {
+      event_category: 'affiliate',
+      store: store || '',
+      product_key: productKey || '',
+      protocol_type: window._welmeProtocol || ''
+    });
+  }
+}
+</script>
    
 </body>
