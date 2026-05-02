@@ -2854,7 +2854,7 @@ if (WELME_SHEET_URL) {
       body: JSON.stringify({
         user_id: getUserId(),
         email: email,
-        protocol: window._welmeProtocol || ''
+        protocol: window._welmeProtocol || window.selectedProtocol || window.protocol || ''
       })
     });
   } catch (e) {}
