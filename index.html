@@ -2159,6 +2159,7 @@ function buildResults(){
   var pid='WLM-'+Math.floor(1000+Math.random()*8999);
   if(navId) navId.textContent=pid+' · PROTOCOL';
   if(navName) navName.textContent=proto.name;
+  window._welmeProtocol = proto.name;
 
   // Build hero 2-col card into resContent
   var scoreColor=overallScore>=70?'var(--ok)':overallScore>=50?'var(--warn)':'var(--risk)';
@@ -2854,7 +2855,7 @@ if (WELME_SHEET_URL) {
       body: JSON.stringify({
         user_id: getUserId(),
         email: email,
-        protocol: window._welmeProtocol || window.selectedProtocol || window.protocol || ''
+        protocol: window._welmeProtocol || ''
       })
     });
   } catch (e) {}
