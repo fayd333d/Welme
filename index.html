@@ -294,9 +294,10 @@ body{background:var(--bg);color:var(--text);
 .tool-tag{display:inline-block;font-size:.65rem;font-weight:700;padding:2px 8px;border-radius:8px;background:#EEF2FF;color:var(--blue)}
 .tool-price{font-size:.78rem;font-weight:700;color:var(--green)}
 .tool-btns{display:flex;gap:7px;margin-top:9px;flex-wrap:wrap}
-.tool-btn{font-size:.72rem;font-weight:700;padding:5px 11px;border-radius:8px;text-decoration:none;transition:opacity .15s}
+.tool-btn{font-size:.72rem;font-weight:700;padding:5px 11px;border-radius:8px;text-decoration:none;transition:opacity .15s;border:0;cursor:pointer;font-family:inherit}
 .tool-btn:hover{opacity:.8}
 .t-amz{background:#232F3E;color:#fff}
+.t-amz.buy-selected{background:#e68a00}
 .t-site{background:#EEF2FF;color:var(--blue)}
 
 /* Protocol section */
@@ -1820,10 +1821,13 @@ function buildToolsSection(bestProto,healthScores){
     extra=TOOLS[minKey][0];
   }
   var allItems=(extra?items.concat([extra]):items).slice(0,4);
-  return allItems.map(function(t){
+  return allItems.map(function(t,idx){
+    var toolKey='tool-'+bestProto+'-'+idx;
+    var cdata={name:t.name,dose:t.brand+' · '+t.tag+' · '+t.price,amz:t.amz,type:'tool'};
+    var cjson=encodeURIComponent(JSON.stringify(cdata)).replace(/'/g,'%27');
     var btnHTML='';
-    if(t.amz) btnHTML+='<a class="tool-btn t-amz" href="'+t.amz+'" target="_blank" rel="noopener" onclick="event.stopPropagation()">📦 Amazon</a>';
-    return'<div class="tool-card">'+
+    if(t.amz) btnHTML+='<button class="tool-btn t-amz" onclick="event.stopPropagation(); trackPurchaseClick(\'Amazon\', \''+toolKey+'\'); wcAddTool(\''+toolKey+'\', \''+cjson+'\')">📦 Amazon</button>';
+    return'<div class="tool-card" id="tool-card-'+toolKey+'">'+
       '<div class="tool-card-top">'+
         '<span class="tool-icon">'+t.icon+'</span>'+
         '<span class="tool-brand">'+t.brand+'</span>'+
@@ -2626,10 +2630,38 @@ function wcShowToast(name,store){
 // Legacy add silently
 function wcAddFromLink(k,cjson){wcPickStore(k,cjson,'amz');}
 
+function wcAddTool(k,cjson){
+  try{
+    var data=JSON.parse(decodeURIComponent(cjson));
+    data.store='amz';
+    wcCart[k]=data;
+    var card=document.getElementById('tool-card-'+k);
+    if(card){
+      card.classList.add('in-cart');
+      card.querySelectorAll('.tool-btn').forEach(function(b){
+        b.classList.remove('buy-selected');
+        b.innerHTML='📦 Amazon';
+      });
+      var btn=card.querySelector('.t-amz');
+      if(btn){btn.classList.add('buy-selected');btn.innerHTML='✓ Amazon';}
+    }
+    wcUpdateFloat();
+    wcShowToast(data.name,'amz');
+  }catch(e){}
+}
+
 function wcRemove(k){
   delete wcCart[k];
   var row=document.getElementById('atc-row-'+k);
   if(row) row.classList.remove('in-cart');
+  var toolCard=document.getElementById('tool-card-'+k);
+  if(toolCard){
+    toolCard.classList.remove('in-cart');
+    toolCard.querySelectorAll('.tool-btn').forEach(function(b){
+      b.classList.remove('buy-selected');
+      b.innerHTML='📦 Amazon';
+    });
+  }
   var btn=document.getElementById('atc-btn-'+k);
   var card=document.getElementById('supp-card-'+k);
   if(btn){btn.textContent='Add to Cart';btn.classList.remove('added');}
@@ -2664,7 +2696,7 @@ function wcRenderDrawer(){
   var foot=document.getElementById('cartFoot');
   if(!body)return;
   if(!keys.length){
-    body.innerHTML='<div class="cart-empty"><div class="cart-empty-icon">🛒</div>Your stack is empty.<br>Tap <strong>Amazon</strong> on any supplement to add it.</div>';
+    body.innerHTML='<div class="cart-empty"><div class="cart-empty-icon">🛒</div>Your stack is empty.<br>Tap <strong>Amazon</strong> on any recommendation to add it.</div>';
     if(foot)foot.style.display='none';
     return;
   }
@@ -2685,7 +2717,7 @@ function wcRenderDrawer(){
   if(body) body.innerHTML=html;
   if(foot){
     foot.innerHTML='<div style="font-size:.78rem;color:var(--muted);text-align:center;line-height:1.5">'+
-      n+' supplement'+(n!==1?'s':'')+' · Click each item\'s link to purchase'+
+      n+' item'+(n!==1?'s':'')+' · Click each item\'s link to purchase'+
     '</div>';
     foot.style.display='block';
   }
@@ -2779,7 +2811,7 @@ if (WELME_SHEET_URL) {
 <div id="cartOverlay" class="cart-overlay" onclick="if(event.target===this)wcCloseDrawer()">
   <div class="cart-drawer">
     <div class="cart-head">
-      <div class="cart-head-title">🛒 My Supplement Stack</div>
+      <div class="cart-head-title">🛒 My Stack</div>
       <button class="cart-close" onclick="wcCloseDrawer()">×</button>
     </div>
     <div id="cartBody" class="cart-body"></div>
