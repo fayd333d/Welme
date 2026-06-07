@@ -332,10 +332,10 @@ body{background:var(--bg);color:var(--text);
 .buy-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 13px;
   border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;
   transition:all .15s;border:1.5px solid transparent}
-.buy-ih{background:#1B8B5E;color:#fff}
-.buy-ih:hover{background:#167a52}
+.buy-amz{background:#FF9900;color:#fff}
+.buy-amz:hover{background:#e68a00}
 .buy-btn.buy-selected{box-shadow:0 0 0 2.5px #fff,0 0 0 4.5px currentColor;opacity:1;font-weight:800}
-.buy-ih.buy-selected{box-shadow:0 0 0 2.5px #fff,0 0 0 4.5px #1B8B5E;background:#167a52}
+.buy-amz.buy-selected{box-shadow:0 0 0 2.5px #fff,0 0 0 4.5px #FF9900;background:#e68a00}
 .atc-row.in-cart{background:rgba(27,139,94,.04);border-radius:0 0 var(--radius) var(--radius);
   margin-left:-16px;margin-right:-16px;padding-left:16px;padding-right:16px}
 @media(max-width:600px){
@@ -365,8 +365,6 @@ body{background:var(--bg);color:var(--text);
 .prod-links{display:flex;gap:7px;flex-wrap:wrap}
 .shop-btn{display:inline-block;padding:8px 12px;border-radius:8px;font-size:.75rem;
   font-weight:700;text-decoration:none;cursor:pointer;transition:all .2s;border:none}
-.shop-btn.s-iherb{background:#ECFDF5;color:#059669;border:1px solid #6EE7B7}
-.shop-btn.s-iherb:hover{box-shadow:0 2px 8px rgba(5,150,105,.2)}
 
 /* Badges - Change 1 */
 .badge-green{background:#ECFDF5;color:#059669}
@@ -501,7 +499,7 @@ body{background:var(--bg);color:var(--text);
 .ci-store-btn{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;
   border-radius:6px;font-size:.72rem;font-weight:700;text-decoration:none;transition:opacity .15s}
 .ci-store-btn:hover{opacity:.85}
-.ci-ih{background:#1B8B5E;color:#fff}
+.ci-amz{background:#FF9900;color:#fff}
 .cart-item-icon{width:32px;height:32px;border-radius:8px;background:var(--green-light);
   display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
 .cart-item-info{flex:1;min-width:0}
@@ -517,8 +515,6 @@ body{background:var(--bg);color:var(--text);
 .cart-checkout-btn{display:flex;align-items:center;justify-content:space-between;
   padding:12px 16px;border-radius:10px;border:none;cursor:pointer;
   font-size:.85rem;font-weight:700;font-family:inherit;transition:all .15s;text-decoration:none}
-.cart-checkout-ih{background:#1B8B5E;color:#fff}
-.cart-checkout-ih:hover{background:#167a52}
 .cart-checkout-btn .btn-label{display:flex;align-items:center;gap:6px}
 .cart-checkout-btn .btn-count{background:rgba(255,255,255,.25);border-radius:8px;
   padding:2px 8px;font-size:.72rem}
@@ -1048,137 +1044,111 @@ var S={
     getDose:function(p){if(!p)return"2000-4000 IU";if(p.ageGrp==="young"&&p.bmi<25)return"2000 IU";if(p.ageGrp==="senior"||p.bmi>27)return"4000 IU";if(p.bmi>30)return"6000 IU";return"3000 IU";},
     why:"Immune regulation, bone density, mood. K2 ensures calcium goes to bones, not arteries. 80% of Europeans are deficient — highest-ROI single supplement.",
     slot:"breakfast",slotLabel:"With Breakfast",slotHint:"With a fat-containing meal — absorption drops without fat",
-    iherb:"https://www.iherb.com/search?kw=vitamin+d3+k2+mk7",eu:"https://www.amazon.com/s?k=vitamin+d3+k2+mk7",
     keys:["vitamin d","vit d","d3","cholecalciferol","d 3","d-3"]},
   mag:{name:"Magnesium Glycinate",dose:"300-400 mg",
     getDose:function(p){if(!p)return"300-400 mg";if(p.sex==="Female"||p.w<70)return"300 mg";return"400 mg";},
     why:"Supports 300+ enzymatic reactions, regulates cortisol and GABA, improves deep sleep architecture. Glycinate form crosses the blood-brain barrier and causes no digestive issues.",
     slot:"prebed",slotLabel:"Before Bed",slotHint:"30-60 minutes before sleep — start at 200 mg if new to magnesium",
-    iherb:"https://www.iherb.com/search?kw=magnesium+glycinate+400mg",eu:"https://www.amazon.com/s?k=magnesium+glycinat+400mg",
     keys:["magnesium","mag","магний"]},
   omega:{name:"Omega-3 (EPA + DHA)",dose:"2 g combined",
     getDose:function(p){if(!p)return"1-2 g";if(p.ageGrp==="young")return"1 g";return"2 g";},
     why:"Anti-inflammatory cornerstone. Supports cardiovascular, cognitive, and hormonal health. EPA reduces inflammatory markers; DHA builds brain cell membranes.",
     slot:"breakfast",slotLabel:"With Breakfast",slotHint:"With any fat-containing meal — refrigerate after opening",
-    iherb:"https://www.iherb.com/search?kw=omega+3+epa+dha+fish+oil",eu:"https://www.amazon.com/s?k=omega+3+epa+dha+hochdosiert",
     keys:["omega","fish oil","epa","dha","омега","omega-3","omega 3"]},
   ashwa:{name:"Ashwagandha KSM-66",dose:"300-600 mg",
     why:"Reduces cortisol by 14–30% in clinical trials. Supports stress resilience, hormonal balance, and sleep quality. KSM-66 is the most studied, highest-bioavailability extract.",
     slot:"evening",slotLabel:"Evening with food",slotHint:"Take with dinner or 1 hour before sleep. Can split AM+PM for cortisol support throughout the day.",
-    iherb:"https://www.iherb.com/search?kw=ashwagandha+ksm-66+600mg",eu:"https://www.amazon.com/s?k=ashwagandha+ksm-66",
     keys:["ashwagandha","ksm","ашваганда","ashwa"]},
   rhodiola:{name:"Rhodiola Rosea",dose:"300-400 mg",
     why:"Adaptogen for mental and physical endurance. Reduces fatigue without stimulant crash. Improves mitochondrial efficiency. Do not use after 3 PM.",
     slot:"morning-empty",slotLabel:"Early Morning — Empty Stomach",slotHint:"Before eating, not after 3 PM — cycle 12 weeks on, 4 off",
-    iherb:"https://www.iherb.com/search?kw=rhodiola+rosea+400mg",eu:"https://www.amazon.com/s?k=rhodiola+rosea+400mg",
     keys:["rhodiola","родиола","rhodiola rosea"]},
   theanine:{name:"L-Theanine",dose:"200 mg",
     why:"Promotes calm alertness without sedation. Increases alpha brain waves. Synergistic with caffeine. At night: speeds sleep onset and reduces racing thoughts.",
     slot:"prebed",slotLabel:"Before Bed",slotHint:"Or with morning coffee for calm focus (100-200 mg)",
-    iherb:"https://www.iherb.com/search?kw=l-theanine+200mg",eu:"https://www.amazon.com/s?k=l-theanin+200mg",
     keys:["theanine","l-theanine","теанин","l theanine"]},
   bcomplex:{name:"B-Complex (methylated)",dose:"1 capsule",
     why:"Cofactors for neurotransmitter and energy production. Methylated forms bypass common MTHFR variations. Stress depletes B vitamins rapidly.",
     slot:"breakfast",slotLabel:"With Breakfast",slotHint:"Morning only — B vitamins are energizing and may affect sleep if taken late",
-    iherb:"https://www.iherb.com/search?kw=b+complex+methylated",eu:"https://www.amazon.com/s?k=b+komplex+methyliert",
     keys:["b complex","b-complex","b vitamin","bcomplex","multivitamin","multi","b12","methylcobalamin","b 12"]},
   coq10:{name:"CoQ10 (Ubiquinol)",dose:"100-200 mg",
     why:"Mitochondrial energy production and powerful antioxidant. Natural levels decline 50% between age 30-60. Ubiquinol is the active, ready-to-use form.",
     slot:"lunch",slotLabel:"With Lunch",slotHint:"Fat-soluble — take with a fat-containing meal. Spreading CoQ10 from breakfast reduces crowding.",
-    iherb:"https://www.iherb.com/search?kw=coq10+ubiquinol+200mg",eu:"https://www.amazon.com/s?k=coq10+ubiquinol+200mg",
     keys:["coq10","ubiquinol","coenzyme q","убихинол","coq 10"]},
   vitC:{name:"Vitamin C (buffered)",dose:"500-1000 mg",
     why:"Collagen synthesis cofactor, immune modulator, antioxidant. Buffered sodium ascorbate is gentle on the stomach. Split dose for steady blood levels.",
     slot:"lunch",slotLabel:"With Lunch",slotHint:"Split between morning and midday for sustained levels",
-    iherb:"https://www.iherb.com/search?kw=vitamin+c+buffered+500mg",eu:"https://www.amazon.com/s?k=vitamin+c+1000mg",
     keys:["vitamin c","vit c","ascorbic","витамин с","аскорбин","ascorbate"]},
   zinc:{name:"Zinc Bisglycinate",dose:"20-25 mg",
     getDose:function(p){if(!p)return"15-25 mg";if(p.sex==="Female")return"15 mg";return"25 mg";},
     why:"Immune function, testosterone support, skin repair, and enzyme cofactor. Bisglycinate is the best-absorbed form with minimal GI effects.",
     slot:"dinner",slotLabel:"With Dinner",slotHint:"Never on an empty stomach — causes nausea. Separate from calcium by 2 hours",
-    iherb:"https://www.iherb.com/search?kw=zinc+bisglycinate+25mg",eu:"https://www.amazon.com/s?k=zink+bisglycinat+25mg",
     keys:["zinc","цинк","zink"]},
   nad:{name:"NMN (Nicotinamide Mononucleotide)",dose:"250-500 mg",
     getDose:function(p){if(!p)return"250-500 mg";if(p.ageGrp==="young")return"250 mg";if(p.ageGrp==="mature")return"500 mg";return"750 mg";},
     why:"NAD+ precursor. NAD+ levels decline ~50% between age 30-60. Restores cellular energy, DNA repair (sirtuins), and mitochondrial biogenesis.",
     slot:"morning-empty",slotLabel:"Early Morning — Empty Stomach",slotHint:"30-60 min before breakfast — completely empty stomach required",
-    iherb:"https://www.iherb.com/search?kw=nmn+nicotinamide+mononucleotide+500mg",eu:"https://www.amazon.com/s?k=nmn+nicotinamide+mononucleotide",
     keys:["nmn","nad","nicotinamide","нмн","nmn+"]},
   lion:{name:"Lion's Mane Mushroom",dose:"500-1000 mg",
     why:"Stimulates Nerve Growth Factor (NGF) synthesis. Supports memory, focus, and neuroprotection. Effects compound over 4-8 weeks of daily use.",
     slot:"lunch",slotLabel:"With Lunch",slotHint:"Take with food — supports afternoon focus and cognitive clarity. Not after 5 PM.",
-    iherb:"https://www.iherb.com/search?kw=lion+mane+mushroom+extract",eu:"https://www.amazon.com/s?k=löwenmähne+pilz+extrakt",
     keys:["lion's mane","lion mane","hericium","ежовик","lions mane"]},
   melatonin:{name:"Melatonin",dose:"0.5-1 mg",
     why:"Circadian entrainment and powerful antioxidant. Low doses (0.5 mg) are as effective as high doses without next-day grogginess.",
     slot:"prebed",slotLabel:"Before Bed",slotHint:"Exactly 30 min before your target sleep time — low dose preferred",
-    iherb:"https://www.iherb.com/search?kw=melatonin+0.5mg+1mg",eu:"https://www.amazon.com/s?k=melatonin+0.5mg",
     keys:["melatonin","мелатонин"]},
   berb:{name:"Berberine HCL",dose:"500 mg x2",
     why:"Activates AMPK — the metabolic master switch. Reduces blood sugar, insulin resistance, LDL cholesterol. Effects comparable to metformin in studies.",
     slot:"prelunch",slotLabel:"Before Lunch AND Before Dinner",slotHint:"15-30 minutes before each of your two largest meals",
-    iherb:"https://www.iherb.com/search?kw=berberine+hcl+500mg",eu:"https://www.amazon.com/s?k=berberin+hcl+500mg",
     keys:["berberine","berb","берберин","berberin"]},
   creatine:{name:"Creatine Monohydrate",dose:"3-5 g",
     getDose:function(p){if(!p)return"3-5 g";return p.sex==="Female"?"3 g":"5 g";},
     why:"Most studied supplement. Cellular ATP regeneration, reduced recovery time, muscle performance. Emerging evidence for cognitive benefits. No loading phase needed.",
     slot:"lunch",slotLabel:"With Lunch",slotHint:"Timing is flexible — with any main meal. Post-workout lunch is ideal for athletes.",
-    iherb:"https://www.iherb.com/search?kw=creatine+monohydrate+powder",eu:"https://www.amazon.com/s?k=kreatin+monohydrat",
     keys:["creatine","kreatin","креатин"]},
   collagen:{name:"Collagen Peptides (Type I + III)",dose:"10-15 g",
     why:"Structural protein for skin, joints, tendons, and gut lining. Must be taken with Vitamin C for synthesis. Type I + III target skin elasticity and joint cartilage.",
     slot:"morning-drink",slotLabel:"Morning (in a drink)",slotHint:"Mix in water, juice, or coffee. Take with 50-100 mg Vitamin C",
-    iherb:"https://www.iherb.com/search?kw=collagen+peptides+type+1+3",eu:"https://www.amazon.com/s?k=kollagen+peptide+typ+1+3",
     keys:["collagen","коллаген","kollagen"]},
   probio:{name:"Probiotic (multi-strain, 50B CFU)",dose:"1 capsule",
     why:"Microbiome diversity, immune function, and gut-brain axis. Multi-strain formula with Lactobacillus and Bifidobacterium. Consistent 8-week use shifts microbiome composition.",
     slot:"morning-empty",slotLabel:"Early Morning — Empty Stomach",slotHint:"20-30 minutes before breakfast for maximum survivability in stomach acid",
-    iherb:"https://www.iherb.com/search?kw=probiotic+50+billion+cfu+multistrain",eu:"https://www.amazon.com/s?k=probiotika+50+milliarden",
     keys:["probiotic","probiotics","lactobacillus","пробиотик","probiotika"]},
   curcumin:{name:"Curcumin + Bioperine",dose:"500-1000 mg",
     why:"Potent anti-inflammatory via NF-kB pathway inhibition. Reduces joint inflammation and digestive inflammatory markers. Bioperine increases absorption 2000%.",
     slot:"lunch",slotLabel:"With Lunch",slotHint:"Must include Bioperine — curcumin alone has near-zero bioavailability",
-    iherb:"https://www.iherb.com/search?kw=curcumin+bioperine+500mg",eu:"https://www.amazon.com/s?k=kurkumin+bioperine",
     keys:["curcumin","turmeric","куркумин","куркума","kurkuma"]},
   maca:{name:"Maca Root (gelatinized)",dose:"1500-3000 mg",
     why:"Supports hormonal balance, energy, and libido without containing hormones. Gelatinized form is easier on digestion. Relevant for women with cycle irregularity or PMS.",
     slot:"lunch",slotLabel:"With Lunch",slotHint:"Midday is optimal for maca's energy and libido effects. Gelatinized form only.",
-    iherb:"https://www.iherb.com/search?kw=maca+root+gelatinized+capsules",eu:"https://www.amazon.com/s?k=maca+wurzel+gelatiniert",
     keys:["maca","мака"]},
   saffron:{name:"Saffron Extract (standardized)",dose:"28-30 mg",
     why:"Multiple RCTs show comparable efficacy to SSRIs for mild-to-moderate low mood with fewer side effects. Supports serotonin regulation and reduces emotional reactivity.",
     slot:"dinner",slotLabel:"With Dinner",slotHint:"Evening is optimal for mood and stress calming. Use standardized Affron extract.",
-    iherb:"https://www.iherb.com/search?kw=saffron+extract+affron+30mg",eu:"https://www.amazon.com/s?k=safranextrakt+affron",
     keys:["saffron","affron","шафран","safran"]},
   resveratrol:{name:"Resveratrol (trans)",dose:"100-200 mg",
     why:"Sirtuin activator. Cardioprotective, anti-inflammatory, and extends healthspan in animal models. Synergistic with NAD+ protocols.",
     slot:"dinner",slotLabel:"With Dinner",slotHint:"Evening with food for better absorption — mimics caloric restriction signaling.",
-    iherb:"https://www.iherb.com/search?kw=resveratrol+trans+100mg",eu:"https://www.amazon.com/s?k=resveratrol+trans",
     keys:["resveratrol","trans-resveratrol","ресвератрол"]},
   iron:{name:"Iron Bisglycinate",dose:"25-30 mg",
     why:"Essential for oxygen transport and energy production. Bisglycinate form is well-tolerated and highly absorbable. Especially relevant for women.",
     slot:"breakfast",slotLabel:"With Breakfast + Vitamin C",slotHint:"Take with Vitamin C for enhanced absorption — never with calcium",
-    iherb:"https://www.iherb.com/search?kw=iron+bisglycinate+25mg",eu:"https://www.amazon.com/s?k=eisen+bisglycinat",
     keys:["iron","железо","eisen"]},
   biotin:{name:"Biotin",dose:"5000 mcg",
     why:"Hair, skin, and nail health. Cofactor for carbohydrate and fat metabolism. Evidence for blood sugar regulation.",
     slot:"breakfast",slotLabel:"With Breakfast",slotHint:"Water-soluble — timing is less critical",
-    iherb:"https://www.iherb.com/search?kw=biotin+5000mcg",eu:"https://www.amazon.com/s?k=biotin+5000mcg",
     keys:["biotin","биотин"]},
   astaxanthin:{name:"Astaxanthin",dose:"4-8 mg",
     why:"Powerful marine antioxidant. Reduces exercise-induced inflammation, supports eye and skin health, and crosses the blood-brain barrier.",
     slot:"dinner",slotLabel:"With Dinner",slotHint:"Fat-soluble — take with an evening meal containing healthy fats for best absorption.",
-    iherb:"https://www.iherb.com/search?kw=astaxanthin+4mg",eu:"https://www.amazon.com/s?k=astaxanthin+4mg",
     keys:["astaxanthin","астаксантин"]},
   ala:{name:"Alpha-Lipoic Acid (ALA)",dose:"300–600 mg",
     why:"Universal antioxidant active in both fat and water environments. Regenerates vitamins C and E. Improves insulin sensitivity, supports blood sugar metabolism, and studied for neuroprotection. Excellent companion to CoQ10.",
     slot:"dinner",slotLabel:"With Dinner",slotHint:"Take with a fat-containing meal — supports overnight cellular repair and antioxidant recycling.",
-    iherb:"https://www.iherb.com/search?kw=alpha+lipoic+acid+600mg",eu:"https://www.amazon.com/s?k=alpha+liponsäure+600mg",
     keys:["alpha lipoic","ala","alpha-lipoic","липоевая","liponsäure"]},
   ps:{name:"Phosphatidylserine (PS)",dose:"300 mg",
     why:"The most clinically validated nootropic. Supports memory encoding, recall, and executive function. Reduces exercise-induced cortisol. FDA-qualified health claim for cognitive decline. 100mg x3 per day with meals.",
     slot:"breakfast",slotLabel:"With Breakfast + Lunch (split dose)",slotHint:"Take 100mg with breakfast and 100mg with lunch — avoid evening doses as PS may disrupt sleep.",
-    iherb:"https://www.iherb.com/search?kw=phosphatidylserine+300mg",eu:"https://www.amazon.com/s?k=phosphatidylserin+300mg",
     keys:["phosphatidylserine","ps","phosphatidyl","фосфатидилсерин"]}
 };
 
@@ -1227,193 +1197,83 @@ var MEDS_CHIPS=[
 // Product data - Change 6
 var PROD={
   d3k2:[
-    {br:"Now Foods",nm:"Vitamin D-3 & K-2",fr:"120 softgels",nt:"2000 IU D3 + 180mcg MK-7",st:"4.8",pr:"$14–18",
-     ih:"https://www.iherb.com/search?kw=now+foods+vitamin+d3+k2+mk7&rating=4&sort=6",
-     az:"https://www.amazon.com/s?k=now+foods+vitamin+d3+k2+mk7",ic:"☀️"},
-    {br:"Jarrow Formulas",nm:"D3 & K2 MK-7",fr:"60 softgels",nt:"5000 IU D3 + 180mcg K2",st:"4.7",pr:"$12–16",
-     ih:"https://www.iherb.com/search?kw=jarrow+d3+k2+mk7&rating=4&sort=6",
-     az:"https://www.amazon.com/s?k=jarrow+d3+k2+mk7",ic:"☀️"}],
+    {br:"Now Foods",nm:"Vitamin D-3 & K-2",fr:"120 softgels",nt:"2000 IU D3 + 180mcg MK-7",st:"4.8",pr:"$14–18",ic:"☀️"},
+    {br:"Jarrow Formulas",nm:"D3 & K2 MK-7",fr:"60 softgels",nt:"5000 IU D3 + 180mcg K2",st:"4.7",pr:"$12–16",ic:"☀️"}],
   mag:[
-    {br:"Pure Encapsulations",nm:"Magnesium Glycinate",fr:"180 capsules",nt:"120mg elemental Mg",st:"4.9",pr:"$24–32",
-     ih:"https://www.iherb.com/search?kw=pure+encapsulations+magnesium+glycinate&rating=4&sort=6",
-     az:"https://www.amazon.com/s?k=pure+encapsulations+magnesium+glycinate",ic:"💎"},
-    {br:"Thorne",nm:"Magnesium Bisglycinate",fr:"120 capsules",nt:"200mg bisglycinate",st:"4.8",pr:"$20–28",
-     ih:"https://www.iherb.com/search?kw=thorne+magnesium+bisglycinate&rating=4&sort=6",
-     az:"https://www.amazon.com/s?k=thorne+magnesium+bisglycinate",ic:"💎"}],
+    {br:"Pure Encapsulations",nm:"Magnesium Glycinate",fr:"180 capsules",nt:"120mg elemental Mg",st:"4.9",pr:"$24–32",ic:"💎"},
+    {br:"Thorne",nm:"Magnesium Bisglycinate",fr:"120 capsules",nt:"200mg bisglycinate",st:"4.8",pr:"$20–28",ic:"💎"}],
   omega:[
-    {br:"Nordic Naturals",nm:"Ultimate Omega 2X",fr:"60 softgels",nt:"2150mg EPA+DHA",st:"4.8",pr:"$28–36",
-     ih:"https://www.iherb.com/search?kw=nordic+naturals+ultimate+omega+2x&rating=4&sort=6",
-     az:"https://www.amazon.com/s?k=nordic+naturals+omega+3",ic:"🐟"},
-    {br:"Carlson Labs",nm:"Super Omega-3",fr:"100 softgels",nt:"1000mg EPA+DHA",st:"4.7",pr:"$18–24",
-     ih:"https://www.iherb.com/search?kw=carlson+super+omega+3&rating=4&sort=6",
-     az:"https://www.amazon.com/s?k=carlson+omega+3",ic:"🐟"}],
+    {br:"Nordic Naturals",nm:"Ultimate Omega 2X",fr:"60 softgels",nt:"2150mg EPA+DHA",st:"4.8",pr:"$28–36",ic:"🐟"},
+    {br:"Carlson Labs",nm:"Super Omega-3",fr:"100 softgels",nt:"1000mg EPA+DHA",st:"4.7",pr:"$18–24",ic:"🐟"}],
   ashwa:[
-    {br:"Ixoreal",nm:"KSM-66 Ashwagandha",fr:"60 capsules",nt:"600mg KSM-66 extract",st:"4.7",pr:"$18–26",
-     ih:"https://www.iherb.com/search?kw=ksm-66+ashwagandha+600mg&rating=4&sort=6",
-     az:"https://www.amazon.com/s?k=ksm+66+ashwagandha+600mg",ic:"🌿"},
-    {br:"NOW Foods",nm:"Ashwagandha Extract",fr:"90 veg capsules",nt:"450mg root + extract",st:"4.6",pr:"$14–18",
-     ih:"https://www.iherb.com/search?kw=now+foods+ashwagandha+extract&rating=4&sort=6",
-     az:"https://www.amazon.com/s?k=now+foods+ashwagandha",ic:"🌿"}],
+    {br:"Ixoreal",nm:"KSM-66 Ashwagandha",fr:"60 capsules",nt:"600mg KSM-66 extract",st:"4.7",pr:"$18–26",ic:"🌿"},
+    {br:"NOW Foods",nm:"Ashwagandha Extract",fr:"90 veg capsules",nt:"450mg root + extract",st:"4.6",pr:"$14–18",ic:"🌿"}],
   rhodiola:[
-    {br:"Jarrow Formulas",nm:"Rhodiola Rosea 500mg",fr:"60 capsules",nt:"500mg root, 3% rosavin",st:"4.7",pr:"$16–22",
-     ih:"https://www.iherb.com/search?kw=jarrow+rhodiola+rosea+500mg&rating=4&sort=6",
-     az:"https://www.amazon.com/s?k=jarrow+rhodiola+rosea",ic:"🌱"},
-    {br:"Gaia Herbs",nm:"Rhodiola Rosea",fr:"60 capsules",nt:"400mg liquid extract",st:"4.6",pr:"$22–30",
-     ih:"https://www.iherb.com/search?kw=gaia+herbs+rhodiola+rosea&rating=4&sort=6",
-     az:"https://www.amazon.com/s?k=gaia+herbs+rhodiola",ic:"🌱"}],
+    {br:"Jarrow Formulas",nm:"Rhodiola Rosea 500mg",fr:"60 capsules",nt:"500mg root, 3% rosavin",st:"4.7",pr:"$16–22",ic:"🌱"},
+    {br:"Gaia Herbs",nm:"Rhodiola Rosea",fr:"60 capsules",nt:"400mg liquid extract",st:"4.6",pr:"$22–30",ic:"🌱"}],
   theanine:[
-    {br:"NOW Foods",nm:"L-Theanine 200mg",fr:"60 veg capsules",nt:"200mg per capsule",st:"4.8",pr:"$10–16",
-     ih:"https://www.iherb.com/search?kw=now+foods+l-theanine+200mg&rating=4&sort=6",
-     az:"https://www.amazon.com/s?k=now+foods+l+theanin+200mg",ic:"🍵"},
-    {br:"Life Extension",nm:"L-Theanine",fr:"60 veg capsules",nt:"100mg, stack 2 for 200mg",st:"4.7",pr:"$12–16",
-     ih:"https://www.iherb.com/search?kw=life+extension+l-theanine+100mg&rating=4&sort=6",
-     az:"https://www.amazon.com/s?k=life+extension+l+theanine",ic:"🍵"}],
+    {br:"NOW Foods",nm:"L-Theanine 200mg",fr:"60 veg capsules",nt:"200mg per capsule",st:"4.8",pr:"$10–16",ic:"🍵"},
+    {br:"Life Extension",nm:"L-Theanine",fr:"60 veg capsules",nt:"100mg, stack 2 for 200mg",st:"4.7",pr:"$12–16",ic:"🍵"}],
   bcomplex:[
-    {br:"Thorne",nm:"B-Complex #12",fr:"60 capsules",nt:"Methylated B vitamins",st:"4.9",pr:"$22–30",
-     ih:"https://www.iherb.com/search?kw=thorne+b-complex+12+methylated&rating=4&sort=6",
-     az:"https://www.amazon.com/s?k=thorne+b+komplex",
-     ic:"🅱️"},
-    {br:"Jarrow Formulas",nm:"B-Right Complex",fr:"100 capsules",nt:"Methylated B12 + B6",st:"4.7",pr:"$16–22",
-     ih:"https://www.iherb.com/search?kw=jarrow+b-right+b-complex&rating=4&sort=6",
-     az:"https://www.amazon.com/s?k=jarrow+b+right+komplex",
-     ic:"🅱️"}],
+    {br:"Thorne",nm:"B-Complex #12",fr:"60 capsules",nt:"Methylated B vitamins",st:"4.9",pr:"$22–30",     ic:"🅱️"},
+    {br:"Jarrow Formulas",nm:"B-Right Complex",fr:"100 capsules",nt:"Methylated B12 + B6",st:"4.7",pr:"$16–22",     ic:"🅱️"}],
   coq10:[
-    {br:"Jarrow Formulas",nm:"Ubiquinol QH-Absorb",fr:"60 softgels",nt:"200mg Ubiquinol",st:"4.8",pr:"$30–40",
-     ih:"https://www.iherb.com/search?kw=jarrow+ubiquinol+200mg&rating=4&sort=6",
-     az:"https://www.amazon.com/s?k=jarrow+ubiquinol+200mg",ic:"💛"},
-    {br:"NOW Foods",nm:"CoQ10 200mg",fr:"60 veg capsules",nt:"200mg CoQ10",st:"4.7",pr:"$20–28",
-     ih:"https://www.iherb.com/search?kw=now+foods+coq10+200mg&rating=4&sort=6",
-     az:"https://www.amazon.com/s?k=now+foods+coq10+200mg",ic:"💛"}],
+    {br:"Jarrow Formulas",nm:"Ubiquinol QH-Absorb",fr:"60 softgels",nt:"200mg Ubiquinol",st:"4.8",pr:"$30–40",ic:"💛"},
+    {br:"NOW Foods",nm:"CoQ10 200mg",fr:"60 veg capsules",nt:"200mg CoQ10",st:"4.7",pr:"$20–28",ic:"💛"}],
   vitC:[
-    {br:"NOW Foods",nm:"Buffered C-1000",fr:"180 tablets",nt:"1000mg sodium ascorbate",st:"4.8",pr:"$12–18",
-     ih:"https://www.iherb.com/search?kw=now+foods+buffered+vitamin+c+1000mg&rating=4&sort=6",
-     az:"https://www.amazon.com/s?k=now+foods+vitamin+c+1000mg+gepuffert",
-     ic:"🍊"},
-    {br:"Solgar",nm:"Ester-C Plus 1000mg",fr:"90 tablets",nt:"1000mg + bioflavonoids",st:"4.7",pr:"$18–24",
-     ih:"https://www.iherb.com/search?kw=solgar+ester+c+plus+1000mg&rating=4&sort=6",
-     az:"https://www.amazon.com/s?k=solgar+ester+c+1000",
-     ic:"🍊"}],
+    {br:"NOW Foods",nm:"Buffered C-1000",fr:"180 tablets",nt:"1000mg sodium ascorbate",st:"4.8",pr:"$12–18",     ic:"🍊"},
+    {br:"Solgar",nm:"Ester-C Plus 1000mg",fr:"90 tablets",nt:"1000mg + bioflavonoids",st:"4.7",pr:"$18–24",     ic:"🍊"}],
   zinc:[
-    {br:"Thorne",nm:"Zinc Bisglycinate",fr:"60 capsules",nt:"15mg zinc bisglycinate",st:"4.9",pr:"$14–18",
-     ih:"https://www.iherb.com/search?kw=thorne+zinc+bisglycinate&rating=4&sort=6",
-     az:"https://www.amazon.com/s?k=thorne+zink+bisglycinat",ic:"🔵"},
-    {br:"NOW Foods",nm:"Zinc Glycinate 30mg",fr:"120 capsules",nt:"30mg zinc glycinate",st:"4.7",pr:"$12–16",
-     ih:"https://www.iherb.com/search?kw=now+foods+zinc+glycinate+30mg&rating=4&sort=6",
-     az:"https://www.amazon.com/s?k=now+foods+zink+glycinat",ic:"🔵"}],
+    {br:"Thorne",nm:"Zinc Bisglycinate",fr:"60 capsules",nt:"15mg zinc bisglycinate",st:"4.9",pr:"$14–18",ic:"🔵"},
+    {br:"NOW Foods",nm:"Zinc Glycinate 30mg",fr:"120 capsules",nt:"30mg zinc glycinate",st:"4.7",pr:"$12–16",ic:"🔵"}],
   nad:[
-    {br:"Tru Niagen",nm:"Nicotinamide Riboside",fr:"60 capsules",nt:"300mg NR per serving",st:"4.6",pr:"$40–55",
-     ih:"https://www.iherb.com/search?kw=tru+niagen+300mg&rating=4&sort=6",
-     az:"https://www.amazon.com/s?k=tru+niagen+300mg",ic:"🔬"},
-    {br:"ProHealth Welme",nm:"NMN Pro 500mg",fr:"60 capsules",nt:"500mg β-NMN",st:"4.7",pr:"$38–50",
-     ih:"https://www.iherb.com/search?kw=prohealth+nmn+500mg&rating=4&sort=6",
-     az:"https://www.amazon.com/s?k=prohealth+nmn+500mg",ic:"🔬"}],
+    {br:"Tru Niagen",nm:"Nicotinamide Riboside",fr:"60 capsules",nt:"300mg NR per serving",st:"4.6",pr:"$40–55",ic:"🔬"},
+    {br:"ProHealth Welme",nm:"NMN Pro 500mg",fr:"60 capsules",nt:"500mg β-NMN",st:"4.7",pr:"$38–50",ic:"🔬"}],
   lion:[
-    {br:"Host Defense",nm:"Lion's Mane",fr:"60 capsules",nt:"500mg mycelium extract",st:"4.7",pr:"$22–30",
-     ih:"https://www.iherb.com/search?kw=host+defense+lions+mane&rating=4&sort=6",
-     az:"https://www.amazon.com/s?k=host+defense+lion+mane",ic:"🍄"},
-    {br:"NOW Foods",nm:"Lion's Mane 500mg",fr:"60 veg capsules",nt:"500mg whole mushroom",st:"4.6",pr:"$16–22",
-     ih:"https://www.iherb.com/search?kw=now+foods+lions+mane+500mg&rating=4&sort=6",
-     az:"https://www.amazon.com/s?k=now+foods+lion+mane",ic:"🍄"}],
+    {br:"Host Defense",nm:"Lion's Mane",fr:"60 capsules",nt:"500mg mycelium extract",st:"4.7",pr:"$22–30",ic:"🍄"},
+    {br:"NOW Foods",nm:"Lion's Mane 500mg",fr:"60 veg capsules",nt:"500mg whole mushroom",st:"4.6",pr:"$16–22",ic:"🍄"}],
   melatonin:[
-    {br:"Life Extension",nm:"Melatonin 0.3mg",fr:"100 capsules",nt:"0.3mg — lowest effective dose",st:"4.7",pr:"$10–14",
-     ih:"https://www.iherb.com/search?kw=life+extension+melatonin+0.3mg&rating=4&sort=6",
-     az:"https://www.amazon.com/s?k=life+extension+melatonin+0.3mg",ic:"🌙"},
-    {br:"Solgar",nm:"Melatonin 1mg",fr:"60 nuggets",nt:"1mg fast-dissolve sublingual",st:"4.6",pr:"$12–16",
-     ih:"https://www.iherb.com/search?kw=solgar+melatonin+1mg+sublingual&rating=4&sort=6",
-     az:"https://www.amazon.com/s?k=solgar+melatonin+1mg",ic:"🌙"}],
+    {br:"Life Extension",nm:"Melatonin 0.3mg",fr:"100 capsules",nt:"0.3mg — lowest effective dose",st:"4.7",pr:"$10–14",ic:"🌙"},
+    {br:"Solgar",nm:"Melatonin 1mg",fr:"60 nuggets",nt:"1mg fast-dissolve sublingual",st:"4.6",pr:"$12–16",ic:"🌙"}],
   berb:[
-    {br:"Thorne",nm:"Berberine-500",fr:"60 capsules",nt:"500mg berberine HCL",st:"4.8",pr:"$28–36",
-     ih:"https://www.iherb.com/search?kw=thorne+berberine+500mg&rating=4&sort=6",
-     az:"https://www.amazon.com/s?k=thorne+berberin+500",
-     ic:"🌿"},
-    {br:"NOW Foods",nm:"Berberine 400mg",fr:"90 veg capsules",nt:"400mg berberine HCL",st:"4.7",pr:"$22–28",
-     ih:"https://www.iherb.com/search?kw=now+foods+berberine+400mg&rating=4&sort=6",
-     az:"https://www.amazon.com/s?k=now+foods+berberin+400mg",
-     ic:"🌿"}],
+    {br:"Thorne",nm:"Berberine-500",fr:"60 capsules",nt:"500mg berberine HCL",st:"4.8",pr:"$28–36",     ic:"🌿"},
+    {br:"NOW Foods",nm:"Berberine 400mg",fr:"90 veg capsules",nt:"400mg berberine HCL",st:"4.7",pr:"$22–28",     ic:"🌿"}],
   creatine:[
-    {br:"Optimum Nutrition",nm:"Micronized Creatine",fr:"400g powder",nt:"5g per serving, unflavored",st:"4.8",pr:"$16–22",
-     ih:"https://www.iherb.com/search?kw=optimum+nutrition+micronized+creatine&rating=4&sort=6",
-     az:"https://www.amazon.com/s?k=optimum+nutrition+kreatin",ic:"💪"},
-    {br:"Creapure®",nm:"Creatine Monohydrate",fr:"500g powder",nt:"German-grade purity",st:"4.9",pr:"$20–26",
-     ih:"https://www.iherb.com/search?kw=creapure+creatine+monohydrate&rating=4&sort=6",
-     az:"https://www.amazon.com/s?k=creapure+kreatin",ic:"💪"}],
+    {br:"Optimum Nutrition",nm:"Micronized Creatine",fr:"400g powder",nt:"5g per serving, unflavored",st:"4.8",pr:"$16–22",ic:"💪"},
+    {br:"Creapure®",nm:"Creatine Monohydrate",fr:"500g powder",nt:"German-grade purity",st:"4.9",pr:"$20–26",ic:"💪"}],
   collagen:[
-    {br:"Vital Proteins",nm:"Collagen Peptides",fr:"284g",nt:"20g Type I+III per scoop",st:"4.7",pr:"$28–38",
-     ih:"https://www.iherb.com/search?kw=vital+proteins+collagen+peptides&rating=4&sort=6",
-     az:"https://www.amazon.com/s?k=vital+proteins+kollagen+peptide",ic:"✨"},
-    {br:"NOW Foods",nm:"Collagen Peptides Powder",fr:"227g",nt:"11g/serving, grass-fed",st:"4.6",pr:"$20–28",
-     ih:"https://www.iherb.com/search?kw=now+foods+collagen+peptides+powder&rating=4&sort=6",
-     az:"https://www.amazon.com/s?k=now+foods+kollagen+peptide",ic:"✨"}],
+    {br:"Vital Proteins",nm:"Collagen Peptides",fr:"284g",nt:"20g Type I+III per scoop",st:"4.7",pr:"$28–38",ic:"✨"},
+    {br:"NOW Foods",nm:"Collagen Peptides Powder",fr:"227g",nt:"11g/serving, grass-fed",st:"4.6",pr:"$20–28",ic:"✨"}],
   probio:[
-    {br:"Garden of Life",nm:"Dr. Formulated 50B",fr:"30 capsules",nt:"50B CFU, 16 strains",st:"4.7",pr:"$32–42",
-     ih:"https://www.iherb.com/search?kw=garden+of+life+dr+formulated+probiotics+50+billion&rating=4&sort=6",
-     az:"https://www.amazon.com/s?k=garden+of+life+probiotika+50+milliarden",ic:"🦠"},
-    {br:"Jarrow Formulas",nm:"Ideal Bowel Support",fr:"60 capsules",nt:"10B CFU L. plantarum",st:"4.7",pr:"$18–26",
-     ih:"https://www.iherb.com/search?kw=jarrow+formulas+ideal+bowel+support&rating=4&sort=6",
-     az:"https://www.amazon.com/s?k=jarrow+probiotika+bowel",ic:"🦠"}],
+    {br:"Garden of Life",nm:"Dr. Formulated 50B",fr:"30 capsules",nt:"50B CFU, 16 strains",st:"4.7",pr:"$32–42",ic:"🦠"},
+    {br:"Jarrow Formulas",nm:"Ideal Bowel Support",fr:"60 capsules",nt:"10B CFU L. plantarum",st:"4.7",pr:"$18–26",ic:"🦠"}],
   curcumin:[
-    {br:"Jarrow Formulas",nm:"Curcumin 95 + Bioperine",fr:"60 capsules",nt:"500mg + 5mg Bioperine",st:"4.7",pr:"$16–22",
-     ih:"https://www.iherb.com/search?kw=jarrow+curcumin+95+bioperine&rating=4&sort=6",
-     az:"https://www.amazon.com/s?k=jarrow+kurkumin+bioperine",ic:"🟠"},
-    {br:"Solgar",nm:"Full Spectrum Curcumin",fr:"60 softgels",nt:"185mg liquid extract",st:"4.6",pr:"$28–38",
-     ih:"https://www.iherb.com/search?kw=solgar+full+spectrum+curcumin&rating=4&sort=6",
-     az:"https://www.amazon.com/s?k=solgar+full+spectrum+curcumin",ic:"🟠"}],
+    {br:"Jarrow Formulas",nm:"Curcumin 95 + Bioperine",fr:"60 capsules",nt:"500mg + 5mg Bioperine",st:"4.7",pr:"$16–22",ic:"🟠"},
+    {br:"Solgar",nm:"Full Spectrum Curcumin",fr:"60 softgels",nt:"185mg liquid extract",st:"4.6",pr:"$28–38",ic:"🟠"}],
   maca:[
-    {br:"NOW Foods",nm:"Maca 750mg Gelatinized",fr:"90 veg capsules",nt:"750mg gelatinized root",st:"4.6",pr:"$16–22",
-     ih:"https://www.iherb.com/search?kw=now+foods+maca+gelatinized+750mg&rating=4&sort=6",
-     az:"https://www.amazon.com/s?k=now+foods+maca+gelatiniert",ic:"🌾"},
-    {br:"Natural Factors",nm:"Maca Root 500mg",fr:"60 capsules",nt:"500mg organic maca",st:"4.5",pr:"$12–18",
-     ih:"https://www.iherb.com/search?kw=natural+factors+maca+root+500mg&rating=4&sort=6",
-     az:"https://www.amazon.com/s?k=natural+factors+maca",ic:"🌾"}],
+    {br:"NOW Foods",nm:"Maca 750mg Gelatinized",fr:"90 veg capsules",nt:"750mg gelatinized root",st:"4.6",pr:"$16–22",ic:"🌾"},
+    {br:"Natural Factors",nm:"Maca Root 500mg",fr:"60 capsules",nt:"500mg organic maca",st:"4.5",pr:"$12–18",ic:"🌾"}],
   saffron:[
-    {br:"Jarrow Formulas",nm:"Saffron 30mg",fr:"60 capsules",nt:"30mg Affron® extract",st:"4.6",pr:"$24–32",
-     ih:"https://www.iherb.com/search?kw=jarrow+saffron+30mg+affron&rating=4&sort=6",
-     az:"https://www.amazon.com/s?k=jarrow+safranextrakt+30mg",ic:"🌸"},
-    {br:"Life Extension",nm:"Optimized Saffron",fr:"60 veg capsules",nt:"28mg Satiereal® extract",st:"4.5",pr:"$20–28",
-     ih:"https://www.iherb.com/search?kw=life+extension+optimized+saffron&rating=4&sort=6",
-     az:"https://www.amazon.com/s?k=life+extension+saffron",ic:"🌸"}],
+    {br:"Jarrow Formulas",nm:"Saffron 30mg",fr:"60 capsules",nt:"30mg Affron® extract",st:"4.6",pr:"$24–32",ic:"🌸"},
+    {br:"Life Extension",nm:"Optimized Saffron",fr:"60 veg capsules",nt:"28mg Satiereal® extract",st:"4.5",pr:"$20–28",ic:"🌸"}],
   resveratrol:[
-    {br:"Jarrow Formulas",nm:"Trans-Resveratrol 100mg",fr:"60 capsules",nt:"100mg trans-resveratrol",st:"4.6",pr:"$16–22",
-     ih:"https://www.iherb.com/search?kw=jarrow+trans-resveratrol+100mg&rating=4&sort=6",
-     az:"https://www.amazon.com/s?k=jarrow+resveratrol+trans",ic:"🍇"},
-    {br:"Life Extension",nm:"Trans-Resveratrol",fr:"60 veg capsules",nt:"100mg + grape extract",st:"4.7",pr:"$18–24",
-     ih:"https://www.iherb.com/search?kw=life+extension+trans-resveratrol&rating=4&sort=6",
-     az:"https://www.amazon.com/s?k=life+extension+resveratrol+trans",ic:"🍇"}],
+    {br:"Jarrow Formulas",nm:"Trans-Resveratrol 100mg",fr:"60 capsules",nt:"100mg trans-resveratrol",st:"4.6",pr:"$16–22",ic:"🍇"},
+    {br:"Life Extension",nm:"Trans-Resveratrol",fr:"60 veg capsules",nt:"100mg + grape extract",st:"4.7",pr:"$18–24",ic:"🍇"}],
   iron:[
-    {br:"Thorne",nm:"Ferrasorb Iron",fr:"60 capsules",nt:"36mg iron bisglycinate + C",st:"4.8",pr:"$16–22",
-     ih:"https://www.iherb.com/search?kw=thorne+ferrasorb+iron+bisglycinate&rating=4&sort=6",
-     az:"https://www.amazon.com/s?k=thorne+ferrasorb+eisen",ic:"🔴"},
-    {br:"Solgar",nm:"Gentle Iron 25mg",fr:"90 veg capsules",nt:"25mg iron bisglycinate",st:"4.7",pr:"$14–18",
-     ih:"https://www.iherb.com/search?kw=solgar+gentle+iron+25mg&rating=4&sort=6",
-     az:"https://www.amazon.com/s?k=solgar+sanftes+eisen+25mg",ic:"🔴"}],
+    {br:"Thorne",nm:"Ferrasorb Iron",fr:"60 capsules",nt:"36mg iron bisglycinate + C",st:"4.8",pr:"$16–22",ic:"🔴"},
+    {br:"Solgar",nm:"Gentle Iron 25mg",fr:"90 veg capsules",nt:"25mg iron bisglycinate",st:"4.7",pr:"$14–18",ic:"🔴"}],
   biotin:[
-    {br:"Solgar",nm:"Biotin 5000mcg",fr:"100 veg capsules",nt:"5000mcg biotin",st:"4.8",pr:"$12–18",
-     ih:"https://www.iherb.com/search?kw=solgar+biotin+5000mcg&rating=4&sort=6",
-     az:"https://www.amazon.com/s?k=solgar+biotin+5000mcg",ic:"💅"},
-    {br:"NOW Foods",nm:"Biotin 5mg",fr:"120 veg capsules",nt:"5000mcg per capsule",st:"4.7",pr:"$10–14",
-     ih:"https://www.iherb.com/search?kw=now+foods+biotin+5000mcg&rating=4&sort=6",
-     az:"https://www.amazon.com/s?k=now+foods+biotin+5000mcg",ic:"💅"}],
+    {br:"Solgar",nm:"Biotin 5000mcg",fr:"100 veg capsules",nt:"5000mcg biotin",st:"4.8",pr:"$12–18",ic:"💅"},
+    {br:"NOW Foods",nm:"Biotin 5mg",fr:"120 veg capsules",nt:"5000mcg per capsule",st:"4.7",pr:"$10–14",ic:"💅"}],
   astaxanthin:[
-    {br:"NOW Foods",nm:"Astaxanthin 4mg",fr:"60 softgels",nt:"4mg natural astaxanthin",st:"4.7",pr:"$16–22",
-     ih:"https://www.iherb.com/search?kw=now+foods+astaxanthin+4mg&rating=4&sort=6",
-     az:"https://www.amazon.com/s?k=now+foods+astaxanthin+4mg",ic:"🦞"},
-    {br:"Jarrow Formulas",nm:"Astaxanthin 12mg",fr:"30 softgels",nt:"12mg Haematococcus algae",st:"4.7",pr:"$20–28",
-     ih:"https://www.iherb.com/search?kw=jarrow+astaxanthin+12mg&rating=4&sort=6",
-     az:"https://www.amazon.com/s?k=jarrow+astaxanthin+12mg",ic:"🦞"}],
+    {br:"NOW Foods",nm:"Astaxanthin 4mg",fr:"60 softgels",nt:"4mg natural astaxanthin",st:"4.7",pr:"$16–22",ic:"🦞"},
+    {br:"Jarrow Formulas",nm:"Astaxanthin 12mg",fr:"30 softgels",nt:"12mg Haematococcus algae",st:"4.7",pr:"$20–28",ic:"🦞"}],
   ala:[
-    {br:"Thorne",nm:"Alpha-Lipoic Acid",fr:"60 capsules",nt:"300mg ALA",st:"4.8",pr:"$22–30",
-     ih:"https://www.iherb.com/search?kw=thorne+alpha+lipoic+acid+300mg&rating=4&sort=6",
-     az:"https://www.amazon.com/s?k=thorne+alpha+liponsäure",ic:"🛡️"},
-    {br:"NOW Foods",nm:"Alpha Lipoic Acid 250mg",fr:"60 veg capsules",nt:"250mg ALA",st:"4.6",pr:"$14–20",
-     ih:"https://www.iherb.com/search?kw=now+foods+alpha+lipoic+acid+250mg&rating=4&sort=6",
-     az:"https://www.amazon.com/s?k=now+foods+alpha+liponsäure+250mg",ic:"🛡️"}],
+    {br:"Thorne",nm:"Alpha-Lipoic Acid",fr:"60 capsules",nt:"300mg ALA",st:"4.8",pr:"$22–30",ic:"🛡️"},
+    {br:"NOW Foods",nm:"Alpha Lipoic Acid 250mg",fr:"60 veg capsules",nt:"250mg ALA",st:"4.6",pr:"$14–20",ic:"🛡️"}],
   ps:[
-    {br:"Jarrow Formulas",nm:"Phosphatidylserine 100",fr:"60 softgels",nt:"100mg PS per softgel",st:"4.7",pr:"$20–28",
-     ih:"https://www.iherb.com/search?kw=jarrow+phosphatidylserine+100mg&rating=4&sort=6",
-     az:"https://www.amazon.com/s?k=jarrow+phosphatidylserin+100mg",ic:"🧠"},
-    {br:"NOW Foods",nm:"Phosphatidyl Serine 150",fr:"60 softgels",nt:"150mg per softgel",st:"4.6",pr:"$18–24",
-     ih:"https://www.iherb.com/search?kw=now+foods+phosphatidyl+serine+150mg&rating=4&sort=6",
-     az:"https://www.amazon.com/s?k=now+foods+phosphatidylserin+150mg",ic:"🧠"}]
+    {br:"Jarrow Formulas",nm:"Phosphatidylserine 100",fr:"60 softgels",nt:"100mg PS per softgel",st:"4.7",pr:"$20–28",ic:"🧠"},
+    {br:"NOW Foods",nm:"Phosphatidyl Serine 150",fr:"60 softgels",nt:"150mg per softgel",st:"4.6",pr:"$18–24",ic:"🧠"}]
 };
 
 // ═══════════════════════════════════════════════════════════
@@ -1886,64 +1746,64 @@ function goToResults(){
 // ══════════════════════════════════════════════════
 var TOOLS={
   sleep:[
-    {icon:'💍',brand:'Oura',name:'Oura Ring Gen 3',why:'Tracks sleep stages, HRV, and body temp every night — the most detailed sleep tracker available.',tag:'Wearable',price:'$299',amz:'https://www.amazon.com/s?k=Oura+Ring+Gen+3'},
-    {icon:'😴',brand:'Manta',name:'Manta Sleep Mask Pro',why:'100% blackout contoured sleep mask with adjustable eye cups — reusable, washable, lasts years.',tag:'Reusable',price:'$35',amz:'https://www.amazon.com/s?k=Manta+Sleep+Mask+Pro'},
-    {icon:'💡',brand:'Philips',name:'SmartSleep Wake-Up Light',why:'Sunrise simulation alarm that gradually raises light — proven to cut morning grogginess.',tag:'Light therapy',price:'$79',amz:'https://www.amazon.com/s?k=Philips+SmartSleep+wake+up+light'},
-    {icon:'🌡️',brand:'Generic',name:'Digital BBT Thermometer',why:'Tracks basal body temperature each morning — affordable baseline for sleep/recovery trends.',tag:'Reusable',price:'$12',amz:'https://www.amazon.com/s?k=basal+body+temperature+thermometer'}
+    {icon:'💍',brand:'Oura',name:'Oura Ring Gen 3',why:'Tracks sleep stages, HRV, and body temp every night — the most detailed sleep tracker available.',tag:'Wearable',price:'$299',amz:'https://amzn.to/3Q24JEy'},
+    {icon:'😴',brand:'Manta',name:'Manta Sleep Mask Pro',why:'100% blackout contoured sleep mask with adjustable eye cups — reusable, washable, lasts years.',tag:'Reusable',price:'$35',amz:'https://amzn.to/4vrMVSa'},
+    {icon:'💡',brand:'Philips',name:'SmartSleep Wake-Up Light',why:'Sunrise simulation alarm that gradually raises light — proven to cut morning grogginess.',tag:'Light therapy',price:'$79',amz:'https://amzn.to/4odXyWt'},
+    {icon:'🌡️',brand:'Generic',name:'Digital BBT Thermometer',why:'Tracks basal body temperature each morning — affordable baseline for sleep/recovery trends.',tag:'Reusable',price:'$12',amz:'https://amzn.to/4fvkgaj'}
   ],
   stress:[
-    {icon:'🎵',brand:'Apollo',name:'Apollo Neuro',why:'Vibration wearable that activates the vagus nerve to shift you out of fight-or-flight mode.',tag:'Device',price:'$349',amz:'https://www.amazon.com/s?k=Apollo+Neuro+wearable'},
-    {icon:'💨',brand:'HeartMath',name:'Inner Balance Sensor',why:'Ear-clip HRV sensor with real-time coherence score — trains the stress response in 5 min/day.',tag:'Biofeedback',price:'$129',amz:'https://www.amazon.com/s?k=HeartMath+Inner+Balance+Sensor'},
-    {icon:'🧘',brand:'Gaiam',name:'Premium Meditation Cushion',why:'Ergonomic buckwheat-filled zafu — proper posture during breathwork reduces session dropout.',tag:'Reusable',price:'$39',amz:'https://www.amazon.com/s?k=Gaiam+meditation+cushion+zafu'},
-    {icon:'📖',brand:'Generic',name:'Guided Journal — 5 Min Gratitude',why:'Daily gratitude journaling consistently reduces cortisol — reusable habit, no subscription.',tag:'Reusable',price:'$14',amz:'https://www.amazon.com/s?k=5+minute+gratitude+journal'}
+    {icon:'🎵',brand:'Apollo',name:'Apollo Neuro',why:'Vibration wearable that activates the vagus nerve to shift you out of fight-or-flight mode.',tag:'Device',price:'$349',amz:'https://amzn.to/4xeMtbM'},
+    {icon:'💨',brand:'HeartMath',name:'Inner Balance Sensor',why:'Ear-clip HRV sensor with real-time coherence score — trains the stress response in 5 min/day.',tag:'Biofeedback',price:'$129',amz:'https://amzn.to/4fqvLQe'},
+    {icon:'🧘',brand:'Gaiam',name:'Premium Meditation Cushion',why:'Ergonomic buckwheat-filled zafu — proper posture during breathwork reduces session dropout.',tag:'Reusable',price:'$39',amz:'https://amzn.to/3QmNvBT'},
+    {icon:'📖',brand:'Generic',name:'Guided Journal — 5 Min Gratitude',why:'Daily gratitude journaling consistently reduces cortisol — reusable habit, no subscription.',tag:'Reusable',price:'$14',amz:'https://amzn.to/4uhv6UP'}
   ],
   metabolic:[
-    {icon:'⚖️',brand:'Renpho',name:'Renpho Smart Scale',why:'Tracks body fat %, visceral fat, muscle mass, and BMI via free app — no subscription.',tag:'Reusable',price:'$35',amz:'https://www.amazon.com/s?k=Renpho+smart+scale+body+fat'},
-    {icon:'🩸',brand:'Everlywell',name:'Everlywell Metabolism Test',why:'At-home cortisol, thyroid, testosterone, and HbA1c panel — results mailed to you.',tag:'Lab test',price:'$99',amz:'https://www.amazon.com/s?k=Everlywell+metabolism+test'},
-    {icon:'🥗',brand:'OXO',name:'Kitchen Food Scale',why:'Precision food weighing for accurate macro tracking — reusable, no batteries needed.',tag:'Reusable',price:'$22',amz:'https://www.amazon.com/s?k=OXO+kitchen+food+scale'},
-    {icon:'📊',brand:'Withings',name:'Withings Body Comp Scale',why:'Measures visceral fat index and vascular age alongside body composition — medical-grade.',tag:'Smart scale',price:'$199',amz:'https://www.amazon.com/s?k=Withings+Body+Comp+Scale'}
+    {icon:'⚖️',brand:'Renpho',name:'Renpho Smart Scale',why:'Tracks body fat %, visceral fat, muscle mass, and BMI via free app — no subscription.',tag:'Reusable',price:'$35',amz:'https://amzn.to/3Q95USC'},
+    {icon:'🩸',brand:'Everlywell',name:'Everlywell Metabolism Test',why:'At-home cortisol, thyroid, testosterone, and HbA1c panel — results mailed to you.',tag:'Lab test',price:'$99',amz:'https://amzn.to/4vrbBua'},
+    {icon:'🥗',brand:'OXO',name:'Kitchen Food Scale',why:'Precision food weighing for accurate macro tracking — reusable, no batteries needed.',tag:'Reusable',price:'$22',amz:'https://amzn.to/4uVw5Lx'},
+    {icon:'📊',brand:'Withings',name:'Withings Body Comp Scale',why:'Measures visceral fat index and vascular age alongside body composition — medical-grade.',tag:'Smart scale',price:'$199',amz:'https://amzn.to/4uU4HgW'}
   ],
   cardiovascular:[
-    {icon:'🩺',brand:'Omron',name:'Omron Platinum BP Monitor',why:'AHA-validated blood pressure cuff with arrhythmia detection and Bluetooth sync.',tag:'Reusable',price:'$79',amz:'https://www.amazon.com/s?k=Omron+Platinum+blood+pressure+monitor'},
-    {icon:'❤️',brand:'Withings',name:'Withings ScanWatch 2',why:'ECG + SpO₂ + arterial stiffness index — cardiologist-grade data on your wrist.',tag:'Wearable',price:'$349',amz:'https://www.amazon.com/s?k=Withings+ScanWatch+2'},
-    {icon:'🫁',brand:'Polar',name:'Polar H10 Chest Strap',why:'Gold-standard HRV and heart rate during training — key predictor of cardiovascular fitness.',tag:'Reusable',price:'$99',amz:'https://www.amazon.com/s?k=Polar+H10+chest+strap+heart+rate'},
-    {icon:'🔬',brand:'Everlywell',name:'Everlywell Heart Health Test',why:'At-home panel for LDL, HDL, triglycerides, and hs-CRP — key cardiovascular risk markers.',tag:'Lab test',price:'$99',amz:'https://www.amazon.com/s?k=Everlywell+heart+health+test'}
+    {icon:'🩺',brand:'Omron',name:'Omron Platinum BP Monitor',why:'AHA-validated blood pressure cuff with arrhythmia detection and Bluetooth sync.',tag:'Reusable',price:'$79',amz:'https://amzn.to/49Mq6QP'},
+    {icon:'❤️',brand:'Withings',name:'Withings ScanWatch 2',why:'ECG + SpO₂ + arterial stiffness index — cardiologist-grade data on your wrist.',tag:'Wearable',price:'$349',amz:'https://amzn.to/3PLTgJd'},
+    {icon:'🫁',brand:'Polar',name:'Polar H10 Chest Strap',why:'Gold-standard HRV and heart rate during training — key predictor of cardiovascular fitness.',tag:'Reusable',price:'$99',amz:'https://amzn.to/4ofZZru'},
+    {icon:'🔬',brand:'Everlywell',name:'Everlywell Heart Health Test',why:'At-home panel for LDL, HDL, triglycerides, and hs-CRP — key cardiovascular risk markers.',tag:'Lab test',price:'$99',amz:'https://amzn.to/3PLTgJd'}
   ],
   athletic:[
-    {icon:'💪',brand:'Whoop',name:'WHOOP 4.0',why:'Recovery-first wearable: strain, sleep, and HRV tell you when to push and when to rest.',tag:'Wearable',price:'$239 + sub',amz:'https://www.amazon.com/s?k=WHOOP+4.0+band'},
-    {icon:'🏋️',brand:'Theragun',name:'Theragun Prime',why:'Percussive therapy gun — proven to reduce DOMS and speed up muscle recovery post-workout.',tag:'Reusable',price:'$299',amz:'https://www.amazon.com/s?k=Theragun+Prime'},
-    {icon:'🔄',brand:'TheraBand',name:'Resistance Band Set (5 levels)',why:'Full-body progressive resistance training — reusable, portable, no gym needed.',tag:'Reusable',price:'$25',amz:'https://www.amazon.com/s?k=TheraBand+resistance+band+set'},
-    {icon:'📊',brand:'Garmin',name:'Garmin Forerunner 265',why:'VO₂ max, training load, recovery advisor — solid step down from 965 at half the price.',tag:'Wearable',price:'$349',amz:'https://www.amazon.com/s?k=Garmin+Forerunner+265'}
+    {icon:'💪',brand:'Whoop',name:'WHOOP 4.0',why:'Recovery-first wearable: strain, sleep, and HRV tell you when to push and when to rest.',tag:'Wearable',price:'$239 + sub',amz:'https://amzn.to/3S9GlkS'},
+    {icon:'🏋️',brand:'Theragun',name:'Theragun Prime',why:'Percussive therapy gun — proven to reduce DOMS and speed up muscle recovery post-workout.',tag:'Reusable',price:'$299',amz:'https://amzn.to/3QtjQa6'},
+    {icon:'🔄',brand:'TheraBand',name:'Resistance Band Set (5 levels)',why:'Full-body progressive resistance training — reusable, portable, no gym needed.',tag:'Reusable',price:'$25',amz:'https://amzn.to/4xwpPfh'},
+    {icon:'📊',brand:'Garmin',name:'Garmin Forerunner 265',why:'VO₂ max, training load, recovery advisor — solid step down from 965 at half the price.',tag:'Wearable',price:'$349',amz:'https://amzn.to/3S9GlkS'}
   ],
   cognitive:[
-    {icon:'🧠',brand:'Muse',name:'Muse S Headband (Gen 2)',why:'EEG headband gives real-time feedback on brain activity during meditation — trains focus.',tag:'Neurofeedback',price:'$399',amz:'https://www.amazon.com/s?k=Muse+S+Gen+2+headband'},
-    {icon:'😎',brand:'Gamma Ray',name:'Blue Light Blocking Glasses',why:'Blocks blue light 2h before bed — protects melatonin and supports next-day cognitive performance.',tag:'Reusable',price:'$16',amz:'https://www.amazon.com/s?k=Gamma+Ray+blue+light+blocking+glasses'},
-    {icon:'💡',brand:'Verilux',name:'HappyLight Luxe 10,000 Lux',why:'Light therapy lamp — regulates circadian rhythm and boosts daytime alertness and focus.',tag:'Reusable',price:'$49',amz:'https://www.amazon.com/s?k=Verilux+HappyLight+Luxe'},
-    {icon:'📓',brand:'Leuchtturm',name:'Bullet Journal Notebook',why:'Analog task capture and weekly review system — reusable habit that reduces cognitive load.',tag:'Reusable',price:'$19',amz:'https://www.amazon.com/s?k=Leuchtturm+bullet+journal'}
+    {icon:'🧠',brand:'Muse',name:'Muse S Headband (Gen 2)',why:'EEG headband gives real-time feedback on brain activity during meditation — trains focus.',tag:'Neurofeedback',price:'$399',amz:'https://amzn.to/4e3ak5q'},
+    {icon:'😎',brand:'Gamma Ray',name:'Blue Light Blocking Glasses',why:'Blocks blue light 2h before bed — protects melatonin and supports next-day cognitive performance.',tag:'Reusable',price:'$16',amz:'https://amzn.to/43loycU'},
+    {icon:'💡',brand:'Verilux',name:'HappyLight Luxe 10,000 Lux',why:'Light therapy lamp — regulates circadian rhythm and boosts daytime alertness and focus.',tag:'Reusable',price:'$49',amz:'https://amzn.to/3QriRY3'},
+    {icon:'📓',brand:'Leuchtturm',name:'Bullet Journal Notebook',why:'Analog task capture and weekly review system — reusable habit that reduces cognitive load.',tag:'Reusable',price:'$19',amz:'https://amzn.to/4uhv6UP'}
   ],
   longevity:[
-    {icon:'🩸',brand:'InsideTracker',name:'InsideTracker Ultimate',why:'Full longevity biomarker panel with biological age score and personalized action plan.',tag:'Lab test',price:'$589',amz:'https://www.amazon.com/s?k=InsideTracker+blood+test'},
-    {icon:'🧬',brand:'TruDiagnostic',name:'TruAge COMPLETE',why:'DNA methylation test calculating your biological age — gold-standard epigenetic test in the US.',tag:'Epigenetics',price:'$299',amz:'https://www.amazon.com/s?k=TruDiagnostic+epigenetic+age'},
-    {icon:'💍',brand:'Oura',name:'Oura Ring Gen 3',why:'Tracks readiness, HRV, and body temperature daily — core metrics for longevity monitoring.',tag:'Wearable',price:'$299',amz:'https://www.amazon.com/s?k=Oura+Ring+Gen+3'},
-    {icon:'☀️',brand:'Hooga',name:'Hooga Red Light Panel HG300',why:'Red/near-infrared light therapy at a fraction of Joovv\'s price — same wavelengths, same benefit.',tag:'Red light',price:'$129',amz:'https://www.amazon.com/s?k=Hooga+HG300+red+light+therapy'}
+    {icon:'🩸',brand:'InsideTracker',name:'InsideTracker Ultimate',why:'Full longevity biomarker panel with biological age score and personalized action plan.',tag:'Lab test',price:'$589',amz:'https://amzn.to/4xjrSTO'},
+    {icon:'🧬',brand:'TruDiagnostic',name:'TruAge COMPLETE',why:'DNA methylation test calculating your biological age — gold-standard epigenetic test in the US.',tag:'Epigenetics',price:'$299',amz:'https://amzn.to/4vCyT0j'},
+    {icon:'💍',brand:'Oura',name:'Oura Ring Gen 3',why:'Tracks readiness, HRV, and body temperature daily — core metrics for longevity monitoring.',tag:'Wearable',price:'$299',amz:'https://amzn.to/3Q24JEy'},
+    {icon:'☀️',brand:'Hooga',name:'Hooga Red Light Panel HG300',why:'Red/near-infrared light therapy at a fraction of Joovv\'s price — same wavelengths, same benefit.',tag:'Red light',price:'$129',amz:'https://amzn.to/4e3xWXC'}
   ],
   hormonal:[
-    {icon:'🌡️',brand:'Oura',name:'Oura Ring Gen 3',why:'Tracks body temperature shifts for cycle analysis and hormonal pattern detection.',tag:'Wearable',price:'$299',amz:'https://www.amazon.com/s?k=Oura+Ring+Gen+3'},
-    {icon:'🩺',brand:'Everlywell',name:'Everlywell Hormone Test',why:'At-home panel for estrogen, testosterone, DHEA-S, cortisol, and thyroid — ships nationwide.',tag:'Lab test',price:'$99',amz:'https://www.amazon.com/s?k=Everlywell+hormones+test'},
-    {icon:'🌡️',brand:'Easy@Home',name:'Basal Thermometer + App',why:'Tracks BBT for cycle and hormone pattern analysis — reusable, syncs to Premom app for free.',tag:'Reusable',price:'$15',amz:'https://www.amazon.com/s?k=Easy@Home+basal+thermometer'},
-    {icon:'☀️',brand:'Hooga',name:'Hooga Red Light Pad',why:'Portable red light therapy — 660nm light shown to support testosterone and cortisol balance.',tag:'Red light',price:'$89',amz:'https://www.amazon.com/s?k=Hooga+red+light+therapy+pad'}
+    {icon:'🌡️',brand:'Oura',name:'Oura Ring Gen 3',why:'Tracks body temperature shifts for cycle analysis and hormonal pattern detection.',tag:'Wearable',price:'$299',amz:'https://amzn.to/3Q24JEy'},
+    {icon:'🩺',brand:'Everlywell',name:'Everlywell Hormone Test',why:'At-home panel for estrogen, testosterone, DHEA-S, cortisol, and thyroid — ships nationwide.',tag:'Lab test',price:'$99',amz:'https://amzn.to/4dVuYpn'},
+    {icon:'🌡️',brand:'Easy@Home',name:'Basal Thermometer + App',why:'Tracks BBT for cycle and hormone pattern analysis — reusable, syncs to Premom app for free.',tag:'Reusable',price:'$15',amz:'https://amzn.to/4fvkgaj'},
+    {icon:'☀️',brand:'Hooga',name:'Hooga Red Light Pad',why:'Portable red light therapy — 660nm light shown to support testosterone and cortisol balance.',tag:'Red light',price:'$89',amz:'https://amzn.to/4e3xWXC'}
   ],
   immune:[
-    {icon:'🩸',brand:'Everlywell',name:'Everlywell Immune Health Test',why:'At-home panel for vitamin D, CRP, zinc, and CBC — core immune markers shipped nationwide.',tag:'Lab test',price:'$89',amz:'https://www.amazon.com/s?k=Everlywell+immune+health+test'},
-    {icon:'💡',brand:'Sperti',name:'Sperti Vitamin D Lamp',why:'UVB lamp for year-round vitamin D synthesis — especially effective in northern US states.',tag:'Reusable',price:'$329',amz:'https://www.amazon.com/s?k=Sperti+Vitamin+D+lamp+UVB'},
-    {icon:'🫁',brand:'Airthings',name:'Airthings Wave Mini',why:'Monitors CO2 and humidity — air quality affects immune function, budget version of Wave Plus.',tag:'Reusable',price:'$79',amz:'https://www.amazon.com/s?k=Airthings+Wave+Mini'},
-    {icon:'🤧',brand:'LEVOIT',name:'Core 300 Air Purifier',why:'HEPA + activated carbon removes airborne pathogens and allergens — meaningful immune benefit.',tag:'Reusable',price:'$99',amz:'https://www.amazon.com/s?k=LEVOIT+Core+300+air+purifier'}
+    {icon:'🩸',brand:'Everlywell',name:'Everlywell Immune Health Test',why:'At-home panel for vitamin D, CRP, zinc, and CBC — core immune markers shipped nationwide.',tag:'Lab test',price:'$89',amz:'https://amzn.to/4fxdNf2'},
+    {icon:'💡',brand:'Sperti',name:'Sperti Vitamin D Lamp',why:'UVB lamp for year-round vitamin D synthesis — especially effective in northern US states.',tag:'Reusable',price:'$329',amz:'https://amzn.to/3QriRY3'},
+    {icon:'🫁',brand:'Airthings',name:'Airthings Wave Mini',why:'Monitors CO2 and humidity — air quality affects immune function, budget version of Wave Plus.',tag:'Reusable',price:'$79',amz:'https://amzn.to/4e8gmSq'},
+    {icon:'🤧',brand:'LEVOIT',name:'Core 300 Air Purifier',why:'HEPA + activated carbon removes airborne pathogens and allergens — meaningful immune benefit.',tag:'Reusable',price:'$99',amz:'https://amzn.to/4dTvF2m'}
   ],
   baseline:[
-    {icon:'💍',brand:'Oura',name:'Oura Ring Gen 3',why:'Best all-in-one health tracker: sleep, HRV, activity, and readiness in one elegant ring.',tag:'Wearable',price:'$299',amz:'https://www.amazon.com/s?k=Oura+Ring+Gen+3'},
-    {icon:'⚖️',brand:'Renpho',name:'Renpho Smart Scale',why:'Tracks 13 body composition metrics including visceral fat and muscle mass via free app.',tag:'Reusable',price:'$35',amz:'https://www.amazon.com/s?k=Renpho+smart+scale+body+fat'},
-    {icon:'🩸',brand:'Everlywell',name:'Everlywell Health Test',why:'Comprehensive at-home panel covering hormones, cholesterol, thyroid, and key vitamins.',tag:'Lab test',price:'$99',amz:'https://www.amazon.com/s?k=Everlywell+health+test'},
-    {icon:'📱',brand:'Welltory',name:'Welltory HRV App',why:'Camera-based HRV measurement each morning — free baseline for stress and recovery.',tag:'App',price:'Free / Pro',amz:'https://www.amazon.com/s?k=Welltory+HRV'}
+    {icon:'💍',brand:'Oura',name:'Oura Ring Gen 3',why:'Best all-in-one health tracker: sleep, HRV, activity, and readiness in one elegant ring.',tag:'Wearable',price:'$299',amz:'https://amzn.to/3Q24JEy'},
+    {icon:'⚖️',brand:'Renpho',name:'Renpho Smart Scale',why:'Tracks 13 body composition metrics including visceral fat and muscle mass via free app.',tag:'Reusable',price:'$35',amz:'https://amzn.to/3Q95USC'},
+    {icon:'🩸',brand:'Everlywell',name:'Everlywell Health Test',why:'Comprehensive at-home panel covering hormones, cholesterol, thyroid, and key vitamins.',tag:'Lab test',price:'$99',amz:'https://amzn.to/4xjrSTO'},
+    {icon:'📱',brand:'Welltory',name:'Welltory HRV App',why:'Camera-based HRV measurement each morning — free baseline for stress and recovery.',tag:'App',price:'Free / Pro',amz:'https://amzn.to/4ujByL0'}
   ]
 };
 
@@ -2347,32 +2207,32 @@ function buildResults(){
 
   // ── Direct product links from affiliate spreadsheet
   var LINKS={
-    d3k2:   {amz:'https://www.amazon.com/dp/B07255MPRN?tag=welme-affiliate-20',ih:'https://www.iherb.com/pr/sports-research-vitamin-d3-with-k2-as-mk-7-5000-iu-60-softgels/84795?rcode=YOUR_RCODE'},
-    mag:    {amz:'https://www.amazon.com/dp/B00151G8L8?tag=welme-affiliate-20',ih:'https://www.iherb.com/pr/doctor-s-best-high-absorption-magnesium-glycinate-bioperine-240-ct/17566?rcode=YOUR_RCODE'},
-    omega:  {amz:'https://www.amazon.com/dp/B06XPPP4M2?tag=welme-affiliate-20',ih:'https://www.iherb.com/pr/nordic-naturals-ultimate-omega-2x-lemon-2150-mg-120-soft-gels/71159?rcode=YOUR_RCODE'},
-    ashwa:  {amz:'https://www.amazon.com/dp/B0013OQEO8?tag=welme-affiliate-20',ih:'https://www.iherb.com/pr/jarrow-formulas-ashwagandha-ksm-66-300-mg-120-veggie-caps/75196?rcode=YOUR_RCODE'},
-    rhodiola:{amz:'https://www.amazon.com/dp/B0036THNA2?tag=welme-affiliate-20',ih:'https://www.iherb.com/pr/gaia-herbs-rhodiola-rosea-60-liquid-phyto-caps/50073?rcode=YOUR_RCODE'},
-    theanine:{amz:'https://www.amazon.com/dp/B001OXTGVG?tag=welme-affiliate-20',ih:'https://www.iherb.com/pr/doctor-s-best-suntheanine-l-theanine-150-mg-90-veggie-caps/17625?rcode=YOUR_RCODE'},
-    bcomplex:{amz:'https://www.amazon.com/dp/B0797RXHJ7?tag=welme-affiliate-20',ih:'https://www.iherb.com/pr/thorne-b-complex-6-60-capsules/51620?rcode=YOUR_RCODE'},
-    coq10:  {amz:'https://www.amazon.com/dp/B004VCOOWS?tag=welme-affiliate-20',ih:'https://www.iherb.com/pr/jarrow-formulas-qh-absorb-max-ubiquinol-200-mg-60-softgels/85476?rcode=YOUR_RCODE'},
-    vitC:   {amz:'https://www.amazon.com/dp/B00020IBAO?tag=welme-affiliate-20',ih:'https://www.iherb.com/pr/solgar-ester-c-plus-500-mg-100-vegetable-capsules/36422?rcode=YOUR_RCODE'},
-    zinc:   {amz:'https://www.amazon.com/dp/B001EPQGLA?tag=welme-affiliate-20',ih:'https://www.iherb.com/pr/now-foods-zinc-picolinate-50-mg-180-caps/11388?rcode=YOUR_RCODE'},
-    nad:    {amz:'https://www.amazon.com/dp/B07SVG5N45?tag=welme-affiliate-20',ih:'https://www.iherb.com/pr/tru-niagen-nicotinamide-riboside-nr-300mg/112043?rcode=YOUR_RCODE'},
-    lion:   {amz:'https://www.amazon.com/dp/B01DKZZFCE?tag=welme-affiliate-20',ih:'https://www.iherb.com/pr/real-mushrooms-lion-s-mane-extract-powder-45g/112882?rcode=YOUR_RCODE'},
-    melatonin:{amz:'https://www.amazon.com/dp/B000X9QZZ2?tag=welme-affiliate-20',ih:'https://www.iherb.com/pr/life-extension-melatonin-0-3-mg-100-capsules/73992?rcode=YOUR_RCODE'},
-    berb:   {amz:'https://www.amazon.com/dp/B009LI7VRC?tag=welme-affiliate-20',ih:'https://www.iherb.com/pr/thorne-berberine-500-mg-60-capsules/103004?rcode=YOUR_RCODE'},
-    creatine:{amz:'https://www.amazon.com/dp/B00E9M4XFI?tag=welme-affiliate-20',ih:'https://www.iherb.com/pr/bulksupplements-com-creatine-monohydrate-powder-500g/83163?rcode=YOUR_RCODE'},
-    collagen:{amz:'https://www.amazon.com/dp/B00K6JUG4K?tag=welme-affiliate-20',ih:'https://www.iherb.com/pr/vital-proteins-collagen-peptides-unflavored-20-oz/78499?rcode=YOUR_RCODE'},
-    probio: {amz:'https://www.amazon.com/dp/B010MAD4ZK?tag=welme-affiliate-20',ih:'https://www.iherb.com/pr/garden-of-life-dr-formulated-probiotics-once-daily-30-billion-cfu-30-ct/47728?rcode=YOUR_RCODE'},
-    curcumin:{amz:'https://www.amazon.com/dp/B000HKZ85A?tag=welme-affiliate-20',ih:'https://www.iherb.com/pr/jarrow-formulas-curcuminup-500-mg-60-softgels/59419?rcode=YOUR_RCODE'},
-    maca:   {amz:'https://www.amazon.com/dp/B000FFLHU2?tag=welme-affiliate-20',ih:'https://www.iherb.com/pr/navitas-organics-maca-powder-16-oz/46788?rcode=YOUR_RCODE'},
-    saffron:{amz:'https://www.amazon.com/s?k=saffron+extract+supplement&tag=welme-affiliate-20',ih:'https://www.iherb.com/c/saffron?rcode=YOUR_RCODE'},
-    resveratrol:{amz:'https://www.amazon.com/dp/B0019BPZ8U?tag=welme-affiliate-20',ih:'https://www.iherb.com/pr/now-foods-natural-resveratrol-200-mg-120-vcaps/756?rcode=YOUR_RCODE'},
-    iron:   {amz:'https://www.amazon.com/dp/B0797GZDZL?tag=welme-affiliate-20',ih:'https://www.iherb.com/pr/thorne-iron-bisglycinate-25-mg-60-capsules/68656?rcode=YOUR_RCODE'},
-    biotin: {amz:'https://www.amazon.com/s?k=biotin+supplement&tag=welme-affiliate-20',ih:'https://www.iherb.com/c/biotin?rcode=YOUR_RCODE'},
-    astaxanthin:{amz:'https://www.amazon.com/dp/B00K2WEOVQ?tag=welme-affiliate-20',ih:'https://www.iherb.com/pr/sports-research-astaxanthin-12-mg-60-softgels/88423?rcode=YOUR_RCODE'},
-    ala:    {amz:'https://www.amazon.com/dp/B0019BSCIO?tag=welme-affiliate-20',ih:'https://www.iherb.com/pr/doctor-s-best-alpha-lipoic-acid-600-mg-180-veggie-caps/17529?rcode=YOUR_RCODE'},
-    ps:     {amz:'https://www.amazon.com/dp/B001OL7TBW?tag=welme-affiliate-20',ih:'https://www.iherb.com/pr/jarrow-formulas-phosphatidylserine-100-mg-120-softgels/1756?rcode=YOUR_RCODE'}
+    d3k2:{amz:'https://amzn.to/4es8bBC'},
+    mag:{amz:'https://amzn.to/4xil7la'},
+    omega:{amz:'https://amzn.to/4g4Smly'},
+    ashwa:{amz:'https://amzn.to/3RIFQ1f'},
+    rhodiola:{amz:'https://amzn.to/4dSoJm6'},
+    theanine:{amz:'https://amzn.to/4fqLlLG'},
+    bcomplex:{amz:'https://amzn.to/4ujQqcs'},
+    coq10:{amz:'https://amzn.to/3SpF8WF'},
+    vitC:{amz:'https://amzn.to/4vq5Ahk'},
+    zinc:{amz:'https://amzn.to/3QtLML3'},
+    nad:{amz:'https://amzn.to/4vppnNG'},
+    lion:{amz:'https://amzn.to/3Q81FGW'},
+    melatonin:{amz:'https://amzn.to/3RU5NuH'},
+    berb:{amz:'https://amzn.to/3Sqxj2Y'},
+    creatine:{amz:'https://amzn.to/4xeLzMa'},
+    collagen:{amz:'https://amzn.to/4e6ip9j'},
+    probio:{amz:'https://amzn.to/4ockZiR'},
+    curcumin:{amz:'https://amzn.to/4dRFKwO'},
+    maca:{amz:'https://amzn.to/4xcjOEf'},
+    saffron:{amz:'https://www.amazon.com/s?k=saffron+extract+supplement&tag=welme-affiliate-20'},
+    resveratrol:{amz:'https://amzn.to/4uv1CTS'},
+    iron:{amz:'https://amzn.to/4uW36aI'},
+    biotin:{amz:'https://www.amazon.com/s?k=biotin+supplement&tag=welme-affiliate-20'},
+    astaxanthin:{amz:'https://amzn.to/4uWwYDV'},
+    ala:{amz:'https://amzn.to/4epTM90'},
+    ps:{amz:'https://amzn.to/3Qm23BL'}
   };
 
   // Unified course info: {type, on, off, bottles, note}
@@ -2406,10 +2266,10 @@ function buildResults(){
     iron:   {type:'cycle', on:'Until levels normalised',off:'retest ferritin',bottles:'~1–2 bottles'}
   };
 
-  // ── Add-to-Cart row builder (iHerb only for supplements)
+  // ── Add-to-Cart row builder (Amazon only for supplements)
   function buildAtcRow(k,sup){
     var lnk=LINKS[k]||{};
-    var ih=lnk.ih||sup.iherb||'';
+    var amz=lnk.amz||'';
     var c=COURSE[k]||{type:'daily',on:'Long-term daily',bottles:'~1 bottle/month'};
     var doseText=sup_getDose(sup,profile);
     // Strip trailing " on" from on-label (e.g. "8–12 weeks on" → "8–12 weeks")
@@ -2427,12 +2287,12 @@ function buildResults(){
       (subLabel?'<div class="course-sub">'+subLabel+'</div>':'')+
       '<div class="course-bottles print-only">🫙 '+c.bottles+'</div>'+
     '</div>';
-    var cdata={name:sup.name,dose:sup_getDose(sup,profile),ih:ih};
+    var cdata={name:sup.name,dose:sup_getDose(sup,profile),amz:amz};
     var cjson=encodeURIComponent(JSON.stringify(cdata));
-    var ihBtn = '<button class="buy-btn buy-ih" onclick="trackPurchaseClick(\'iHerb\', \''+k+'\'); wcPickStore(\''+k+'\', \''+cjson+'\', \'ih\')"> iHerb</button>';
+    var amzBtn = amz?'<button class="buy-btn buy-amz" onclick="trackPurchaseClick(\'Amazon\', \''+k+'\'); wcPickStore(\''+k+'\', \''+cjson+'\', \'amz\')"> Amazon</button>':'';
     return'<div class="atc-row" id="atc-row-'+k+'">'+
       courseHTML+
-      '<div class="atc-btns">'+ihBtn+'</div>'+
+      '<div class="atc-btns">'+amzBtn+'</div>'+
     '</div>';
   }
 
@@ -2725,7 +2585,7 @@ function wcToggle(k,cjson){
   wcUpdateFloat();
 }
 
-// Add to cart when clicking iHerb — stays inside quiz
+// Add to cart when clicking Amazon — stays inside quiz
 function wcPickStore(k,cjson,store){
   try{
     var data=JSON.parse(decodeURIComponent(cjson));
@@ -2741,10 +2601,10 @@ function wcPickStore(k,cjson,store){
       row2.querySelectorAll('.buy-btn').forEach(function(b){
         b.classList.remove('buy-selected');
         // restore original label
-        if(b.classList.contains('buy-ih'))b.innerHTML='🌿 iHerb';
+        if(b.classList.contains('buy-amz'))b.innerHTML='📦 Amazon';
       });
-      var sel=row2.querySelector('.buy-ih');
-      if(sel){sel.classList.add('buy-selected');sel.innerHTML='✓ iHerb';}
+      var sel=row2.querySelector('.buy-amz');
+      if(sel){sel.classList.add('buy-selected');sel.innerHTML='✓ Amazon';}
     }
   }catch(e){}
 }
@@ -2757,14 +2617,14 @@ function wcShowToast(name,store){
       'box-shadow:0 4px 20px rgba(27,139,94,.4);transition:opacity .3s;pointer-events:none';
     document.body.appendChild(t);
   }
-  var icon='🌿';
+  var icon='📦';
   t.textContent=icon+' Added: '+name;
   t.style.opacity='1';
   clearTimeout(t._timer);
   t._timer=setTimeout(function(){t.style.opacity='0';},2200);
 }
 // Legacy add silently
-function wcAddFromLink(k,cjson){wcPickStore(k,cjson,'ih');}
+function wcAddFromLink(k,cjson){wcPickStore(k,cjson,'amz');}
 
 function wcRemove(k){
   delete wcCart[k];
@@ -2804,7 +2664,7 @@ function wcRenderDrawer(){
   var foot=document.getElementById('cartFoot');
   if(!body)return;
   if(!keys.length){
-    body.innerHTML='<div class="cart-empty"><div class="cart-empty-icon">🛒</div>Your stack is empty.<br>Tap <strong>iHerb</strong> on any supplement to add it.</div>';
+    body.innerHTML='<div class="cart-empty"><div class="cart-empty-icon">🛒</div>Your stack is empty.<br>Tap <strong>Amazon</strong> on any supplement to add it.</div>';
     if(foot)foot.style.display='none';
     return;
   }
@@ -2812,12 +2672,12 @@ function wcRenderDrawer(){
   var n=keys.length;
   keys.forEach(function(k){
     var d=wcCart[k];
-    var ihLink=d.ih?'<a class="ci-store-btn ci-ih" href="'+d.ih+'" target="_blank" rel="noopener">🌿 iHerb</a>':'';
+    var amzLink=d.amz?'<a class="ci-store-btn ci-amz" href="'+d.amz+'" target="_blank" rel="noopener">📦 Amazon</a>':'';
     html+='<div class="cart-item">'+
       '<div class="cart-item-main">'+
         '<div class="cart-item-name">'+d.name+'</div>'+
         '<div class="cart-item-sub">'+d.dose+'</div>'+
-        '<div class="ci-links">'+ihLink+'</div>'+
+        '<div class="ci-links">'+amzLink+'</div>'+
       '</div>'+
       '<button class="cart-remove" onclick="wcRemove(\''+k+'\')" title="Remove">✕</button>'+
     '</div>';
