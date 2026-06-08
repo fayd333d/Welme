@@ -329,6 +329,7 @@ body{background:var(--bg);color:var(--text);
 .course-label{color:var(--text);font-weight:700;font-size:.76rem}
 .course-sub{color:var(--muted);font-size:.72rem}
 .course-bottles{color:var(--muted);font-size:.7rem;display:flex;align-items:center;gap:3px}
+.supp-price{color:var(--muted);font-size:.72rem}
 .atc-btns{display:flex;gap:7px;flex-shrink:0;align-items:center}
 .buy-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 13px;
   border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;
@@ -1747,64 +1748,64 @@ function goToResults(){
 // ══════════════════════════════════════════════════
 var TOOLS={
   sleep:[
-    {icon:'💍',brand:'Oura',name:'Oura Ring Gen 3',why:'Tracks sleep stages, HRV, and body temp every night — the most detailed sleep tracker available.',tag:'Wearable',price:'$299',amz:'https://amzn.to/3Q24JEy'},
-    {icon:'😴',brand:'Manta',name:'Manta Sleep Mask Pro',why:'100% blackout contoured sleep mask with adjustable eye cups — reusable, washable, lasts years.',tag:'Reusable',price:'$35',amz:'https://amzn.to/4vrMVSa'},
-    {icon:'💡',brand:'Philips',name:'SmartSleep Wake-Up Light',why:'Sunrise simulation alarm that gradually raises light — proven to cut morning grogginess.',tag:'Light therapy',price:'$79',amz:'https://amzn.to/4odXyWt'},
-    {icon:'🌡️',brand:'Generic',name:'Digital BBT Thermometer',why:'Tracks basal body temperature each morning — affordable baseline for sleep/recovery trends.',tag:'Reusable',price:'$12',amz:'https://amzn.to/4fvkgaj'}
+    {icon:'💍',brand:'Oura',name:'Oura Ring Gen 3',why:'Tracks sleep stages, HRV, and body temp every night — the most detailed sleep tracker available.',tag:'Wearable',price:'$400',amz:'https://amzn.to/3Q24JEy'},
+    {icon:'😴',brand:'Manta',name:'Manta Sleep Mask Pro',why:'100% blackout contoured sleep mask with adjustable eye cups — reusable, washable, lasts years.',tag:'Reusable',price:'$49.99',amz:'https://amzn.to/4vrMVSa'},
+    {icon:'💡',brand:'Philips',name:'SmartSleep Wake-Up Light',why:'Sunrise simulation alarm that gradually raises light — proven to cut morning grogginess.',tag:'Light therapy',price:'$156.99',amz:'https://amzn.to/4odXyWt'},
+    {icon:'🌡️',brand:'Generic',name:'Digital BBT Thermometer',why:'Tracks basal body temperature each morning — affordable baseline for sleep/recovery trends.',tag:'Reusable',price:'$14.99',amz:'https://amzn.to/4fvkgaj'}
   ],
   stress:[
-    {icon:'🎵',brand:'Apollo',name:'Apollo Neuro',why:'Vibration wearable that activates the vagus nerve to shift you out of fight-or-flight mode.',tag:'Device',price:'$349',amz:'https://amzn.to/4xeMtbM'},
-    {icon:'💨',brand:'HeartMath',name:'Inner Balance Sensor',why:'Ear-clip HRV sensor with real-time coherence score — trains the stress response in 5 min/day.',tag:'Biofeedback',price:'$129',amz:'https://amzn.to/4fqvLQe'},
-    {icon:'🧘',brand:'Gaiam',name:'Premium Meditation Cushion',why:'Ergonomic buckwheat-filled zafu — proper posture during breathwork reduces session dropout.',tag:'Reusable',price:'$39',amz:'https://amzn.to/3QmNvBT'},
-    {icon:'📖',brand:'Generic',name:'Guided Journal — 5 Min Gratitude',why:'Daily gratitude journaling consistently reduces cortisol — reusable habit, no subscription.',tag:'Reusable',price:'$14',amz:'https://amzn.to/4uhv6UP'}
+    {icon:'🎵',brand:'Apollo',name:'Apollo Neuro',why:'Vibration wearable that activates the vagus nerve to shift you out of fight-or-flight mode.',tag:'Device',price:'$239.00',amz:'https://amzn.to/4xeMtbM'},
+    {icon:'💨',brand:'HeartMath',name:'Inner Balance Sensor',why:'Ear-clip HRV sensor with real-time coherence score — trains the stress response in 5 min/day.',tag:'Biofeedback',price:'$9',amz:'https://amzn.to/4fqvLQe'},
+    {icon:'🧘',brand:'Gaiam',name:'Premium Meditation Cushion',why:'Ergonomic buckwheat-filled zafu — proper posture during breathwork reduces session dropout.',tag:'Reusable',price:'$129',amz:'https://amzn.to/3QmNvBT'},
+    {icon:'📖',brand:'Generic',name:'Guided Journal — 5 Min Gratitude',why:'Daily gratitude journaling consistently reduces cortisol — reusable habit, no subscription.',tag:'Reusable',price:'$34.99',amz:'https://amzn.to/4uhv6UP'}
   ],
   metabolic:[
-    {icon:'⚖️',brand:'Renpho',name:'Renpho Smart Scale',why:'Tracks body fat %, visceral fat, muscle mass, and BMI via free app — no subscription.',tag:'Reusable',price:'$35',amz:'https://amzn.to/3Q95USC'},
-    {icon:'🩸',brand:'Everlywell',name:'Everlywell Metabolism Test',why:'At-home cortisol, thyroid, testosterone, and HbA1c panel — results mailed to you.',tag:'Lab test',price:'$99',amz:'https://amzn.to/4vrbBua'},
-    {icon:'🥗',brand:'OXO',name:'Kitchen Food Scale',why:'Precision food weighing for accurate macro tracking — reusable, no batteries needed.',tag:'Reusable',price:'$22',amz:'https://amzn.to/4uVw5Lx'},
-    {icon:'📊',brand:'Withings',name:'Withings Body Comp Scale',why:'Measures visceral fat index and vascular age alongside body composition — medical-grade.',tag:'Smart scale',price:'$199',amz:'https://amzn.to/4uU4HgW'}
+    {icon:'⚖️',brand:'Renpho',name:'Renpho Smart Scale',why:'Tracks body fat %, visceral fat, muscle mass, and BMI via free app — no subscription.',tag:'Reusable',price:'$79',amz:'https://amzn.to/3Q95USC'},
+    {icon:'🩸',brand:'Everlywell',name:'Everlywell Metabolism Test',why:'At-home cortisol, thyroid, testosterone, and HbA1c panel — results mailed to you.',tag:'Lab test',price:'$149',amz:'https://amzn.to/4vrbBua'},
+    {icon:'🥗',brand:'OXO',name:'Kitchen Food Scale',why:'Precision food weighing for accurate macro tracking — reusable, no batteries needed.',tag:'Reusable',price:'$54',amz:'https://amzn.to/4uVw5Lx'},
+    {icon:'📊',brand:'Withings',name:'Withings Body Comp Scale',why:'Measures visceral fat index and vascular age alongside body composition — medical-grade.',tag:'Smart scale',price:'$79',amz:'https://amzn.to/4uU4HgW'}
   ],
   cardiovascular:[
-    {icon:'🩺',brand:'Omron',name:'Omron Platinum BP Monitor',why:'AHA-validated blood pressure cuff with arrhythmia detection and Bluetooth sync.',tag:'Reusable',price:'$79',amz:'https://amzn.to/49Mq6QP'},
-    {icon:'❤️',brand:'Withings',name:'Withings ScanWatch 2',why:'ECG + SpO₂ + arterial stiffness index — cardiologist-grade data on your wrist.',tag:'Wearable',price:'$349',amz:'https://amzn.to/3PLTgJd'},
-    {icon:'🫁',brand:'Polar',name:'Polar H10 Chest Strap',why:'Gold-standard HRV and heart rate during training — key predictor of cardiovascular fitness.',tag:'Reusable',price:'$99',amz:'https://amzn.to/4ofZZru'},
-    {icon:'🔬',brand:'Everlywell',name:'Everlywell Heart Health Test',why:'At-home panel for LDL, HDL, triglycerides, and hs-CRP — key cardiovascular risk markers.',tag:'Lab test',price:'$99',amz:'https://amzn.to/3PLTgJd'}
+    {icon:'🩺',brand:'Omron',name:'Omron Platinum BP Monitor',why:'AHA-validated blood pressure cuff with arrhythmia detection and Bluetooth sync.',tag:'Reusable',price:'$20',amz:'https://amzn.to/49Mq6QP'},
+    {icon:'❤️',brand:'Withings',name:'Withings ScanWatch 2',why:'ECG + SpO₂ + arterial stiffness index — cardiologist-grade data on your wrist.',tag:'Wearable',price:'$19',amz:'https://amzn.to/3PLTgJd'},
+    {icon:'🫁',brand:'Polar',name:'Polar H10 Chest Strap',why:'Gold-standard HRV and heart rate during training — key predictor of cardiovascular fitness.',tag:'Reusable',price:'$104',amz:'https://amzn.to/4ofZZru'},
+    {icon:'🔬',brand:'Everlywell',name:'Everlywell Heart Health Test',why:'At-home panel for LDL, HDL, triglycerides, and hs-CRP — key cardiovascular risk markers.',tag:'Lab test',price:'$19',amz:'https://amzn.to/3PLTgJd'}
   ],
   athletic:[
-    {icon:'💪',brand:'Whoop',name:'WHOOP 4.0',why:'Recovery-first wearable: strain, sleep, and HRV tell you when to push and when to rest.',tag:'Wearable',price:'$239 + sub',amz:'https://amzn.to/3S9GlkS'},
-    {icon:'🏋️',brand:'Theragun',name:'Theragun Prime',why:'Percussive therapy gun — proven to reduce DOMS and speed up muscle recovery post-workout.',tag:'Reusable',price:'$299',amz:'https://amzn.to/3QtjQa6'},
-    {icon:'🔄',brand:'TheraBand',name:'Resistance Band Set (5 levels)',why:'Full-body progressive resistance training — reusable, portable, no gym needed.',tag:'Reusable',price:'$25',amz:'https://amzn.to/4xwpPfh'},
-    {icon:'📊',brand:'Garmin',name:'Garmin Forerunner 265',why:'VO₂ max, training load, recovery advisor — solid step down from 965 at half the price.',tag:'Wearable',price:'$349',amz:'https://amzn.to/3S9GlkS'}
+    {icon:'💪',brand:'Whoop',name:'WHOOP 4.0',why:'Recovery-first wearable: strain, sleep, and HRV tell you when to push and when to rest.',tag:'Wearable',price:'$449.99',amz:'https://amzn.to/3S9GlkS'},
+    {icon:'🏋️',brand:'Theragun',name:'Theragun Prime',why:'Percussive therapy gun — proven to reduce DOMS and speed up muscle recovery post-workout.',tag:'Reusable',price:'$299.00',amz:'https://amzn.to/3QtjQa6'},
+    {icon:'🔄',brand:'TheraBand',name:'Resistance Band Set (5 levels)',why:'Full-body progressive resistance training — reusable, portable, no gym needed.',tag:'Reusable',price:'$189',amz:'https://amzn.to/4xwpPfh'},
+    {icon:'📊',brand:'Garmin',name:'Garmin Forerunner 265',why:'VO₂ max, training load, recovery advisor — solid step down from 965 at half the price.',tag:'Wearable',price:'$449.99',amz:'https://amzn.to/3S9GlkS'}
   ],
   cognitive:[
-    {icon:'🧠',brand:'Muse',name:'Muse S Headband (Gen 2)',why:'EEG headband gives real-time feedback on brain activity during meditation — trains focus.',tag:'Neurofeedback',price:'$399',amz:'https://amzn.to/4e3ak5q'},
-    {icon:'😎',brand:'Gamma Ray',name:'Blue Light Blocking Glasses',why:'Blocks blue light 2h before bed — protects melatonin and supports next-day cognitive performance.',tag:'Reusable',price:'$16',amz:'https://amzn.to/43loycU'},
-    {icon:'💡',brand:'Verilux',name:'HappyLight Luxe 10,000 Lux',why:'Light therapy lamp — regulates circadian rhythm and boosts daytime alertness and focus.',tag:'Reusable',price:'$49',amz:'https://amzn.to/3QriRY3'},
-    {icon:'📓',brand:'Leuchtturm',name:'Bullet Journal Notebook',why:'Analog task capture and weekly review system — reusable habit that reduces cognitive load.',tag:'Reusable',price:'$19',amz:'https://amzn.to/4uhv6UP'}
+    {icon:'🧠',brand:'Muse',name:'Muse S Headband (Gen 2)',why:'EEG headband gives real-time feedback on brain activity during meditation — trains focus.',tag:'Neurofeedback',price:'$474',amz:'https://amzn.to/4e3ak5q'},
+    {icon:'😎',brand:'Gamma Ray',name:'Blue Light Blocking Glasses',why:'Blocks blue light 2h before bed — protects melatonin and supports next-day cognitive performance.',tag:'Reusable',price:'$62',amz:'https://amzn.to/43loycU'},
+    {icon:'💡',brand:'Verilux',name:'HappyLight Luxe 10,000 Lux',why:'Light therapy lamp — regulates circadian rhythm and boosts daytime alertness and focus.',tag:'Reusable',price:'$399',amz:'https://amzn.to/3QriRY3'},
+    {icon:'📓',brand:'Leuchtturm',name:'Bullet Journal Notebook',why:'Analog task capture and weekly review system — reusable habit that reduces cognitive load.',tag:'Reusable',price:'$34.99',amz:'https://amzn.to/4uhv6UP'}
   ],
   longevity:[
-    {icon:'🩸',brand:'InsideTracker',name:'InsideTracker Ultimate',why:'Full longevity biomarker panel with biological age score and personalized action plan.',tag:'Lab test',price:'$589',amz:'https://amzn.to/4xjrSTO'},
-    {icon:'🧬',brand:'TruDiagnostic',name:'TruAge COMPLETE',why:'DNA methylation test calculating your biological age — gold-standard epigenetic test in the US.',tag:'Epigenetics',price:'$299',amz:'https://amzn.to/4vCyT0j'},
-    {icon:'💍',brand:'Oura',name:'Oura Ring Gen 3',why:'Tracks readiness, HRV, and body temperature daily — core metrics for longevity monitoring.',tag:'Wearable',price:'$299',amz:'https://amzn.to/3Q24JEy'},
-    {icon:'☀️',brand:'Hooga',name:'Hooga Red Light Panel HG300',why:'Red/near-infrared light therapy at a fraction of Joovv\'s price — same wavelengths, same benefit.',tag:'Red light',price:'$129',amz:'https://amzn.to/4e3xWXC'}
+    {icon:'🩸',brand:'InsideTracker',name:'InsideTracker Ultimate',why:'Full longevity biomarker panel with biological age score and personalized action plan.',tag:'Lab test',price:'$129',amz:'https://amzn.to/4xjrSTO'},
+    {icon:'🧬',brand:'TruDiagnostic',name:'TruAge COMPLETE',why:'DNA methylation test calculating your biological age — gold-standard epigenetic test in the US.',tag:'Epigenetics',price:'$399',amz:'https://amzn.to/4vCyT0j'},
+    {icon:'💍',brand:'Oura',name:'Oura Ring Gen 3',why:'Tracks readiness, HRV, and body temperature daily — core metrics for longevity monitoring.',tag:'Wearable',price:'$400',amz:'https://amzn.to/3Q24JEy'},
+    {icon:'☀️',brand:'Hooga',name:'Hooga Red Light Panel HG300',why:'Red/near-infrared light therapy at a fraction of Joovv\'s price — same wavelengths, same benefit.',tag:'Red light',price:'$299.00',amz:'https://amzn.to/4e3xWXC'}
   ],
   hormonal:[
-    {icon:'🌡️',brand:'Oura',name:'Oura Ring Gen 3',why:'Tracks body temperature shifts for cycle analysis and hormonal pattern detection.',tag:'Wearable',price:'$299',amz:'https://amzn.to/3Q24JEy'},
-    {icon:'🩺',brand:'Everlywell',name:'Everlywell Hormone Test',why:'At-home panel for estrogen, testosterone, DHEA-S, cortisol, and thyroid — ships nationwide.',tag:'Lab test',price:'$99',amz:'https://amzn.to/4dVuYpn'},
-    {icon:'🌡️',brand:'Easy@Home',name:'Basal Thermometer + App',why:'Tracks BBT for cycle and hormone pattern analysis — reusable, syncs to Premom app for free.',tag:'Reusable',price:'$15',amz:'https://amzn.to/4fvkgaj'},
-    {icon:'☀️',brand:'Hooga',name:'Hooga Red Light Pad',why:'Portable red light therapy — 660nm light shown to support testosterone and cortisol balance.',tag:'Red light',price:'$89',amz:'https://amzn.to/4e3xWXC'}
+    {icon:'🌡️',brand:'Oura',name:'Oura Ring Gen 3',why:'Tracks body temperature shifts for cycle analysis and hormonal pattern detection.',tag:'Wearable',price:'$400',amz:'https://amzn.to/3Q24JEy'},
+    {icon:'🩺',brand:'Everlywell',name:'Everlywell Hormone Test',why:'At-home panel for estrogen, testosterone, DHEA-S, cortisol, and thyroid — ships nationwide.',tag:'Lab test',price:'$279',amz:'https://amzn.to/4dVuYpn'},
+    {icon:'🌡️',brand:'Easy@Home',name:'Basal Thermometer + App',why:'Tracks BBT for cycle and hormone pattern analysis — reusable, syncs to Premom app for free.',tag:'Reusable',price:'$14.99',amz:'https://amzn.to/4fvkgaj'},
+    {icon:'☀️',brand:'Hooga',name:'Hooga Red Light Pad',why:'Portable red light therapy — 660nm light shown to support testosterone and cortisol balance.',tag:'Red light',price:'$299.00',amz:'https://amzn.to/4e3xWXC'}
   ],
   immune:[
-    {icon:'🩸',brand:'Everlywell',name:'Everlywell Immune Health Test',why:'At-home panel for vitamin D, CRP, zinc, and CBC — core immune markers shipped nationwide.',tag:'Lab test',price:'$89',amz:'https://amzn.to/4fxdNf2'},
-    {icon:'💡',brand:'Sperti',name:'Sperti Vitamin D Lamp',why:'UVB lamp for year-round vitamin D synthesis — especially effective in northern US states.',tag:'Reusable',price:'$329',amz:'https://amzn.to/3QriRY3'},
-    {icon:'🫁',brand:'Airthings',name:'Airthings Wave Mini',why:'Monitors CO2 and humidity — air quality affects immune function, budget version of Wave Plus.',tag:'Reusable',price:'$79',amz:'https://amzn.to/4e8gmSq'},
-    {icon:'🤧',brand:'LEVOIT',name:'Core 300 Air Purifier',why:'HEPA + activated carbon removes airborne pathogens and allergens — meaningful immune benefit.',tag:'Reusable',price:'$99',amz:'https://amzn.to/4dTvF2m'}
+    {icon:'🩸',brand:'Everlywell',name:'Everlywell Immune Health Test',why:'At-home panel for vitamin D, CRP, zinc, and CBC — core immune markers shipped nationwide.',tag:'Lab test',price:'$19.99',amz:'https://amzn.to/4fxdNf2'},
+    {icon:'💡',brand:'Sperti',name:'Sperti Vitamin D Lamp',why:'UVB lamp for year-round vitamin D synthesis — especially effective in northern US states.',tag:'Reusable',price:'$399',amz:'https://amzn.to/3QriRY3'},
+    {icon:'🫁',brand:'Airthings',name:'Airthings Wave Mini',why:'Monitors CO2 and humidity — air quality affects immune function, budget version of Wave Plus.',tag:'Reusable',price:'$329',amz:'https://amzn.to/4e8gmSq'},
+    {icon:'🤧',brand:'LEVOIT',name:'Core 300 Air Purifier',why:'HEPA + activated carbon removes airborne pathogens and allergens — meaningful immune benefit.',tag:'Reusable',price:'$149',amz:'https://amzn.to/4dTvF2m'}
   ],
   baseline:[
-    {icon:'💍',brand:'Oura',name:'Oura Ring Gen 3',why:'Best all-in-one health tracker: sleep, HRV, activity, and readiness in one elegant ring.',tag:'Wearable',price:'$299',amz:'https://amzn.to/3Q24JEy'},
-    {icon:'⚖️',brand:'Renpho',name:'Renpho Smart Scale',why:'Tracks 13 body composition metrics including visceral fat and muscle mass via free app.',tag:'Reusable',price:'$35',amz:'https://amzn.to/3Q95USC'},
-    {icon:'🩸',brand:'Everlywell',name:'Everlywell Health Test',why:'Comprehensive at-home panel covering hormones, cholesterol, thyroid, and key vitamins.',tag:'Lab test',price:'$99',amz:'https://amzn.to/4xjrSTO'},
-    {icon:'📱',brand:'Welltory',name:'Welltory HRV App',why:'Camera-based HRV measurement each morning — free baseline for stress and recovery.',tag:'App',price:'Free / Pro',amz:'https://amzn.to/4ujByL0'}
+    {icon:'💍',brand:'Oura',name:'Oura Ring Gen 3',why:'Best all-in-one health tracker: sleep, HRV, activity, and readiness in one elegant ring.',tag:'Wearable',price:'$400',amz:'https://amzn.to/3Q24JEy'},
+    {icon:'⚖️',brand:'Renpho',name:'Renpho Smart Scale',why:'Tracks 13 body composition metrics including visceral fat and muscle mass via free app.',tag:'Reusable',price:'$79',amz:'https://amzn.to/3Q95USC'},
+    {icon:'🩸',brand:'Everlywell',name:'Everlywell Health Test',why:'Comprehensive at-home panel covering hormones, cholesterol, thyroid, and key vitamins.',tag:'Lab test',price:'$129',amz:'https://amzn.to/4xjrSTO'},
+    {icon:'📱',brand:'Welltory',name:'Welltory HRV App',why:'Camera-based HRV measurement each morning — free baseline for stress and recovery.',tag:'App',price:'$425',amz:'https://amzn.to/4ujByL0'}
   ]
 };
 
@@ -2211,32 +2212,32 @@ function buildResults(){
 
   // ── Direct product links from affiliate spreadsheet
   var LINKS={
-    d3k2:{amz:'https://amzn.to/4es8bBC'},
-    mag:{amz:'https://amzn.to/4xil7la'},
-    omega:{amz:'https://amzn.to/4g4Smly'},
-    ashwa:{amz:'https://amzn.to/3RIFQ1f'},
-    rhodiola:{amz:'https://amzn.to/4dSoJm6'},
-    theanine:{amz:'https://amzn.to/4fqLlLG'},
-    bcomplex:{amz:'https://amzn.to/4ujQqcs'},
-    coq10:{amz:'https://amzn.to/3SpF8WF'},
-    vitC:{amz:'https://amzn.to/4vq5Ahk'},
-    zinc:{amz:'https://amzn.to/3QtLML3'},
-    nad:{amz:'https://amzn.to/4vppnNG'},
-    lion:{amz:'https://amzn.to/3Q81FGW'},
-    melatonin:{amz:'https://amzn.to/3RU5NuH'},
-    berb:{amz:'https://amzn.to/3Sqxj2Y'},
-    creatine:{amz:'https://amzn.to/4xeLzMa'},
-    collagen:{amz:'https://amzn.to/4e6ip9j'},
-    probio:{amz:'https://amzn.to/4ockZiR'},
-    curcumin:{amz:'https://amzn.to/4dRFKwO'},
-    maca:{amz:'https://amzn.to/4xcjOEf'},
+    d3k2:{amz:'https://amzn.to/4es8bBC',price:'$24'},
+    mag:{amz:'https://amzn.to/4xil7la',price:'$13'},
+    omega:{amz:'https://amzn.to/4g4Smly',price:'$76'},
+    ashwa:{amz:'https://amzn.to/3RIFQ1f',price:'$18'},
+    rhodiola:{amz:'https://amzn.to/4dSoJm6',price:'$31'},
+    theanine:{amz:'https://amzn.to/4fqLlLG',price:'$29'},
+    bcomplex:{amz:'https://amzn.to/4ujQqcs',price:'$34'},
+    coq10:{amz:'https://amzn.to/3SpF8WF',price:'$50'},
+    vitC:{amz:'https://amzn.to/4vq5Ahk',price:'$13'},
+    zinc:{amz:'https://amzn.to/3QtLML3',price:'$12'},
+    nad:{amz:'https://amzn.to/4vppnNG',price:'$19'},
+    lion:{amz:'https://amzn.to/3Q81FGW',price:'$38'},
+    melatonin:{amz:'https://amzn.to/3RU5NuH',price:'$9'},
+    berb:{amz:'https://amzn.to/3Sqxj2Y',price:'$51'},
+    creatine:{amz:'https://amzn.to/4xeLzMa',price:'$29'},
+    collagen:{amz:'https://amzn.to/4e6ip9j',price:'$43'},
+    probio:{amz:'https://amzn.to/4ockZiR',price:'$20'},
+    curcumin:{amz:'https://amzn.to/4dRFKwO',price:'$28'},
+    maca:{amz:'https://amzn.to/4xcjOEf',price:'$19'},
     saffron:{amz:'https://www.amazon.com/s?k=saffron+extract+supplement&tag=welme-affiliate-20'},
-    resveratrol:{amz:'https://amzn.to/4uv1CTS'},
-    iron:{amz:'https://amzn.to/4uW36aI'},
+    resveratrol:{amz:'https://amzn.to/4uv1CTS',price:'$21'},
+    iron:{amz:'https://amzn.to/4uW36aI',price:'$42'},
     biotin:{amz:'https://www.amazon.com/s?k=biotin+supplement&tag=welme-affiliate-20'},
-    astaxanthin:{amz:'https://amzn.to/4uWwYDV'},
-    ala:{amz:'https://amzn.to/4epTM90'},
-    ps:{amz:'https://amzn.to/3Qm23BL'}
+    astaxanthin:{amz:'https://amzn.to/4uWwYDV',price:'$54'},
+    ala:{amz:'https://amzn.to/4epTM90',price:'$28'},
+    ps:{amz:'https://amzn.to/3Qm23BL',price:'$36'}
   };
 
   // Unified course info: {type, on, off, bottles, note}
@@ -2274,6 +2275,7 @@ function buildResults(){
   function buildAtcRow(k,sup){
     var lnk=LINKS[k]||{};
     var amz=lnk.amz||'';
+    var price=lnk.price||'See Amazon price';
     var c=COURSE[k]||{type:'daily',on:'Long-term daily',bottles:'~1 bottle/month'};
     var doseText=sup_getDose(sup,profile);
     // Strip trailing " on" from on-label (e.g. "8–12 weeks on" → "8–12 weeks")
@@ -2289,9 +2291,10 @@ function buildResults(){
     var courseHTML='<div class="atc-course">'+
       '<div class="course-label">'+mainLabel+'</div>'+
       (subLabel?'<div class="course-sub">'+subLabel+'</div>':'')+
+      (amz?'<div class="supp-price">Price: '+price+'</div>':'')+
       '<div class="course-bottles print-only">🫙 '+c.bottles+'</div>'+
     '</div>';
-    var cdata={name:sup.name,dose:sup_getDose(sup,profile),amz:amz};
+    var cdata={name:sup.name,dose:sup_getDose(sup,profile),price:price,amz:amz};
     var cjson=encodeURIComponent(JSON.stringify(cdata));
     var amzBtn = amz?'<button class="buy-btn buy-amz" onclick="trackPurchaseClick(\'Amazon\', \''+k+'\'); wcPickStore(\''+k+'\', \''+cjson+'\', \'amz\')"> Amazon</button>':'';
     return'<div class="atc-row" id="atc-row-'+k+'">'+
@@ -2709,6 +2712,7 @@ function wcRenderDrawer(){
       '<div class="cart-item-main">'+
         '<div class="cart-item-name">'+d.name+'</div>'+
         '<div class="cart-item-sub">'+d.dose+'</div>'+
+        (d.price?'<div class="cart-item-sub">Price: '+d.price+'</div>':'')+
         '<div class="ci-links">'+amzLink+'</div>'+
       '</div>'+
       '<button class="cart-remove" onclick="wcRemove(\''+k+'\')" title="Remove">✕</button>'+
