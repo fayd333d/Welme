@@ -1310,6 +1310,29 @@ var adExcludedKeys=[];     // excluded due to AD interactions
 var selectedChipKeys=[];
 var unitSystem='imperial'; // 'imperial' (in/lbs) or 'metric' (cm/kg)
 var currentProto=null;   // set by buildResults()
+var welmeMetaFlags={quizStarted:false,quizCompleted:false};
+
+function welmeTrackMeta(eventName,params){
+  try{
+    if(typeof fbq==='function'){
+      if(params) fbq('trackCustom',eventName,params);
+      else fbq('trackCustom',eventName);
+    }
+  }catch(e){}
+}
+function welmeTrackQuizStarted(){
+  if(welmeMetaFlags.quizStarted)return;
+  welmeMetaFlags.quizStarted=true;
+  welmeTrackMeta('QuizStarted');
+}
+function welmeTrackQuizCompleted(){
+  if(welmeMetaFlags.quizCompleted)return;
+  welmeMetaFlags.quizCompleted=true;
+  welmeTrackMeta('QuizCompleted');
+}
+function welmeTrackAffiliateClick(productName){
+  welmeTrackMeta('AffiliateLinkClicked',{product:productName||''});
+}
 
 // stepNum — +/- buttons on number inputs
 function stepNum(dir){
@@ -1370,6 +1393,7 @@ var AD_EXCLUDE=['theanine','ashwa','saffron','rhodiola'];
 // QUIZ FLOW
 // ═══════════════════════════════════════════════════════════
 function startQuiz(){
+  welmeTrackQuizStarted();
   document.getElementById('introScreen').classList.remove('on');
   document.getElementById('progArea').classList.add('visible');
   buildProgDots();
@@ -2517,6 +2541,7 @@ function buildResults(){
   // Tools & devices section
   document.getElementById('toolsContent').innerHTML=
     '<div class="tools-grid">'+buildToolsSection(bestProto,healthScores)+'</div>';
+  welmeTrackQuizCompleted();
 
   // ── Lifestyle section
   var lifeSec=document.getElementById('lifestyleSection');
@@ -2727,7 +2752,8 @@ function wcRenderDrawer(){
   var n=keys.length;
   keys.forEach(function(k){
     var d=wcCart[k];
-    var amzLink=d.amz?'<a class="ci-store-btn ci-amz" href="'+d.amz+'" target="_blank" rel="noopener">📦 Amazon</a>':'';
+    var productName=encodeURIComponent(d.name||'');
+    var amzLink=d.amz?'<a class="ci-store-btn ci-amz" href="'+d.amz+'" target="_blank" rel="noopener" data-product="'+productName+'" onclick="welmeTrackAffiliateClick(decodeURIComponent(this.getAttribute(\'data-product\')||\'\'))">📦 Amazon</a>':'';
     html+='<div class="cart-item">'+
       '<div class="cart-item-main">'+
         '<div class="cart-item-name">'+d.name+'</div>'+
