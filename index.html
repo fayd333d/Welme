@@ -1291,6 +1291,7 @@ var ans={};
 var profile=null;
 var takenKeys=[];          // union (backwards compat)
 var alreadyTakingKeys=[];  // supplements user already takes (not excluded)
+var quizAlreadyTakingKeys=[]; // raw quiz answer for analytics only
 var adExcludedKeys=[];     // excluded due to AD interactions
 var selectedChipKeys=[];
 var unitSystem='imperial'; // 'imperial' (in/lbs) or 'metric' (cm/kg)
@@ -1693,6 +1694,7 @@ function collectMeds(){
   // Supplements user is already taking
   alreadyTakingKeys=selectedChipKeys.filter(function(k){return k!=='_ad';});
   textKeys.forEach(function(k){if(alreadyTakingKeys.indexOf(k)===-1)alreadyTakingKeys.push(k);});
+  quizAlreadyTakingKeys=alreadyTakingKeys.slice();
   // AD-excluded supplements (removed from protocol entirely)
   adExcludedKeys=takingAD?AD_EXCLUDE.slice():[];
   // Remove AD-excluded from alreadyTaking (they're gone, not "already have")
@@ -1700,6 +1702,17 @@ function collectMeds(){
   // Backwards compat union
   takenKeys=alreadyTakingKeys.slice();
   adExcludedKeys.forEach(function(k){if(takenKeys.indexOf(k)===-1)takenKeys.push(k);});
+}
+
+function supplementNameFromKey(k){
+  var chip=MEDS_CHIPS.find(function(c){return c.key===k;});
+  if(chip&&chip.key!=='_ad')return chip.label;
+  if(S[k]&&S[k].name)return S[k].name;
+  return k;
+}
+
+function supplementNamesFromKeys(keys){
+  return keys.map(supplementNameFromKey);
 }
 
 function parseMeds(txt){
@@ -2067,18 +2080,23 @@ function buildResults(){
   if(navId) navId.textContent=pid+' · PROTOCOL';
   if(navName) navName.textContent=proto.name;
   window._welmeProtocol = proto.name;
-  trackWelmeEvent({
-  event_name: "quiz_complete",
-  event_type: "quiz_complete",
-  age: window._welmeAge || "",
-  gender: window._welmeGender || "",
-  goal: proto.name,
-  excluded_items: alreadyTakingKeys.slice(),
-  current_stack: [],
-  stack: [],
-  purchase_intent: false,
-  checkout_clicked: false
-});    
+  var excludedItems=supplementNamesFromKeys(quizAlreadyTakingKeys);
+  var quizCompletePayload={
+    event_name: "quiz_complete",
+    event_type: "quiz_complete",
+    age: window._welmeAge || "",
+    gender: window._welmeGender || "",
+    goal: proto.name,
+    excluded_items: excludedItems,
+    excludedItems: excludedItems,
+    current_stack: [],
+    stack: [],
+    purchase_intent: false,
+    checkout_clicked: false
+  };
+  console.log("QUIZ COMPLETE excluded_items", excludedItems);
+  console.log("QUIZ COMPLETE payload", quizCompletePayload);
+  trackWelmeEvent(quizCompletePayload);    
 
   // Build hero 2-col card into resContent
   var scoreColor=overallScore>=70?'var(--ok)':overallScore>=50?'var(--warn)':'var(--risk)';
