@@ -1700,12 +1700,6 @@ function toggleChip(key,el){
   else {
   selectedChipKeys.push(key);
   el.classList.add('sel');
-
-  trackWelmeEvent({
-    event_type: "add_to_stack",
-    stack: [...selectedChipKeys],
-    checkout_clicked: false
-  });
 }
   var adSec=document.getElementById('adNameSection');
   if(adSec) adSec.style.display=selectedChipKeys.indexOf('_ad')>-1?'block':'none';
@@ -2643,6 +2637,7 @@ function wcPickStore(k,cjson,store){
     var data=JSON.parse(decodeURIComponent(cjson));
     data.store=store;
     wcCart[k]=data;
+    wcTrackAddToStack(k,data);
     var row=document.getElementById('atc-row-'+k);
     if(row) row.classList.add('in-cart');
     wcUpdateFloat();
@@ -2678,11 +2673,25 @@ function wcShowToast(name,store){
 // Legacy add silently
 function wcAddFromLink(k,cjson){wcPickStore(k,cjson,'amz');}
 
+function wcGetLiveStackKeys(){
+  return Object.keys(wcCart);
+}
+function wcTrackAddToStack(k,data){
+  trackWelmeEvent({
+    event_type: "add_to_stack",
+    stack: wcGetLiveStackKeys(),
+    added_item: k,
+    added_item_name: data&&data.name?data.name:k,
+    checkout_clicked: false
+  });
+}
+
 function wcAddTool(k,cjson){
   try{
     var data=JSON.parse(decodeURIComponent(cjson));
     data.store='amz';
     wcCart[k]=data;
+    wcTrackAddToStack(k,data);
     var card=document.getElementById('tool-card-'+k);
     if(card){
       card.classList.add('in-cart');
