@@ -2093,7 +2093,10 @@ function buildResults(){
   age: window._welmeAge || "",
   gender: window._welmeGender || "",
   goal: proto.name,
-  excluded_items: takenKeys.slice(),
+  excluded_items: alreadyTakingKeys.slice(),
+  current_stack: [],
+  stack: [],
+  purchase_intent: false,
   checkout_clicked: false
 });    
 
@@ -2941,7 +2944,10 @@ function trackPurchaseClick(store, productKey) {
     event_name: "checkout_click",
     event_type: "checkout_click",
     checkout_items: liveStack,
+    current_stack: liveStack,
+    stack: liveStack,
     product: productKey || '',
+    purchase_intent: true,
     checkout_clicked: true
   });
 
