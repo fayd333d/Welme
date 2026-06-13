@@ -1312,6 +1312,7 @@ var profile=null;
 var takenKeys=[];          // union (backwards compat)
 var alreadyTakingKeys=[];  // supplements user already takes (not excluded)
 var quizAlreadyTakingKeys=[]; // raw quiz answer for analytics only
+var quizSelectedSupplements=[]; // readable final quiz answer for analytics only
 var adExcludedKeys=[];     // excluded due to AD interactions
 var selectedChipKeys=[];
 var unitSystem='imperial'; // 'imperial' (in/lbs) or 'metric' (cm/kg)
@@ -1698,7 +1699,7 @@ function buildMedsChips(){
 function toggleChip(key,el){
   var idx=selectedChipKeys.indexOf(key);
   var action;
-  if(idx>-1){selectedChipKeys.splice(idx,1);el.classList.remove('sel');action='removed';}
+  if(idx>-1){selectedChipKeys.splice(idx,1);el.classList.remove('sel');action='deselected';}
   else {
   selectedChipKeys.push(key);
   el.classList.add('sel');
@@ -1718,7 +1719,8 @@ function collectMeds(){
   alreadyTakingKeys=selectedChipKeys.filter(function(k){return k!=='_ad';});
   textKeys.forEach(function(k){if(alreadyTakingKeys.indexOf(k)===-1)alreadyTakingKeys.push(k);});
   quizAlreadyTakingKeys=alreadyTakingKeys.slice();
-  trackQuizSupplementsSelected('', 'submitted');
+  quizSelectedSupplements=supplementNamesFromKeys(quizAlreadyTakingKeys);
+  trackQuizSupplementsSubmitted();
   // AD-excluded supplements (removed from protocol entirely)
   adExcludedKeys=takingAD?AD_EXCLUDE.slice():[];
   // Remove AD-excluded from alreadyTaking (they're gone, not "already have")
@@ -1744,12 +1746,28 @@ function trackQuizSupplementsSelected(changedKey,action){
   var textKeys=parseMeds((document.getElementById('medsInput').value||'').toLowerCase());
   textKeys.forEach(function(k){if(selectedKeys.indexOf(k)===-1)selectedKeys.push(k);});
   var selectedSupplements=supplementNamesFromKeys(selectedKeys);
+  quizSelectedSupplements=selectedSupplements.slice();
+  var payload={
+    event_name: "quiz_supplements_selected",
+    event_type: "quiz_supplements_selected",
+    selected_supplements: selectedSupplements.join(', '),
+    changed_item: changedKey?supplementNameFromKey(changedKey):'',
+    action: action || '',
+    checkout_clicked: false
+  };
+  console.log("QUIZ SUPPLEMENTS SELECTED payload", payload);
+  trackWelmeEvent(payload);
+}
+
+function trackQuizSupplementsSubmitted(){
+  var selectedKeys=quizAlreadyTakingKeys.slice();
+  quizSelectedSupplements=supplementNamesFromKeys(selectedKeys);
   trackWelmeEvent({
     event_name: "quiz_supplements_selected",
     event_type: "quiz_supplements_selected",
-    selected_supplements: selectedSupplements,
-    changed_item: changedKey?supplementNameFromKey(changedKey):'',
-    action: action || '',
+    selected_supplements: quizSelectedSupplements.join(', '),
+    changed_item: '',
+    action: 'submitted',
     checkout_clicked: false
   });
 }
@@ -2119,15 +2137,15 @@ function buildResults(){
   if(navId) navId.textContent=pid+' · PROTOCOL';
   if(navName) navName.textContent=proto.name;
   window._welmeProtocol = proto.name;
-  var excludedItems=supplementNamesFromKeys(quizAlreadyTakingKeys);
+  var excludedItems=quizSelectedSupplements.slice();
   var quizCompletePayload={
     event_name: "quiz_complete",
     event_type: "quiz_complete",
     age: window._welmeAge || "",
     gender: window._welmeGender || "",
     goal: proto.name,
-    excluded_items: excludedItems,
-    excludedItems: excludedItems,
+    excluded_items: excludedItems.join(', '),
+    excludedItems: excludedItems.join(', '),
     current_stack: [],
     stack: [],
     purchase_intent: false,
