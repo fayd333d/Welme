@@ -293,11 +293,14 @@ body{background:var(--bg);color:var(--text);
 .tool-footer{display:flex;align-items:center;margin-top:6px}
 .tool-tag{display:inline-block;font-size:.65rem;font-weight:700;padding:2px 8px;border-radius:8px;background:#EEF2FF;color:var(--blue)}
 .tool-price{font-size:.72rem;color:var(--muted);margin-top:4px}
-.tool-btns{display:flex;gap:7px;margin-top:7px;flex-wrap:wrap}
-.tool-btn{font-size:.72rem;font-weight:700;padding:5px 11px;border-radius:8px;text-decoration:none;transition:opacity .15s;border:0;cursor:pointer;font-family:inherit}
-.tool-btn:hover{opacity:.8}
-.t-amz{background:#232F3E;color:#fff}
-.t-amz.buy-selected{background:#e68a00}
+.tool-btns{display:flex;gap:7px;margin-top:auto;padding-top:10px;width:100%}
+.tool-btn{width:100%;display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  font-size:.86rem;font-weight:800;padding:10px 14px;border-radius:8px;text-decoration:none;
+  transition:opacity .15s,background .15s;cursor:pointer;font-family:inherit}
+.btn-plus{font-size:1.35em;font-weight:400;line-height:1;display:inline-block;transform:translateY(-1px)}
+.tool-btn:hover{opacity:.88}
+.t-amz{background:#fff;color:var(--green);border:1.5px solid var(--green)}
+.t-amz.buy-selected{background:var(--green-light);color:var(--green);border-color:var(--green)}
 .t-site{background:#EEF2FF;color:var(--blue)}
 
 /* Protocol section */
@@ -324,25 +327,31 @@ body{background:var(--bg);color:var(--text);
 
 /* ATC row */
 .atc-row{border-top:1px solid var(--border);margin-top:12px;padding-top:12px;
-  display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap}
+  display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
 .atc-course{display:flex;flex-direction:column;gap:3px;font-size:.75rem;min-width:0}
 .course-label{color:var(--text);font-weight:700;font-size:.76rem}
 .course-sub{color:var(--muted);font-size:.72rem}
 .course-bottles{color:var(--muted);font-size:.7rem;display:flex;align-items:center;gap:3px}
 .supp-price{color:var(--muted);font-size:.72rem}
-.atc-btns{display:flex;gap:7px;flex-shrink:0;align-items:center}
-.buy-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 13px;
-  border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;
+.atc-btns{display:flex;gap:7px;flex-shrink:0;align-items:center;margin-left:auto}
+.buy-btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  min-width:160px;padding:12px 22px;border-radius:8px;font-size:.9rem;font-weight:800;cursor:pointer;
   transition:all .15s;border:1.5px solid transparent}
-.buy-amz{background:#FF9900;color:#fff}
-.buy-amz:hover{background:#e68a00}
+.buy-amz{background:var(--green);color:#fff}
+.buy-amz:hover{background:#14784f}
 .buy-btn.buy-selected{box-shadow:0 0 0 2.5px #fff,0 0 0 4.5px currentColor;opacity:1;font-weight:800}
-.buy-amz.buy-selected{box-shadow:0 0 0 2.5px #fff,0 0 0 4.5px #FF9900;background:#e68a00}
+.buy-amz.buy-selected{box-shadow:0 0 0 2.5px #fff,0 0 0 4.5px rgba(27,139,94,.35);background:#14784f}
 .atc-row.in-cart{background:rgba(27,139,94,.04);border-radius:0 0 var(--radius) var(--radius);
   margin-left:-16px;margin-right:-16px;padding-left:16px;padding-right:16px}
 @media(max-width:600px){
-  .atc-row{flex-direction:column;gap:8px}
-  .atc-btns{justify-content:flex-start}
+  .atc-row{gap:10px}
+  .atc-course{flex:1}
+  .atc-btns{justify-content:flex-end}
+  .buy-btn{min-width:150px;padding:12px 18px}
+}
+@media(max-width:360px){
+  .atc-btns{width:100%;margin-left:0}
+  .buy-btn{width:100%}
 }
 
 /* Slot circles */
@@ -467,14 +476,20 @@ body{background:var(--bg);color:var(--text);
   .sch-time-hour{font-size:.9rem}}
 
 /* ── Cart float button ────────────────────────────────── */
-.cart-float{display:none;position:fixed;bottom:80px;right:20px;z-index:300;
-  align-items:center;gap:8px;background:var(--green);color:#fff;
-  border:none;border-radius:28px;padding:10px 18px;font-size:.85rem;font-weight:700;
-  cursor:pointer;box-shadow:0 4px 20px rgba(27,139,94,.35);transition:all .2s;font-family:inherit}
+.cart-float{display:none;position:fixed;bottom:24px;right:24px;z-index:300;
+  align-items:center;gap:14px;background:var(--green);color:#fff;
+  border:none;border-radius:10px;padding:14px 22px;font-size:1rem;font-weight:800;
+  cursor:pointer;box-shadow:0 8px 28px rgba(27,139,94,.35);transition:all .2s;font-family:inherit}
 .cart-float:hover{transform:translateY(-2px);box-shadow:0 6px 28px rgba(27,139,94,.45)}
 .cart-float.visible{display:flex}
-.cart-badge{background:#fff;color:var(--green);border-radius:12px;
-  padding:2px 7px;font-size:.75rem;font-weight:800;min-width:20px;text-align:center}
+.cart-icon{font-size:1.25rem;line-height:1}
+.cart-badge{background:#fff;color:var(--green);border-radius:50%;
+  width:32px;height:32px;font-size:.95rem;font-weight:800;display:inline-flex;
+  align-items:center;justify-content:center;text-align:center;flex-shrink:0}
+@media(max-width:600px){
+  .cart-float{left:16px;right:16px;bottom:16px;justify-content:center;border-radius:10px;
+    padding:14px 18px;font-size:1.05rem}
+}
 
 /* ── Cart overlay & drawer ────────────────────────────── */
 .cart-overlay{display:none;position:fixed;inset:0;background:rgba(15,23,18,.45);
@@ -528,13 +543,6 @@ body{background:var(--bg);color:var(--text);
 .site-footer a{color:var(--muted);text-decoration:none;font-weight:700}
 .site-footer a:hover{color:var(--green)}
 
-/* Scroll to top button - Change 7 */
-#scrollTop{position:fixed;bottom:24px;right:20px;width:46px;height:46px;border-radius:50%;
-  background:var(--green);color:#fff;border:none;cursor:pointer;font-size:1.1rem;font-weight:800;
-  opacity:0;transition:opacity .3s;z-index:200;box-shadow:0 4px 16px rgba(27,139,94,.3);
-  display:flex;align-items:center;justify-content:center}
-#scrollTop.vis{opacity:1}
-
 /* Processing indicators */
 .proc-step{font-size:.82rem;color:var(--muted);padding:8px 0;margin-bottom:8px;display:flex;align-items:center;gap:8px}
 .proc-step::before{content:'◦';font-size:1.2rem;color:var(--border)}
@@ -565,7 +573,7 @@ body{background:var(--bg);color:var(--text);
 @media print{
   *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
   body{background:#fff!important;font-size:10.5px;color:#0F172A;-webkit-font-smoothing:antialiased}
-  .logo,.prog-area,.quiz-wrap,.screen,#scrollTop,#emailGate{display:none!important}
+  .logo,.prog-area,.quiz-wrap,.screen,#emailGate{display:none!important}
   .res-screen{display:block!important;padding:0!important}
   #actionButtons,.btn-next,.action-btn,.quick-scroll{display:none!important}
   .res-screen>div:last-of-type{display:none!important}
@@ -934,9 +942,6 @@ Separate with comma or newline"></textarea>
   </div>
   <div>Welme provides informational wellness guidance only and is not a medical provider.</div>
 </footer>
-
-<!-- Scroll to top button - Change 7 -->
-<button id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
 <script>
 // ═══════════════════════════════════════════════════════════
@@ -1759,11 +1764,6 @@ function goToResults(){
   document.querySelectorAll('#resScreen .section').forEach(function(el,i){
     el.style.animationDelay=(i*0.08)+'s';
   });
-
-  window.addEventListener('scroll',function(){
-    var st=document.getElementById('scrollTop');
-    if(st)st.classList.toggle('vis',window.scrollY>400);
-  },{passive:true});
 }
 
 // ── SCORE CALCULATION (answers stored as indices)
@@ -1851,7 +1851,7 @@ function buildToolsSection(bestProto,healthScores){
     var cdata={name:t.name,dose:t.brand+' · '+t.tag+' · '+t.price,amz:t.amz,type:'tool'};
     var cjson=encodeURIComponent(JSON.stringify(cdata)).replace(/'/g,'%27');
     var btnHTML='';
-    if(t.amz) btnHTML+='<button class="tool-btn t-amz" onclick="event.stopPropagation(); trackPurchaseClick(\'Amazon\', \''+toolKey+'\'); wcAddTool(\''+toolKey+'\', \''+cjson+'\')">📦 Amazon</button>';
+    if(t.amz) btnHTML+='<button class="tool-btn t-amz" onclick="event.stopPropagation(); trackPurchaseClick(\'Amazon\', \''+toolKey+'\'); wcAddTool(\''+toolKey+'\', \''+cjson+'\')"><span class="btn-plus">+</span> Add to Stack</button>';
     return'<div class="tool-card" id="tool-card-'+toolKey+'">'+
       '<div class="tool-card-top">'+
         '<span class="tool-icon">'+t.icon+'</span>'+
@@ -2320,7 +2320,7 @@ function buildResults(){
     '</div>';
     var cdata={name:sup.name,dose:sup_getDose(sup,profile),price:price,amz:amz};
     var cjson=encodeURIComponent(JSON.stringify(cdata));
-    var amzBtn = amz?'<button class="buy-btn buy-amz" onclick="trackPurchaseClick(\'Amazon\', \''+k+'\'); wcPickStore(\''+k+'\', \''+cjson+'\', \'amz\')"> Amazon</button>':'';
+    var amzBtn = amz?'<button class="buy-btn buy-amz" onclick="trackPurchaseClick(\'Amazon\', \''+k+'\'); wcPickStore(\''+k+'\', \''+cjson+'\', \'amz\')"><span class="btn-plus">+</span> Add to Stack</button>':'';
     return'<div class="atc-row" id="atc-row-'+k+'">'+
       courseHTML+
       '<div class="atc-btns">'+amzBtn+'</div>'+
@@ -2633,10 +2633,10 @@ function wcPickStore(k,cjson,store){
       row2.querySelectorAll('.buy-btn').forEach(function(b){
         b.classList.remove('buy-selected');
         // restore original label
-        if(b.classList.contains('buy-amz'))b.innerHTML='📦 Amazon';
+        if(b.classList.contains('buy-amz'))b.innerHTML='<span class="btn-plus">+</span> Add to Stack';
       });
       var sel=row2.querySelector('.buy-amz');
-      if(sel){sel.classList.add('buy-selected');sel.innerHTML='✓ Amazon';}
+      if(sel){sel.classList.add('buy-selected');sel.innerHTML='<span class="btn-plus">+</span> Add to Stack';}
     }
   }catch(e){}
 }
@@ -2668,10 +2668,10 @@ function wcAddTool(k,cjson){
       card.classList.add('in-cart');
       card.querySelectorAll('.tool-btn').forEach(function(b){
         b.classList.remove('buy-selected');
-        b.innerHTML='📦 Amazon';
+        b.innerHTML='<span class="btn-plus">+</span> Add to Stack';
       });
       var btn=card.querySelector('.t-amz');
-      if(btn){btn.classList.add('buy-selected');btn.innerHTML='✓ Amazon';}
+      if(btn){btn.classList.add('buy-selected');btn.innerHTML='<span class="btn-plus">+</span> Add to Stack';}
     }
     wcUpdateFloat();
     wcShowToast(data.name,'amz');
@@ -2687,7 +2687,7 @@ function wcRemove(k){
     toolCard.classList.remove('in-cart');
     toolCard.querySelectorAll('.tool-btn').forEach(function(b){
       b.classList.remove('buy-selected');
-      b.innerHTML='📦 Amazon';
+      b.innerHTML='<span class="btn-plus">+</span> Add to Stack';
     });
   }
   var btn=document.getElementById('atc-btn-'+k);
@@ -2724,7 +2724,7 @@ function wcRenderDrawer(){
   var foot=document.getElementById('cartFoot');
   if(!body)return;
   if(!keys.length){
-    body.innerHTML='<div class="cart-empty"><div class="cart-empty-icon">🛒</div>Your stack is empty.<br>Tap <strong>Amazon</strong> on any recommendation to add it.</div>';
+    body.innerHTML='<div class="cart-empty"><div class="cart-empty-icon">🛒</div>Your stack is empty.<br>Tap <strong>+ Add to Stack</strong> on any recommendation to add it.</div>';
     if(foot)foot.style.display='none';
     return;
   }
@@ -2834,7 +2834,7 @@ if (WELME_SHEET_URL) {
 </script>
 <!-- Cart Float Button -->
 <button id="cartFloat" class="cart-float" onclick="wcOpenDrawer()">
-  🛒 My Stack <span id="cartBadge" class="cart-badge">0</span>
+  <span class="cart-icon">🛒</span> View My Stack <span id="cartBadge" class="cart-badge">0</span>
 </button>
 
 <!-- Cart Drawer -->
