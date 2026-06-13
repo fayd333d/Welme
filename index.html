@@ -2682,7 +2682,7 @@ function wcTrackAddToStack(k,data){
   trackWelmeEvent({
     event_name: "add_to_stack",
     event_type: "add_to_stack",
-    current_stack: wcGetLiveStackKeys(),
+    current_stack: wcGetLiveStackContents(),
     added_item: k,
     added_item_name: data&&data.name?data.name:k,
     checkout_clicked: false
