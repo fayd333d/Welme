@@ -1697,13 +1697,16 @@ function buildMedsChips(){
 // Change 4 - Toggle AD section
 function toggleChip(key,el){
   var idx=selectedChipKeys.indexOf(key);
-  if(idx>-1){selectedChipKeys.splice(idx,1);el.classList.remove('sel');}
+  var action;
+  if(idx>-1){selectedChipKeys.splice(idx,1);el.classList.remove('sel');action='removed';}
   else {
   selectedChipKeys.push(key);
   el.classList.add('sel');
+  action='selected';
 }
   var adSec=document.getElementById('adNameSection');
   if(adSec) adSec.style.display=selectedChipKeys.indexOf('_ad')>-1?'block':'none';
+  trackQuizSupplementsSelected(key,action);
 }
 
 // Collect meds — separate already-taking from AD exclusions
@@ -1715,6 +1718,7 @@ function collectMeds(){
   alreadyTakingKeys=selectedChipKeys.filter(function(k){return k!=='_ad';});
   textKeys.forEach(function(k){if(alreadyTakingKeys.indexOf(k)===-1)alreadyTakingKeys.push(k);});
   quizAlreadyTakingKeys=alreadyTakingKeys.slice();
+  trackQuizSupplementsSelected('', 'submitted');
   // AD-excluded supplements (removed from protocol entirely)
   adExcludedKeys=takingAD?AD_EXCLUDE.slice():[];
   // Remove AD-excluded from alreadyTaking (they're gone, not "already have")
@@ -1733,6 +1737,21 @@ function supplementNameFromKey(k){
 
 function supplementNamesFromKeys(keys){
   return keys.map(supplementNameFromKey);
+}
+
+function trackQuizSupplementsSelected(changedKey,action){
+  var selectedKeys=selectedChipKeys.filter(function(k){return k!=='_ad';});
+  var textKeys=parseMeds((document.getElementById('medsInput').value||'').toLowerCase());
+  textKeys.forEach(function(k){if(selectedKeys.indexOf(k)===-1)selectedKeys.push(k);});
+  var selectedSupplements=supplementNamesFromKeys(selectedKeys);
+  trackWelmeEvent({
+    event_name: "quiz_supplements_selected",
+    event_type: "quiz_supplements_selected",
+    selected_supplements: selectedSupplements,
+    changed_item: changedKey?supplementNameFromKey(changedKey):'',
+    action: action || '',
+    checkout_clicked: false
+  });
 }
 
 function parseMeds(txt){
