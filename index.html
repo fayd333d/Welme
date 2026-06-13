@@ -1851,7 +1851,7 @@ function buildToolsSection(bestProto,healthScores){
     var cdata={name:t.name,dose:t.brand+' · '+t.tag+' · '+t.price,amz:t.amz,type:'tool'};
     var cjson=encodeURIComponent(JSON.stringify(cdata)).replace(/'/g,'%27');
     var btnHTML='';
-    if(t.amz) btnHTML+='<button class="tool-btn t-amz" onclick="event.stopPropagation(); trackPurchaseClick(\'Amazon\', \''+toolKey+'\'); wcAddTool(\''+toolKey+'\', \''+cjson+'\')"><span class="btn-plus">+</span> Add to Stack</button>';
+    if(t.amz) btnHTML+='<button class="tool-btn t-amz" onclick="event.stopPropagation(); wcAddTool(\''+toolKey+'\', \''+cjson+'\')"><span class="btn-plus">+</span> Add to Stack</button>';
     return'<div class="tool-card" id="tool-card-'+toolKey+'">'+
       '<div class="tool-card-top">'+
         '<span class="tool-icon">'+t.icon+'</span>'+
@@ -2320,7 +2320,7 @@ function buildResults(){
     '</div>';
     var cdata={name:sup.name,dose:sup_getDose(sup,profile),price:price,amz:amz};
     var cjson=encodeURIComponent(JSON.stringify(cdata));
-    var amzBtn = amz?'<button class="buy-btn buy-amz" onclick="trackPurchaseClick(\'Amazon\', \''+k+'\'); wcPickStore(\''+k+'\', \''+cjson+'\', \'amz\')"><span class="btn-plus">+</span> Add to Stack</button>':'';
+    var amzBtn = amz?'<button class="buy-btn buy-amz" onclick="wcPickStore(\''+k+'\', \''+cjson+'\', \'amz\')"><span class="btn-plus">+</span> Add to Stack</button>':'';
     return'<div class="atc-row" id="atc-row-'+k+'">'+
       courseHTML+
       '<div class="atc-btns">'+amzBtn+'</div>'+
@@ -2718,6 +2718,13 @@ function wcCloseDrawer(){
   document.getElementById('cartOverlay').classList.remove('open');
 }
 
+function wcGetLiveStackContents(){
+  return Object.keys(wcCart).map(function(k){
+    var item=wcCart[k]||{};
+    return item.name||k;
+  });
+}
+
 function wcRenderDrawer(){
   var keys=Object.keys(wcCart);
   var body=document.getElementById('cartBody');
@@ -2733,7 +2740,7 @@ function wcRenderDrawer(){
   keys.forEach(function(k){
     var d=wcCart[k];
     var productName=encodeURIComponent(d.name||'');
-    var amzLink=d.amz?'<a class="ci-store-btn ci-amz" href="'+d.amz+'" target="_blank" rel="noopener" data-product="'+productName+'" onclick="welmeTrackAffiliateClick(decodeURIComponent(this.getAttribute(\'data-product\')||\'\'))">📦 Amazon</a>':'';
+    var amzLink=d.amz?'<a class="ci-store-btn ci-amz" href="'+d.amz+'" target="_blank" rel="noopener" data-product="'+productName+'" onclick="trackPurchaseClick(\'Amazon\', decodeURIComponent(this.getAttribute(\'data-product\')||\'\'));welmeTrackAffiliateClick(decodeURIComponent(this.getAttribute(\'data-product\')||\'\'))">📦 Amazon</a>':'';
     html+='<div class="cart-item">'+
       '<div class="cart-item-main">'+
         '<div class="cart-item-name">'+d.name+'</div>'+
@@ -2890,9 +2897,11 @@ function trackCTA() {
 
 <script>
 function trackPurchaseClick(store, productKey) {
+  var liveStack=typeof wcGetLiveStackContents==='function'?wcGetLiveStackContents():[];
   trackWelmeEvent({
     event_type: "checkout_click",
-    stack: selectedChipKeys && selectedChipKeys.length ? [...selectedChipKeys] : [productKey],
+    stack: liveStack,
+    product: productKey || '',
     checkout_clicked: true
   });
 
@@ -2901,6 +2910,7 @@ function trackPurchaseClick(store, productKey) {
       event_category: 'affiliate',
       store: store || '',
       product_key: productKey || '',
+      stack: liveStack.join(', '),
       protocol_type: window._welmeProtocol || ''
     });
   }
