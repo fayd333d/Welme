@@ -1700,7 +1700,6 @@ function collectMeds(){
   textKeys.forEach(function(k){if(alreadyTakingKeys.indexOf(k)===-1)alreadyTakingKeys.push(k);});
   quizAlreadyTakingKeys=alreadyTakingKeys.slice();
   quizSelectedSupplements=supplementNamesFromKeys(quizAlreadyTakingKeys);
-  trackQuizSupplementsSubmitted();
   // AD-excluded supplements (removed from protocol entirely)
   adExcludedKeys=takingAD?AD_EXCLUDE.slice():[];
   // Remove AD-excluded from alreadyTaking (they're gone, not "already have")
@@ -1721,6 +1720,17 @@ function supplementNamesFromKeys(keys){
   return keys.map(supplementNameFromKey);
 }
 
+function getTrackingGoal(){
+  if(window._welmeProtocol)return window._welmeProtocol;
+  try{
+    if(!profile)buildProfile();
+    var key=assignBestProto(calcScores());
+    return PROTO[key]&&PROTO[key].name?PROTO[key].name:key;
+  }catch(e){
+    return "";
+  }
+}
+
 function trackQuizSupplementsSelected(changedKey,action){
   var selectedKeys=selectedChipKeys.filter(function(k){return k!=='_ad';});
   var textKeys=parseMeds((document.getElementById('medsInput').value||'').toLowerCase());
@@ -1728,31 +1738,21 @@ function trackQuizSupplementsSelected(changedKey,action){
   var selectedSupplements=supplementNamesFromKeys(selectedKeys);
   if(!selectedSupplements.length)return;
   quizSelectedSupplements=selectedSupplements.slice();
+  var selectedSupplementsText=selectedSupplements.join(', ');
   var payload={
     event_name: "quiz_supplements_selected",
     event_type: "quiz_supplements_selected",
-    selected_supplements: selectedSupplements.join(', '),
+    age: window._welmeAge || "",
+    gender: window._welmeGender || "",
+    goal: getTrackingGoal(),
+    selected_supplements: selectedSupplementsText,
     changed_item: changedKey?supplementNameFromKey(changedKey):'',
     action: action || '',
+    current_stack: selectedSupplementsText,
+    stack: selectedSupplementsText,
     checkout_clicked: false
   };
-  console.log("QUIZ SUPPLEMENTS SELECTED payload", payload);
-  trackWelmeEvent(payload);
-}
-
-function trackQuizSupplementsSubmitted(){
-  var selectedKeys=quizAlreadyTakingKeys.slice();
-  quizSelectedSupplements=supplementNamesFromKeys(selectedKeys);
-  if(!quizSelectedSupplements.length)return;
-  var payload={
-    event_name: "quiz_supplements_selected",
-    event_type: "quiz_supplements_selected",
-    selected_supplements: quizSelectedSupplements.join(', '),
-    changed_item: '',
-    action: 'submitted',
-    checkout_clicked: false
-  };
-  console.log("QUIZ SUPPLEMENTS SELECTED payload", payload);
+  console.log('quiz_supplements_selected payload:', payload);
   trackWelmeEvent(payload);
 }
 
