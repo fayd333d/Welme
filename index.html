@@ -2068,10 +2068,12 @@ function buildResults(){
   if(navName) navName.textContent=proto.name;
   window._welmeProtocol = proto.name;
   trackWelmeEvent({
+  event_name: "quiz_complete",
   event_type: "quiz_complete",
   age: window._welmeAge || "",
   gender: window._welmeGender || "",
-  stack: [],
+  goal: proto.name,
+  excluded_items: takenKeys.slice(),
   checkout_clicked: false
 });    
 
@@ -2658,8 +2660,9 @@ function wcGetLiveStackKeys(){
 }
 function wcTrackAddToStack(k,data){
   trackWelmeEvent({
+    event_name: "add_to_stack",
     event_type: "add_to_stack",
-    stack: wcGetLiveStackKeys(),
+    current_stack: wcGetLiveStackKeys(),
     added_item: k,
     added_item_name: data&&data.name?data.name:k,
     checkout_clicked: false
@@ -2908,8 +2911,9 @@ function trackCTA() {
 function trackPurchaseClick(store, productKey) {
   var liveStack=typeof wcGetLiveStackContents==='function'?wcGetLiveStackContents():[];
   trackWelmeEvent({
+    event_name: "checkout_click",
     event_type: "checkout_click",
-    stack: liveStack,
+    checkout_items: liveStack,
     product: productKey || '',
     checkout_clicked: true
   });
