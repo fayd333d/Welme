@@ -1746,6 +1746,7 @@ function trackQuizSupplementsSelected(changedKey,action){
   var textKeys=parseMeds((document.getElementById('medsInput').value||'').toLowerCase());
   textKeys.forEach(function(k){if(selectedKeys.indexOf(k)===-1)selectedKeys.push(k);});
   var selectedSupplements=supplementNamesFromKeys(selectedKeys);
+  if(!selectedSupplements.length)return;
   quizSelectedSupplements=selectedSupplements.slice();
   var payload={
     event_name: "quiz_supplements_selected",
@@ -1762,14 +1763,17 @@ function trackQuizSupplementsSelected(changedKey,action){
 function trackQuizSupplementsSubmitted(){
   var selectedKeys=quizAlreadyTakingKeys.slice();
   quizSelectedSupplements=supplementNamesFromKeys(selectedKeys);
-  trackWelmeEvent({
+  if(!quizSelectedSupplements.length)return;
+  var payload={
     event_name: "quiz_supplements_selected",
     event_type: "quiz_supplements_selected",
     selected_supplements: quizSelectedSupplements.join(', '),
     changed_item: '',
     action: 'submitted',
     checkout_clicked: false
-  });
+  };
+  console.log("QUIZ SUPPLEMENTS SELECTED payload", payload);
+  trackWelmeEvent(payload);
 }
 
 function parseMeds(txt){
@@ -2146,8 +2150,8 @@ function buildResults(){
     goal: proto.name,
     excluded_items: excludedItems.join(', '),
     excludedItems: excludedItems.join(', '),
-    current_stack: [],
-    stack: [],
+    current_stack: '',
+    stack: '',
     purchase_intent: false,
     checkout_clicked: false
   };
@@ -2739,13 +2743,14 @@ function wcGetLiveStackKeys(){
 function wcTrackAddToStack(k,data){
   var item={id:k,name:data&&data.name?data.name:k};
   var updatedStack=wcGetLiveStackContents();
+  var updatedStackText=updatedStack.join(', ');
   var payload={
     event_name: "add_to_stack",
     event_type: "add_to_stack",
     added_item: item.id,
     added_item_name: item.name,
-    current_stack: updatedStack,
-    stack: updatedStack,
+    current_stack: updatedStackText,
+    stack: updatedStackText,
     checkout_clicked: false
   };
   console.log("ADD_TO_STACK CLICKED", item);
@@ -2893,15 +2898,28 @@ function trackWelmeEvent(eventData) {
   if (!WELME_TRACKING_URL) return;
 
   try {
+    var payload={
+      user_id: getUserId(),
+      protocol: window._welmeProtocol || "",
+      ...eventData
+    };
+    [
+      "selected_supplements",
+      "excluded_items",
+      "excludedItems",
+      "selected_items",
+      "current_stack",
+      "stack",
+      "checkout_items"
+    ].forEach(function(field){
+      if(Array.isArray(payload[field]))payload[field]=payload[field].join(', ');
+    });
+    console.log("WELME TRACKING WEBHOOK PAYLOAD", payload);
     fetch(WELME_TRACKING_URL, {
       method: "POST",
       mode: "no-cors",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        user_id: getUserId(),
-        protocol: window._welmeProtocol || "",
-        ...eventData
-      })
+      body: JSON.stringify(payload)
     });
   } catch (e) {}
 }
@@ -2919,15 +2937,17 @@ function submitEmailAndDownload(){
   // Send email + protocol to Google Sheets (fire-and-forget)
 if (WELME_SHEET_URL) {
   try {
+    var emailPayload={
+      user_id: getUserId(),
+      email: email,
+      protocol: window._welmeProtocol || ''
+    };
+    console.log("WELME EMAIL WEBHOOK PAYLOAD", emailPayload);
     fetch(WELME_SHEET_URL, {
       method: 'POST',
       mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        user_id: getUserId(),
-        email: email,
-        protocol: window._welmeProtocol || ''
-      })
+      body: JSON.stringify(emailPayload)
     });
   } catch (e) {}
 }
@@ -2995,12 +3015,13 @@ function trackCTA() {
 <script>
 function trackPurchaseClick(store, productKey) {
   var liveStack=typeof wcGetLiveStackContents==='function'?wcGetLiveStackContents():[];
+  var liveStackText=liveStack.join(', ');
   trackWelmeEvent({
     event_name: "checkout_click",
     event_type: "checkout_click",
-    checkout_items: liveStack,
-    current_stack: liveStack,
-    stack: liveStack,
+    checkout_items: liveStackText,
+    current_stack: liveStackText,
+    stack: liveStackText,
     product: productKey || '',
     purchase_intent: true,
     checkout_clicked: true
