@@ -344,15 +344,18 @@ body{background:var(--bg);color:var(--text);
   font-size:.78rem;font-weight:700;color:var(--blue);margin-bottom:12px}
 .supp-hint{font-size:.77rem;color:var(--muted);line-height:1.6;
   padding:10px 12px;background:rgba(26,95,168,.05);border-radius:8px;margin-bottom:12px}
+.supp-use-label{font-size:.68rem;font-weight:800;color:var(--blue);text-transform:uppercase;
+  letter-spacing:.06em;margin-bottom:4px}
 
 /* ATC row */
 .atc-row{border-top:1px solid var(--border);margin-top:12px;padding-top:12px;
   display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
-.atc-course{display:flex;flex-direction:column;gap:3px;font-size:.75rem;min-width:0}
+.atc-course{display:flex;align-items:baseline;gap:6px;font-size:.75rem;min-width:0}
 .course-label{color:var(--text);font-weight:700;font-size:.76rem}
 .course-sub{color:var(--muted);font-size:.72rem}
 .course-bottles{color:var(--muted);font-size:.7rem;display:flex;align-items:center;gap:3px}
-.supp-price{color:var(--muted);font-size:.72rem}
+.supp-price{color:var(--text);font-size:.95rem;font-weight:800;white-space:nowrap}
+.supp-price-dollar{color:var(--green);font-size:1.2em;margin-right:1px}
 .atc-btns{display:flex;gap:7px;flex-shrink:0;align-items:center;margin-left:auto}
 .buy-btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;
   min-width:160px;padding:12px 22px;border-radius:8px;font-size:.9rem;font-weight:800;cursor:pointer;
@@ -420,6 +423,15 @@ body{background:var(--bg);color:var(--text);
 .kbju-tip-title{font-size:.8rem;font-weight:700;margin-bottom:8px;color:var(--text)}
 .kbju-tip{font-size:.78rem;color:var(--muted);margin-bottom:6px;line-height:1.5;
   padding-left:12px;border-left:2px solid var(--border)}
+
+.routine-grid{display:grid;grid-template-columns:1fr;gap:12px}
+.routine-card{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius);
+  padding:14px}
+.routine-title{font-size:.78rem;font-weight:800;color:var(--green);text-transform:uppercase;
+  letter-spacing:.05em;margin-bottom:10px}
+.routine-item{font-size:.8rem;color:var(--muted);line-height:1.58;padding:9px 0;
+  border-top:1px solid rgba(100,116,139,.14)}
+.routine-item:first-of-type{border-top:none;padding-top:0}
 
 /* BioJack Box */
 .bj-box{background:linear-gradient(135deg,#F0F4FF,#F5F0FF);border:1.5px solid var(--blue);
@@ -645,21 +657,7 @@ body{background:var(--bg);color:var(--text);
   .kbju-card{padding:10px;border-radius:6px!important}
   .kbju-val{font-size:1.2rem}
 
-  /* ── PDF PAGE 2: SCHEDULE ── */
-  #scheduleSection{page-break-before:always;padding-top:8px}
-  .schedule-wrap{border:1px solid #E4EAF2!important;border-radius:8px!important;overflow:hidden}
-  .sch-slot{page-break-inside:avoid;min-height:auto!important}
-  .sch-time{background:#F7F9FC!important}
-  .sch-time-label{font-size:.72rem;color:#1B8B5E;font-weight:700}
-  .sch-time-hour{font-size:.68rem;color:#94A3B8}
-  .sch-pill{
-    background:#E8F5EE!important;color:#1B8B5E!important;
-    border:1px solid rgba(27,139,94,.3)!important;
-    font-size:.7rem;padding:3px 8px!important
-  }
-  .sch-tip{font-size:.72rem;color:#475569;line-height:1.5}
-
-  /* ── PDF PAGE 3: SUPPLEMENTS ── */
+  /* ── PDF PAGE 2: SUPPLEMENTS ── */
   #existingStackSection{display:none!important}
   #suppDurationNote{display:none!important}
   .existing-stack-box{background:#F0FDF4!important;border:1px solid #1B8B5E!important;border-radius:8px!important}
@@ -688,7 +686,7 @@ body{background:var(--bg);color:var(--text);
   .supp-slot{font-size:.72rem!important}
   .supp-hint{font-size:.71rem!important}
   .cycle-warn,.interaction-note{font-size:.7rem!important;padding:6px 10px!important}
-  .prod-cards,.prod-links,#toolsSection{display:none!important}
+  .prod-cards,.prod-links{display:none!important}
 
   /* Hide action buttons */
   .res-action-btn,.action-btn,.action-row{display:none!important}
@@ -710,7 +708,7 @@ body{background:var(--bg);color:var(--text);
 <div class="wrap">
   <div class="logo">
     <a class="logo-mark" href="index.html" aria-label="Welme homepage"><span class="logo-w">Wel</span><span class="logo-me">me</span></a>
-    <div class="logo-sub">PERSONALISED · SCIENCE-BACKED · PRECISE</div>
+    <div class="logo-sub">Precise · Science-backed · Personalised</div>
   </div>
 
   <!-- ═══════════════════════════════════════════════════════════
@@ -894,18 +892,6 @@ Separate with comma or newline"></textarea>
       <div id="protocolContent"></div>
     </div>
 
-    <!-- КБЖУ section - Change 3 -->
-    <div class="section" id="kbjuSection">
-      <div class="sec-title">📊 Your Personal Nutrition Targets</div>
-      <div id="kbjuContent"></div>
-    </div>
-
-    <!-- Schedule section — shown BEFORE supplement links -->
-    <div class="section" id="scheduleSection">
-      <div class="sec-title">⏰ Daily Schedule</div>
-      <div id="scheduleContent"></div>
-    </div>
-
     <!-- Supplement duration note (replaces "Already In Your Stack") -->
     <div id="suppDurationNote" style="display:none;margin-bottom:16px;padding:14px 16px;
       background:var(--green-light);border:1.5px solid rgba(27,139,94,.25);border-radius:12px;
@@ -919,26 +905,26 @@ Separate with comma or newline"></textarea>
 
     <!-- Supplements section -->
     <div class="section" id="suppsSection">
-      <div class="sec-title">💊 Recommendations</div>
+      <div class="sec-title">💊 Supplement Recommendations</div>
       <div id="suppsContent"></div>
     </div>
 
-    <!-- Tools & Devices section -->
-    <div class="section" id="toolsSection">
-      <div class="sec-title">🛠️ Recommended Tools &amp; Devices</div>
-      <div id="toolsContent"></div>
+    <!-- КБЖУ section - Change 3 -->
+    <div class="section" id="kbjuSection">
+      <div class="sec-title">📊 Your Personal Nutrition Targets</div>
+      <div id="kbjuContent"></div>
     </div>
 
-    <!-- Lifestyle advice section — PDF ONLY (print CSS shows it, screen always hidden) -->
-    <div class="section" id="lifestyleSection" style="display:none">
-      <div class="sec-title">🌿 Lifestyle & Habit Recommendations</div>
+    <!-- Daily routine tips -->
+    <div class="section" id="lifestyleSection">
+      <div class="sec-title">🌿 Daily Routine Tips</div>
       <div id="lifestyleContent"></div>
     </div>
 
     <!-- Actions -->
     <div style="padding:24px;background:var(--card);border:1.5px solid var(--border);
       border-radius:14px;margin-bottom:16px">
-      <button class="res-action-btn" onclick="downloadPDF()">⬇ Download My Protocol (PDF)</button>
+      <button class="res-action-btn" onclick="downloadPDF()">⬇ Save My Protocol (PDF)</button>
       <p style="font-size:.82rem;color:var(--muted);line-height:1.65;text-align:center;
         margin:14px 0 16px;max-width:360px;margin-left:auto;margin-right:auto">
         A comprehensive guide with your supplement schedule, high-impact lifestyle upgrades,
@@ -1919,7 +1905,7 @@ function buildToolsSection(bestProto,healthScores){
     var cdata={name:t.name,dose:t.brand+' · '+t.tag+' · '+t.price,amz:t.amz,type:'tool'};
     var cjson=encodeURIComponent(JSON.stringify(cdata)).replace(/'/g,'%27');
     var btnHTML='';
-    if(t.amz) btnHTML+='<button class="tool-btn t-amz" onclick="event.stopPropagation(); wcAddTool(\''+toolKey+'\', \''+cjson+'\')"><span class="btn-plus">+</span> Add to Stack</button>';
+    if(t.amz) btnHTML+='<button class="tool-btn t-amz" onclick="event.stopPropagation(); wcAddTool(\''+toolKey+'\', \''+cjson+'\')"><span class="btn-plus">+</span> Add to Cart</button>';
     return'<div class="tool-card" id="tool-card-'+toolKey+'">'+
       '<div class="tool-card-top">'+
         '<span class="tool-icon">'+t.icon+'</span>'+
@@ -2378,27 +2364,15 @@ function buildResults(){
     var lnk=LINKS[k]||{};
     var amz=lnk.amz||'';
     var price=lnk.price||'See Amazon price';
-    var c=COURSE[k]||{type:'daily',on:'Long-term daily',bottles:'~1 bottle/month'};
-    var doseText=sup_getDose(sup,profile);
-    // Strip trailing " on" from on-label (e.g. "8–12 weeks on" → "8–12 weeks")
-    var onClean=(c.on||'').replace(/\s+on$/i,'');
-    var mainLabel=c.type==='cycle'
-      ? 'Course: '+onClean
-      : c.type==='asneeded'
-      ? 'Use as needed — low dose only'
-      : 'Long-term daily use';
-    // Only show break if it's a real duration (not "reassess")
-    var breakVal=(c.off&&c.off.toLowerCase()!=='reassess')?c.off:'';
-    var subLabel=breakVal?'Minimum break: '+breakVal:'';
+    var priceHTML=price.indexOf('$')===0
+      ? '<span class="supp-price"><span class="supp-price-dollar">$</span>'+price.slice(1)+'</span>'
+      : '<span class="supp-price">'+price+'</span>';
     var courseHTML='<div class="atc-course">'+
-      '<div class="course-label">'+mainLabel+'</div>'+
-      (subLabel?'<div class="course-sub">'+subLabel+'</div>':'')+
-      (amz?'<div class="supp-price">Price: '+price+'</div>':'')+
-      '<div class="course-bottles print-only">🫙 '+c.bottles+'</div>'+
+      (amz?priceHTML:'')+
     '</div>';
     var cdata={name:sup.name,dose:sup_getDose(sup,profile),price:price,amz:amz};
     var cjson=encodeURIComponent(JSON.stringify(cdata));
-    var amzBtn = amz?'<button class="buy-btn buy-amz" onclick="wcPickStore(\''+k+'\', \''+cjson+'\', \'amz\')"><span class="btn-plus">+</span> Add to Stack</button>':'';
+    var amzBtn = amz?'<button class="buy-btn buy-amz" onclick="wcPickStore(\''+k+'\', \''+cjson+'\', \'amz\')"><span class="btn-plus">+</span> Add to Cart</button>':'';
     return'<div class="atc-row" id="atc-row-'+k+'">'+
       courseHTML+
       '<div class="atc-btns">'+amzBtn+'</div>'+
@@ -2415,12 +2389,69 @@ function buildResults(){
   // ── Render new recommendations
   var suppsHTML='';
   var suppIdx=0;
+  var metricLabels={sleep:'sleep quality',energy:'energy',stress:'stress resilience',activity:'activity',nutrition:'nutrition quality',metabolic:'metabolic health'};
+  var scoreFocus=Object.keys(metricLabels).sort(function(a,b){return healthScores[a]-healthScores[b];}).slice(0,2)
+    .map(function(k){return metricLabels[k];}).join(' and ');
+  var MECHANISM={
+    d3k2:'D3 raises vitamin-D signalling while K2 activates matrix Gla protein, helping route calcium toward bone rather than soft tissue.',
+    mag:'Magnesium supports ATP-dependent enzymes and GABA tone; B6 can improve intracellular magnesium handling.',
+    omega:'EPA helps resolve inflammatory signalling, while DHA supports neuronal and cell-membrane fluidity.',
+    ashwa:'Withanolides modulate HPA-axis stress signalling and pair well with magnesium or theanine for calmer evening tone.',
+    rhodiola:'Rosavins and salidroside support mitochondrial stress adaptation and catecholamine balance without a caffeine-like spike.',
+    theanine:'Raises alpha-wave activity and balances glutamate signalling; it pairs well with magnesium for sleep or caffeine for calm focus.',
+    bcomplex:'Methylated B vitamins support one-carbon metabolism and neurotransmitter synthesis, helping magnesium and CoQ10-dependent energy pathways work efficiently.',
+    coq10:'Ubiquinol shuttles electrons in mitochondrial complex I/II and works with antioxidants such as vitamin E and resveratrol.',
+    vitC:'Recycles glutathione and vitamin E, supports collagen hydroxylation, and improves non-heme iron absorption.',
+    zinc:'Supports zinc-finger transcription factors and immune enzymes; balance with copper if used at higher doses long term.',
+    nad:'NMN supports NAD+ pools used by sirtuins and DNA-repair enzymes; resveratrol may complement the same longevity pathways.',
+    lion:'Hericenones and erinacines support nerve-growth-factor signalling, pairing well with omega-3 membrane support.',
+    melatonin:'Helps anchor circadian timing and acts as a mitochondrial antioxidant at night.',
+    berb:'Activates AMPK and supports glucose disposal; it pairs well with post-meal walking and higher-fiber meals.',
+    creatine:'Replenishes phosphocreatine to buffer ATP demand in muscle and brain, synergizing with B vitamins and CoQ10 in energy metabolism.',
+    collagen:'Provides glycine, proline, and hydroxyproline; vitamin C is required for collagen cross-linking.',
+    probio:'Supports microbial diversity and short-chain-fatty-acid production, complementing fiber and fermented foods.',
+    curcumin:'Curcuminoids modulate NF-kB inflammatory signalling and work best with fat-containing meals.',
+    maca:'Glucosinolates may support endocrine resilience without directly supplying hormones.',
+    saffron:'Crocin and safranal influence serotonin and antioxidant pathways; avoid combining with mood medications unless supervised.',
+    resveratrol:'Activates stress-response pathways that complement NAD+ metabolism, especially alongside NMN.',
+    iron:'Restores hemoglobin and mitochondrial oxygen transport when deficient; vitamin C improves absorption.',
+    biotin:'Cofactor for carboxylase enzymes involved in fatty-acid and glucose metabolism.',
+    astaxanthin:'A lipid-soluble carotenoid that protects cell membranes from oxidative stress and pairs well with omega-3s.',
+    ala:'Alpha-lipoic acid supports redox cycling and insulin sensitivity, complementing berberine-style metabolic support.',
+    ps:'Phosphatidylserine supports neuronal membranes and may help regulate evening cortisol when stress is high.'
+  };
+  function personalizedWhy(k,sup){
+    return MECHANISM[k]||sup.why;
+  }
+  function recommendedUseHTML(k,sup){
+    var c=COURSE[k]||{type:'daily',on:'Long-term daily',bottles:'~1 bottle/month'};
+    var onClean=(c.on||'').replace(/\s+on$/i,'');
+    var mainLabel=c.type==='cycle'
+      ? onClean
+      : c.type==='asneeded'
+      ? 'Use as needed, low dose only'
+      : 'Suitable for long-term daily use';
+    var breakVal=(c.off&&c.off.toLowerCase()!=='reassess')?c.off:'';
+    var parts=[sup.slotLabel,sup.slotHint,mainLabel];
+    if(breakVal)parts.push('Minimum break: '+breakVal);
+    return'<div class="supp-hint"><div class="supp-use-label">Recommended Use</div>'+parts.filter(Boolean).join(' • ')+'</div>';
+  }
+  function doseMaxGrams(text){
+    var nums=(text||'').match(/[\d.]+/g)||[];
+    if(!nums.length)return 0;
+    var max=Math.max.apply(null,nums.map(Number));
+    return /mg/i.test(text)?max/1000:max;
+  }
+  function shouldShowInteraction(k,sup){
+    if(k==='omega')return doseMaxGrams(sup_getDose(sup,profile))>3;
+    return !!INTERACT_NOTE[k];
+  }
   function suppCardHTML(k){
     var sup=S[k]; if(!sup) return'';
     suppIdx++;
     function cleanNote(s){return s?s.replace(/⚕️\s*/g,'').replace(/\s{2,}/g,' ').trim():'';}
     var cycleHTML=CYCLE_WARN[k]?'<div class="cycle-warn">'+cleanNote(CYCLE_WARN[k])+'</div>':'';
-    var interactHTML=INTERACT_NOTE[k]?'<div class="interaction-note">'+cleanNote(INTERACT_NOTE[k])+'</div>':'';
+    var interactHTML=shouldShowInteraction(k,sup)?'<div class="interaction-note">'+cleanNote(INTERACT_NOTE[k])+'</div>':'';
     // PDF-only detailed block (print CSS shows it)
     var c=COURSE[k]||{type:'daily',on:'Long-term daily',bottles:'~1 bottle/month'};
     var onCleanPdf=(c.on||'').replace(/\s+on$/i,'');
@@ -2429,7 +2460,7 @@ function buildResults(){
     // Strip ⚕️ from notes for clean PDF text
     function stripMed(s){return s?s.replace(/⚕️\s*/g,'').replace(/\s{2,}/g,' ').trim():'';}
     var warnClean=stripMed(CYCLE_WARN[k]);
-    var interactClean=stripMed(INTERACT_NOTE[k]);
+    var interactClean=shouldShowInteraction(k,sup)?stripMed(INTERACT_NOTE[k]):'';
     var pdfDetail='<div class="pdf-supp-detail">'+
       '<div class="pdf-row"><span class="pdf-lbl">When to take</span><span>'+sup.slotLabel+'</span></div>'+
       '<div class="pdf-row"><span class="pdf-lbl">How to take</span><span>'+sup.slotHint+'</span></div>'+
@@ -2443,15 +2474,15 @@ function buildResults(){
           '<div class="supp-name">'+sup.name+'</div>'+
           '<div class="supp-dose">'+sup_getDose(sup,profile)+'</div>'+
         '</div>'+
-        '<div class="supp-why">'+sup.why+'</div>'+
-        '<div class="supp-slot">'+sup.slotLabel+'</div>'+
-        '<div class="supp-hint">'+sup.slotHint+'</div>'+
+        '<div class="supp-why">'+personalizedWhy(k,sup)+'</div>'+
+        recommendedUseHTML(k,sup)+
         cycleHTML+interactHTML+pdfDetail+
       '</div>'+
       buildAtcRow(k,sup)+
     '</div>';
   }
 
+  var suppCardKeys=newRecs.concat(alreadyInStack).sort(function(a,b){return slotPri(a)-slotPri(b);});
   if(newRecs.length===0){
     // User already covers the full core protocol — find advanced complementary options
     var advPool=(ADVANCED_SUPP[bestProto]||['coq10','lion','astaxanthin','curcumin','ps'])
@@ -2459,10 +2490,11 @@ function buildResults(){
         return alreadyTakingKeys.indexOf(k)<0 && adExcludedKeys.indexOf(k)<0 && S[k];
       });
     var advRecs=advPool.slice(0,3);
+    suppCardKeys=alreadyInStack.concat(advRecs).sort(function(a,b){return slotPri(a)-slotPri(b);});
     if(advRecs.length>0){
       // Update section title to reflect "advanced" framing
       var supSec=document.getElementById('suppsSection');
-      if(supSec){var t=supSec.querySelector('.sec-title');if(t)t.textContent='Next-Level Additions';}
+      if(supSec){var t=supSec.querySelector('.sec-title');if(t)t.textContent='Supplement Recommendations';}
       var metaEl=document.getElementById('suppsSectionMeta');
       if(metaEl)metaEl.textContent='Advanced Stack';
       suppsHTML=
@@ -2471,13 +2503,16 @@ function buildResults(){
         'Your health foundations are strong — you\'re already covering the core protocol. '+
         'Here are some less obvious, high-impact additions worth exploring next:'+
         '</div>';
-      advRecs.forEach(function(k){ suppsHTML+=suppCardHTML(k); });
+      suppCardKeys.forEach(function(k){ suppsHTML+=suppCardHTML(k); });
     }else{
-      suppsHTML='<div style="padding:16px;text-align:center;color:var(--muted);font-size:.9rem">'+
-        'Your supplement stack is exceptional — all key bases are covered.</div>';
+      suppCardKeys.forEach(function(k){ suppsHTML+=suppCardHTML(k); });
+      if(!suppsHTML){
+        suppsHTML='<div style="padding:16px;text-align:center;color:var(--muted);font-size:.9rem">'+
+          'Your supplement stack is exceptional — all key bases are covered.</div>';
+      }
     }
   }else{
-    newRecs.forEach(function(k){ suppsHTML+=suppCardHTML(k); });
+    suppCardKeys.forEach(function(k){ suppsHTML+=suppCardHTML(k); });
   }
   document.getElementById('suppsContent').innerHTML=suppsHTML;
   // Show footer CTA below supplement cards
@@ -2490,175 +2525,50 @@ function buildResults(){
   var totalLbl=document.getElementById('stackTotalLabel');
   if(totalLbl)totalLbl.textContent=(newRecs.length+alreadyInStack.length)+' supplements total';
 
-  // Schedule section — include BOTH new recs and already-taking
-  // ── Build sleek schedule with lifestyle tips ──────────────────────────────
+  // Daily Routine Tips — non-supplement guidance
   var sc2=healthScores;
-  // 5 slots: emptyMorning, breakfast, lunch, dinner, bed
-  var slots2={emptyMorning:[],breakfast:[],lunch:[],dinner:[],bed:[]};
-  // Supplements taken twice per day → appear in two slots
-  var DUAL_SLOT={
-    berb:['lunch','dinner'],  // before lunch + before dinner
-    vitC:['breakfast','lunch'], // split morning + midday
-    ps:  ['breakfast','lunch'], // 100mg x2: breakfast + lunch
-    probio:['emptyMorning']  // single but empty stomach
-  };
-  var scheduleSupps=newRecs.concat(alreadyInStack);
-  scheduleSupps.forEach(function(k){
-    var s=S[k];if(!s)return;
-    var isExisting=alreadyInStack.indexOf(k)>-1;
-    var dose=sup_getDose(s,profile);
-    var dual=DUAL_SLOT[k];
-    if(dual){
-      // split dose label for dual-slot supplements
-      var splitDose= k==='berb'?'500 mg before meal':
-                     k==='vitC'?'500 mg':
-                     k==='ps'?'100 mg':''+dose;
-      dual.forEach(function(sl){
-        slots2[sl]&&slots2[sl].push({name:s.name,dose:splitDose,existing:isExisting,timing:s.slotHint});
-      });
-    }else{
-      var sl=s.slot||'breakfast';
-      var entry={name:s.name,dose:dose,existing:isExisting,timing:s.slotHint};
-      if(sl==='morning-empty')slots2.emptyMorning.push(entry);
-      else if(sl==='breakfast'||sl==='morning-drink')slots2.breakfast.push(entry);
-      else if(sl==='lunch'||sl==='prelunch')slots2.lunch.push(entry);
-      else if(sl==='dinner'||sl==='evening')slots2.dinner.push(entry);
-      else if(sl==='prebed')slots2.bed.push(entry);
-    }
-  });
-
-  function pillsHTML(arr){
-    if(!arr.length)return'';
-    return arr.map(function(x){
-      var style=x.existing?'background:rgba(27,139,94,.08);color:var(--green);border:1px solid rgba(27,139,94,.25);':'';
-      return'<span class="sch-pill" style="'+style+'">'+x.name+' · '+x.dose+'</span>';
-    }).join('');
-  }
-
-  // Lifestyle tips keyed to scores
+  var routineGroups=[];
   var tipWake=[];
-  // Correct sequence: phone → leg shakes (in bed) → warm water → optional extras
-  tipWake.push('No phone or screen for the first 20 minutes — silence notifications, do not open any apps');
-  tipWake.push('Leg shakes & shoulder rolls for 60 seconds while still in bed — activates lymphatic flow and gently wakes the nervous system');
-  tipWake.push('500 ml warm or hot water — warmth gently activates digestion and stimulates gut motility; add a pinch of sea salt for electrolytes');
-  if(sc2.sleep<70) tipWake.push('Track your sleep window — consistent wake time matters more than bedtime');
-  if(sc2.stress<65) tipWake.push('2-minute box breathing: inhale 4s · hold 4s · exhale 4s · hold 4s');
+  tipWake.push('No phone or screen for the first 20 minutes — silence notifications, do not open any apps.');
+  tipWake.push('Leg shakes and shoulder rolls for 60 seconds while still in bed — activates lymphatic flow and gently wakes the nervous system.');
+  tipWake.push('500 ml warm or hot water — warmth gently activates digestion and stimulates gut motility; add a pinch of sea salt for electrolytes.');
+  if(sc2.sleep<70) tipWake.push('Track your sleep window — consistent wake time matters more than bedtime.');
+  if(sc2.stress<65) tipWake.push('2-minute box breathing: inhale 4s, hold 4s, exhale 4s, hold 4s.');
+  routineGroups.push({title:'Morning',items:tipWake});
 
   var tipBreakfast=[];
-  tipBreakfast.push('Eat protein first — aim for 25–35 g at this meal to blunt glucose spikes');
-  if(sc2.metabolic<70) tipBreakfast.push('10-minute walk after breakfast lowers post-meal glucose by up to 30%');
+  tipBreakfast.push('Eat protein first — aim for 25–35 g at breakfast to blunt glucose spikes.');
+  if(sc2.metabolic<70) tipBreakfast.push('Take a 10-minute walk after breakfast to lower post-meal glucose.');
+  routineGroups.push({title:'Breakfast',items:tipBreakfast});
 
   var tipLunch=[];
-  if(sc2.activity<65) tipLunch.push('Desk-bound? Stand up and walk 5 minutes every 90 minutes during the day');
-  tipLunch.push('Natural light exposure during lunch break — 10 min outside supports cortisol rhythm');
+  if(sc2.activity<65) tipLunch.push('Desk-bound? Stand up and walk 5 minutes every 90 minutes during the day.');
+  tipLunch.push('Get natural light during lunch break — 10 minutes outside supports your cortisol rhythm.');
+  routineGroups.push({title:'Lunch / Midday',items:tipLunch});
 
   var tipDinner=[];
-  tipDinner.push('Stop eating at least 3 hours before sleep — late meals disrupt melatonin onset');
-  if(sc2.stress<65) tipDinner.push('Screen-free hour before bed — blue light shifts your circadian clock by up to 3 hours');
-  if(sc2.sleep<65) tipDinner.push('Keep the room cool: 17–19°C / 63–67°F for deeper sleep architecture');
+  tipDinner.push('Stop eating at least 3 hours before sleep — late meals disrupt melatonin onset.');
+  if(sc2.stress<65) tipDinner.push('Create a screen-free hour before bed to protect your circadian rhythm.');
+  if(sc2.sleep<65) tipDinner.push('Keep the room cool: 17–19°C / 63–67°F for deeper sleep architecture.');
+  routineGroups.push({title:'Evening',items:tipDinner});
 
   var tipBed=[];
-  tipBed.push('Dim lights 60–90 minutes before sleep — full darkness signals melatonin release');
-  if(sc2.stress<65) tipBed.push('Progressive muscle relaxation or 4-7-8 breathing to lower cortisol before sleep');
-  if(sc2.sleep<65) tipBed.push('Avoid alcohol — even one drink reduces REM sleep by up to 24%');
+  tipBed.push('Dim lights 60–90 minutes before sleep — full darkness signals melatonin release.');
+  if(sc2.stress<65) tipBed.push('Use progressive muscle relaxation or 4-7-8 breathing to lower cortisol before sleep.');
+  if(sc2.sleep<65) tipBed.push('Avoid alcohol — even one drink can reduce REM sleep.');
+  routineGroups.push({title:'Before Bed',items:tipBed});
 
-  function tipsHTML(arr){
-    if(!arr||!arr.length)return'';
-    return'<div class="sch-tip">'+arr.map(function(t,i){
-      return'<div class="sch-tip-item"><span class="sch-num">'+(i+1)+'.</span><span class="sch-tip-text">'+t+'</span></div>';
+  var lifeCont=document.getElementById('lifestyleContent');
+  if(lifeCont){
+    lifeCont.innerHTML='<div class="routine-grid">'+routineGroups.map(function(group){
+      return'<div class="routine-card">'+
+        '<div class="routine-title">'+group.title+'</div>'+
+        group.items.map(function(item){return'<div class="routine-item">'+item+'</div>';}).join('')+
+      '</div>';
     }).join('')+'</div>';
   }
 
-  function schSlot(timeLabel,timeHint,suppArr,tips){
-    var hasPills=suppArr.length>0;
-    var pillsBlock=hasPills
-      ?'<div class="sch-pills">'+pillsHTML(suppArr)+'</div>'
-      :'';
-    return'<div class="sch-slot">'+
-      '<div class="sch-time">'+
-        '<div class="sch-time-label">'+timeLabel+'</div>'+
-        (timeHint?'<div class="sch-time-hour" style="font-size:.68rem;color:var(--muted);margin-top:3px;line-height:1.3">'+timeHint+'</div>':'')+
-      '</div>'+
-      '<div class="sch-body">'+
-        pillsBlock+
-        tipsHTML(tips)+
-      '</div>'+
-    '</div>';
-  }
-
-  var scheduleHTML='<div class="schedule-wrap">'+
-    schSlot('Morning','On empty stomach — before eating',slots2.emptyMorning,tipWake)+
-    schSlot('Breakfast','With food',slots2.breakfast,tipBreakfast)+
-    schSlot('Lunch / Midday','With or before main meal',slots2.lunch,tipLunch)+
-    schSlot('Dinner','With or 30 min before dinner',slots2.dinner,tipDinner)+
-    schSlot('Before Bed','30–60 min before sleep',slots2.bed,tipBed)+
-  '</div>';
-
-  document.getElementById('scheduleContent').innerHTML=scheduleHTML;
-
-  // Tools & devices section
-  document.getElementById('toolsContent').innerHTML=
-    '<div class="tools-grid">'+buildToolsSection(bestProto,healthScores)+'</div>';
   welmeTrackQuizCompleted();
-
-  // ── Lifestyle section
-  var lifeSec=document.getElementById('lifestyleSection');
-  var lifeCont=document.getElementById('lifestyleContent');
-  if(lifeSec&&lifeCont){
-    // lifestyleSection stays display:none on screen — only shown via print CSS in PDF
-    var sc=healthScores;
-    var tips=[];
-    // Nutrition tips
-    tips.push({cat:'🥗 Nutrition',items:[
-      'Eat your largest meal at lunch, not dinner — evening caloric load blunts growth hormone release during sleep and raises next-morning cortisol.',
-      'Include 30g of fibre daily: 2 tablespoons of ground flaxseed (on any meal) is the most underrated high-leverage habit for hormones and gut microbiome.',
-      'Eat protein first at every meal — protein at the start of a meal blunts the glucose spike by up to 30% and increases satiety signalling.',
-      'Limit liquid calories: juices, smoothies, and sports drinks create glucose spikes without triggering satiety — opt for whole fruit instead.',
-      sc.nutrition<65?'Add fermented foods daily (kefir, kimchi, sauerkraut, live yoghurt) — even 1–2 tablespoons per meal significantly shifts gut microbiome diversity.':null,
-    ].filter(Boolean)});
-    // Sleep tips
-    tips.push({cat:'😴 Sleep Quality',items:[
-      'Your bedroom temperature should be 17–19°C (62–67°F) — the single most impactful sleep environment variable.',
-      'Avoid alcohol within 3 hours of sleep: alcohol reduces REM sleep by up to 25% even when it helps you fall asleep faster.',
-      'Keep your last meal at least 2.5 hours before bed — digestion raises core body temperature, delaying sleep onset.',
-      sc.sleep<65?'Use a consistent sleep/wake schedule on weekends — social jet lag (>1h difference) is as damaging as sleeping 2 hours less.':null,
-      sc.sleep<50?'A 10–20 min nap between 13:00–15:00 restores cognitive performance without affecting night sleep — longer naps impair it.':null,
-    ].filter(Boolean)});
-    // Stress & recovery tips
-    tips.push({cat:'🧘 Stress & Recovery',items:[
-      'Cold-water face immersion (20 seconds in ice-cold water) activates the diving reflex — lowers heart rate by 10–25% in seconds. Use before high-stakes meetings or during acute stress.',
-      'Physiological sigh: double inhale through the nose, then long exhale through the mouth — the fastest known method to reduce real-time arousal and anxiety.',
-      sc.stress<65?'Schedule a daily "worry window" (10 minutes) — writing down stressors prevents cognitive rumination and measurably reduces cortisol AUC across the day.':null,
-      'Limit caffeine to before 13:00 — caffeine has a 6-hour half-life and a 10–12 hour quarter-life. Afternoon coffee disrupts sleep architecture even if you feel you fall asleep normally.',
-    ].filter(Boolean)});
-    // Activity tips
-    tips.push({cat:'🏃 Movement & Activity',items:[
-      'A 10-minute walk after meals reduces postprandial glucose spike by up to 30% — more effective than the same 10 minutes of exercise at any other time.',
-      'Zone 2 cardio (you can hold a conversation, but barely) for 150+ minutes per week is the highest-leverage activity for longevity, insulin sensitivity, and mitochondrial density.',
-      sc.activity<65?'Stand up and move for 2 minutes every 45 minutes — prolonged sitting creates metabolic dysfunction independent of total daily exercise volume.':null,
-      'Resistance training 2× per week maintains metabolic rate and bone density — more impactful than cardio for body composition after age 30.',
-    ].filter(Boolean)});
-    // Non-obvious health habits
-    tips.push({cat:'💡 Non-Obvious Habits',items:[
-      'Nasal breathing during sleep — mouth taping (with medical tape) reduces micro-arousals, improves oxygen saturation, and reduces snoring. Start with 15-minute trials while awake.',
-      'Sunlight in the first 30 minutes after waking — 5–10 minutes of morning light sets your circadian clock, improves night-time melatonin onset, and elevates daytime alertness.',
-      'Magnesium depletes faster under stress, with alcohol, and through sweat — three separate reasons why most active people are chronically borderline deficient.',
-      'Social connection is a top-tier health variable: loneliness raises all-cause mortality risk by 26% — equivalent to smoking 15 cigarettes per day.',
-    ]});
-    var lHTML='';
-    tips.forEach(function(sec){
-      lHTML+='<div style="margin-bottom:20px">'+
-        '<div style="font-size:.82rem;font-weight:800;color:var(--green);margin-bottom:10px;'+
-          'padding-bottom:6px;border-bottom:1px solid var(--border)">'+sec.cat+'</div>'+
-        '<ul style="margin:0;padding-left:18px">'+
-          sec.items.map(function(t){
-            return'<li style="font-size:.82rem;color:var(--text);line-height:1.65;margin-bottom:8px">'+t+'</li>';
-          }).join('')+
-        '</ul>'+
-      '</div>';
-    });
-    lifeCont.innerHTML=lHTML;
-  }
 
 
   }catch(err){
@@ -2712,10 +2622,10 @@ function wcPickStore(k,cjson,store){
       row2.querySelectorAll('.buy-btn').forEach(function(b){
         b.classList.remove('buy-selected');
         // restore original label
-        if(b.classList.contains('buy-amz'))b.innerHTML='<span class="btn-plus">+</span> Add to Stack';
+        if(b.classList.contains('buy-amz'))b.innerHTML='<span class="btn-plus">+</span> Add to Cart';
       });
       var sel=row2.querySelector('.buy-amz');
-      if(sel){sel.classList.add('buy-selected');sel.innerHTML='<span class="btn-plus">+</span> Add to Stack';}
+      if(sel){sel.classList.add('buy-selected');sel.innerHTML='<span class="btn-plus">+</span> Add to Cart';}
     }
   }catch(e){}
 }
@@ -2770,10 +2680,10 @@ function wcAddTool(k,cjson){
       card.classList.add('in-cart');
       card.querySelectorAll('.tool-btn').forEach(function(b){
         b.classList.remove('buy-selected');
-        b.innerHTML='<span class="btn-plus">+</span> Add to Stack';
+        b.innerHTML='<span class="btn-plus">+</span> Add to Cart';
       });
       var btn=card.querySelector('.t-amz');
-      if(btn){btn.classList.add('buy-selected');btn.innerHTML='<span class="btn-plus">+</span> Add to Stack';}
+      if(btn){btn.classList.add('buy-selected');btn.innerHTML='<span class="btn-plus">+</span> Add to Cart';}
     }
     wcUpdateFloat();
     wcShowToast(data.name,'amz');
@@ -2789,7 +2699,7 @@ function wcRemove(k){
     toolCard.classList.remove('in-cart');
     toolCard.querySelectorAll('.tool-btn').forEach(function(b){
       b.classList.remove('buy-selected');
-      b.innerHTML='<span class="btn-plus">+</span> Add to Stack';
+      b.innerHTML='<span class="btn-plus">+</span> Add to Cart';
     });
   }
   var btn=document.getElementById('atc-btn-'+k);
@@ -2833,7 +2743,7 @@ function wcRenderDrawer(){
   var foot=document.getElementById('cartFoot');
   if(!body)return;
   if(!keys.length){
-    body.innerHTML='<div class="cart-empty"><div class="cart-empty-icon">🛒</div>Your stack is empty.<br>Tap <strong>+ Add to Stack</strong> on any recommendation to add it.</div>';
+    body.innerHTML='<div class="cart-empty"><div class="cart-empty-icon">🛒</div>Your cart is empty.<br>Tap <strong>+ Add to Cart</strong> on any recommendation to add it.</div>';
     if(foot)foot.style.display='none';
     return;
   }
@@ -2958,7 +2868,7 @@ if (WELME_SHEET_URL) {
 </script>
 <!-- Cart Float Button -->
 <button id="cartFloat" class="cart-float" onclick="wcOpenDrawer()">
-  <span class="cart-icon">🛒</span> View My Stack <span id="cartBadge" class="cart-badge">0</span>
+  <span class="cart-icon">🛒</span> View My Cart <span id="cartBadge" class="cart-badge">0</span>
 </button>
 
 <!-- Cart Drawer -->
@@ -2992,7 +2902,7 @@ if (WELME_SHEET_URL) {
     <button onclick="submitEmailAndDownload()"
       style="width:100%;padding:14px;background:#EAF7F2;color:#0B1513;border:1.5px solid rgba(10,63,61,.22);border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:12px;font-family:inherit;transition:opacity .15s"
       onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">
-      Download My Protocol PDF
+      Save My Protocol PDF
     </button>
     <div onclick="closeEmailGate()"
       style="color:var(--ink-muted);font-size:13px;cursor:pointer;font-family:'JetBrains Mono',monospace;letter-spacing:.04em">
