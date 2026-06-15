@@ -269,12 +269,19 @@ body{background:var(--bg);color:var(--text);
   padding:24px;background:var(--card);border:1.5px solid var(--border);border-radius:14px;margin-bottom:16px;
   animation:fadeUp .45s ease bothbox-shadow: 0 2px 12px rgba(15,23,42,.07);}
 .sec-title{font-size:1.05rem;font-weight:800;color:var(--text);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+#suppsSection>.sec-title{font-size:1.48rem;margin-bottom:26px;padding-bottom:14px;border-bottom:1.5px solid var(--border)}
 .pdf-health-only{display:none}
 .screen-only{display:block}
 .supp-disclaimer{background:#FFF7ED;border:1.5px solid rgba(180,83,9,.24);border-radius:12px;
   padding:14px 16px;color:#92400E;font-size:.82rem;line-height:1.6;margin-bottom:16px}
 .supp-card-note{font-size:.78rem;color:var(--muted);background:var(--card);border:1.5px dashed var(--border);
   border-radius:10px;padding:10px 12px;margin-top:12px;line-height:1.55}
+.supp-group{padding:18px 14px 6px;margin:0 -14px 32px;border-radius:16px;background:rgba(27,139,94,.035)}
+.supp-group.recommendations{margin-top:34px;background:rgba(26,95,168,.035);border-top:1.5px solid var(--border)}
+.supp-group-title{font-size:1.18rem;font-weight:900;color:var(--text);margin:0 0 16px;display:flex;align-items:center;gap:8px}
+.supp-group-title::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block}
+.supp-group.recommendations .supp-group-title::before{background:var(--blue)}
+.supp-group-sub{font-size:.78rem;color:var(--muted);line-height:1.55;margin:-6px 0 14px}
 .supp-mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
 @media(max-width:560px){.supp-mini-grid{grid-template-columns:1fr}}
 .supp-info-box{background:var(--card);border:1.5px solid var(--border);border-radius:10px;padding:12px}
@@ -282,15 +289,38 @@ body{background:var(--bg);color:var(--text);
   letter-spacing:.06em;margin-bottom:7px}
 .supp-info-list{display:flex;flex-direction:column;gap:5px;font-size:.78rem;color:var(--muted);line-height:1.45}
 .supp-info-list span::before{content:'• ';color:var(--green);font-weight:800}
+.supp-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}
+.supp-metric{background:#fff;border:1.5px solid rgba(27,139,94,.22);border-radius:11px;padding:11px 8px;text-align:center}
+.supp-metric-value{font-size:.95rem;font-weight:900;color:var(--text);line-height:1.18}
+.supp-metric-label{font-size:.62rem;font-weight:800;color:var(--green);text-transform:uppercase;letter-spacing:.05em;margin-top:5px}
+@media(max-width:560px){.supp-metrics{grid-template-columns:repeat(2,1fr)}}
+.amazon-links-block{border-top:1.5px solid var(--border);margin-top:28px;padding-top:22px}
+.amazon-links-title{font-size:1.05rem;font-weight:900;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.amazon-links-title::before{content:'🛒';font-size:.95rem}
+.protocol-summary{border-top:1.5px solid var(--border);margin-top:28px;padding-top:22px}
 .purchase-table{width:100%;border-collapse:separate;border-spacing:0 8px}
 .purchase-table th{font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:left;padding:0 10px 4px}
-.purchase-table td{background:var(--bg);border-top:1.5px solid var(--border);border-bottom:1.5px solid var(--border);padding:10px}
+.purchase-table th:nth-child(1),.purchase-table td:nth-child(1){width:52%}
+.purchase-table th:nth-child(2),.purchase-table td:nth-child(2){width:20%}
+.purchase-table th:nth-child(3),.purchase-table td:nth-child(3){width:28%;text-align:right}
+.purchase-table td{background:var(--bg);border-top:1.5px solid var(--border);border-bottom:1.5px solid var(--border);padding:8px 10px}
 .purchase-table td:first-child{border-left:1.5px solid var(--border);border-radius:10px 0 0 10px;font-weight:700}
 .purchase-table td:last-child{border-right:1.5px solid var(--border);border-radius:0 10px 10px 0;text-align:right}
-.amazon-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;background:var(--green);
-  color:#fff;text-decoration:none;border-radius:8px;padding:9px 13px;font-size:.78rem;font-weight:800}
+.amazon-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;background:var(--card);
+  color:var(--green);text-decoration:none;border:1.5px solid var(--green);border-radius:8px;padding:7px 11px;font-size:.74rem;font-weight:800;white-space:nowrap}
+.amazon-icon{font-size:.9rem;line-height:1}
 .purchase-price{font-size:.9rem;font-weight:800;color:var(--text);white-space:nowrap}
 .purchase-price span{color:var(--green);font-size:1.15em}
+@media(max-width:560px){
+  .purchase-table thead{display:none}
+  .purchase-table,.purchase-table tbody,.purchase-table tr,.purchase-table td{display:block;width:100%}
+  .purchase-table tr{background:var(--bg);border:1.5px solid var(--border);border-radius:10px;margin-bottom:10px;padding:10px}
+  .purchase-table td{border:none!important;background:transparent;padding:4px 0}
+  .purchase-table td:first-child{border-radius:0;font-weight:800;font-size:.92rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .purchase-table td:nth-child(2){padding-top:6px}
+  .purchase-table td:last-child{border-radius:0;text-align:left;padding-top:8px}
+  .amazon-btn{min-height:36px;padding:7px 12px;width:auto;display:inline-flex;flex-wrap:nowrap}
+}
 
 /* ── SCORE BARS ── */
 .score-overall-card{background:var(--bg);border-radius:14px;padding:18px;margin-bottom:16px;border:1.5px solid var(--border)}
@@ -356,11 +386,9 @@ body{background:var(--bg);color:var(--text);
 
 /* Supplement cards */
 .supp-card{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius);
-  padding:16px;margin-bottom:14px}
+  padding:16px;margin-bottom:16px}
 .supp-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px}
-.supp-name{font-size:1.05rem;font-weight:800;color:var(--text);flex-grow:1}
-.supp-dose{font-size:.85rem;background:var(--card);border-radius:8px;padding:4px 10px;
-  color:var(--green);font-weight:700;white-space:nowrap}
+.supp-name{font-size:1rem;font-weight:800;color:var(--text);flex-grow:1;line-height:1.25}
 .supp-why{font-size:.85rem;color:var(--muted);line-height:1.7;margin-bottom:12px}
 .supp-slot{display:inline-block;background:var(--card);border-radius:8px;padding:6px 12px;
   font-size:.78rem;font-weight:700;color:var(--blue);margin-bottom:12px}
@@ -613,12 +641,22 @@ body{background:var(--bg);color:var(--text);
   .meds-title{font-size:1.2rem}
   .res-title{font-size:1.4rem}
   .section{padding:18px}
+  #suppsSection{padding:4px 0 0;background:transparent;border:none;border-radius:0}
+  #suppsSection>.sec-title{font-size:1.38rem;padding:0 2px 13px;margin-bottom:22px}
+  .supp-group{padding:16px 10px 4px;margin:0 -10px 30px;border-radius:14px}
+  .supp-group.recommendations{margin-top:34px;padding-top:18px}
+  .supp-group-title{font-size:1.12rem;padding:0 2px;margin-bottom:15px}
+  .supp-name{font-size:.98rem}
+  .supp-card{padding:14px;margin-bottom:16px;border-radius:14px}
   .opt{min-height:52px;padding:14px 12px}
   .q-nav{flex-direction:column;gap:12px}
   .btn-back,.btn-next{width:100%}
   .prog-dots{display:none}
   .opt-label{font-size:.95rem}
-  .supp-card{padding:12px}
+  .supp-info-box{padding:11px}
+  .supp-hint{padding:10px}
+  .supp-metrics{gap:7px}
+  .supp-metric{padding:10px 6px}
   .kbju-grid{grid-template-columns:repeat(2,1fr)}
   .home-disclaimer{font-size:.74rem}
 }
@@ -704,7 +742,6 @@ body{background:var(--bg);color:var(--text);
     margin-bottom:10px;padding:12px!important
   }
   .supp-name{font-size:.9rem!important}
-  .supp-dose{font-size:.78rem!important}
   .supp-why{font-size:.77rem!important;line-height:1.55!important}
   .supp-slot{font-size:.72rem!important}
   .supp-hint{font-size:.71rem!important}
@@ -938,8 +975,30 @@ Separate with comma or newline"></textarea>
 
     <!-- Supplements section -->
     <div class="section screen-only" id="suppsSection">
-      <div class="sec-title">💊 Your Personalized Supplement Guide</div>
+      <div class="sec-title">💊 Personalized Supplement Guide</div>
       <div id="suppsContent"></div>
+      <div id="purchaseContent"></div>
+      <div id="protocolSummarySection" class="protocol-summary">
+        <div class="sec-title">📄 Full Health Protocol</div>
+        <div class="supp-mini-grid">
+          <div class="supp-info-box">
+            <div class="supp-info-title">Personal Plan</div>
+            <div class="supp-info-list">
+              <span>Personalized supplement schedule</span>
+              <span>Supplement timing, duration, and cycling guidance</span>
+              <span>Nutrition targets and meal guidance</span>
+            </div>
+          </div>
+          <div class="supp-info-box">
+            <div class="supp-info-title">Health Guidance</div>
+            <div class="supp-info-list">
+              <span>Lifestyle recommendations</span>
+              <span>Sleep and recovery optimization</span>
+              <span>Physical activity recommendations</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- КБЖУ section - Change 3 -->
@@ -957,25 +1016,7 @@ Separate with comma or newline"></textarea>
     <!-- Actions -->
     <div class="screen-only results-cta-card" style="padding:24px;background:var(--card);border:1.5px solid var(--border);
       border-radius:14px;margin-bottom:16px">
-      <button class="res-action-btn" onclick="downloadPDF()">Get My Protocol</button>
-      <p style="font-size:.82rem;color:var(--muted);line-height:1.65;text-align:center;
-        margin:14px 0 16px;max-width:360px;margin-left:auto;margin-right:auto">
-        Your full answer analysis and personalized Health Protocol are available in the PDF.
-      </p>
-      <div style="text-align:center">
-        <button onclick="location.reload()" style="background:none;border:none;cursor:pointer;
-          font-size:.78rem;color:var(--muted);text-decoration:underline;font-family:inherit;padding:4px 8px">
-          Start over
-        </button>
-      </div>
-    </div>
-
-    <div class="section screen-only" id="purchaseSection">
-      <div class="sec-title">🛒 Optional Supplement Purchase Links</div>
-      <p style="font-size:.84rem;color:var(--muted);line-height:1.65;margin-bottom:14px">
-        If you want to purchase the recommended supplements, you can use the links below.
-      </p>
-      <div id="purchaseContent"></div>
+      <button class="res-action-btn" onclick="downloadPDF()">View My Protocol</button>
     </div>
   </div>
 </div>
@@ -1096,17 +1137,17 @@ var S={
   d3k2:{name:"Vitamin D3 + K2 (MK-7)",dose:"2000-4000 IU D3 + 100 mcg K2",
     getDose:function(p){if(!p)return"2000-4000 IU";if(p.ageGrp==="young"&&p.bmi<25)return"2000 IU";if(p.ageGrp==="senior"||p.bmi>27)return"4000 IU";if(p.bmi>30)return"6000 IU";return"3000 IU";},
     why:"Immune regulation, bone density, mood. K2 ensures calcium goes to bones, not arteries. 80% of Europeans are deficient — highest-ROI single supplement.",
-    slot:"breakfast",slotLabel:"With Breakfast",slotHint:"With a fat-containing meal — absorption drops without fat",
+    slot:"breakfast",slotLabel:"With Breakfast",slotHint:"With a fat-containing meal. Absorption drops without fat.",
     keys:["vitamin d","vit d","d3","cholecalciferol","d 3","d-3"]},
   mag:{name:"Magnesium Glycinate",dose:"300-400 mg",
     getDose:function(p){if(!p)return"300-400 mg";if(p.sex==="Female"||p.w<70)return"300 mg";return"400 mg";},
     why:"Supports 300+ enzymatic reactions, regulates cortisol and GABA, improves deep sleep architecture. Glycinate form crosses the blood-brain barrier and causes no digestive issues.",
-    slot:"prebed",slotLabel:"Before Bed",slotHint:"30-60 minutes before sleep — start at 200 mg if new to magnesium",
+    slot:"prebed",slotLabel:"Before Bed",slotHint:"30-60 minutes before sleep. Start at 200 mg if new to magnesium.",
     keys:["magnesium","mag","магний"]},
   omega:{name:"Omega-3 (EPA + DHA)",dose:"2 g combined",
     getDose:function(p){if(!p)return"1-2 g";if(p.ageGrp==="young")return"1 g";return"2 g";},
     why:"Anti-inflammatory cornerstone. Supports cardiovascular, cognitive, and hormonal health. EPA reduces inflammatory markers; DHA builds brain cell membranes.",
-    slot:"breakfast",slotLabel:"With Breakfast",slotHint:"With any fat-containing meal — refrigerate after opening",
+    slot:"breakfast",slotLabel:"With Breakfast",slotHint:"With any fat-containing meal for better absorption",
     keys:["omega","fish oil","epa","dha","омега","omega-3","omega 3"]},
   ashwa:{name:"Ashwagandha KSM-66",dose:"300-600 mg",
     why:"Reduces cortisol by 14–30% in clinical trials. Supports stress resilience, hormonal balance, and sleep quality. KSM-66 is the most studied, highest-bioavailability extract.",
@@ -1114,7 +1155,7 @@ var S={
     keys:["ashwagandha","ksm","ашваганда","ashwa"]},
   rhodiola:{name:"Rhodiola Rosea",dose:"300-400 mg",
     why:"Adaptogen for mental and physical endurance. Reduces fatigue without stimulant crash. Improves mitochondrial efficiency. Do not use after 3 PM.",
-    slot:"morning-empty",slotLabel:"Early Morning — Empty Stomach",slotHint:"Before eating, not after 3 PM — cycle 12 weeks on, 4 off",
+    slot:"morning-empty",slotLabel:"Early Morning, Empty Stomach",slotHint:"Before eating. Not after 3 PM. Cycle 12 weeks on, 4 off.",
     keys:["rhodiola","родиола","rhodiola rosea"]},
   theanine:{name:"L-Theanine",dose:"200 mg",
     why:"Promotes calm alertness without sedation. Increases alpha brain waves. Synergistic with caffeine. At night: speeds sleep onset and reduces racing thoughts.",
@@ -1122,11 +1163,11 @@ var S={
     keys:["theanine","l-theanine","теанин","l theanine"]},
   bcomplex:{name:"B-Complex (methylated)",dose:"1 capsule",
     why:"Cofactors for neurotransmitter and energy production. Methylated forms bypass common MTHFR variations. Stress depletes B vitamins rapidly.",
-    slot:"breakfast",slotLabel:"With Breakfast",slotHint:"Morning only — B vitamins are energizing and may affect sleep if taken late",
+    slot:"breakfast",slotLabel:"With Breakfast",slotHint:"Morning only. B vitamins are energizing and may affect sleep if taken late.",
     keys:["b complex","b-complex","b vitamin","bcomplex","multivitamin","multi","b12","methylcobalamin","b 12"]},
   coq10:{name:"CoQ10 (Ubiquinol)",dose:"100-200 mg",
     why:"Mitochondrial energy production and powerful antioxidant. Natural levels decline 50% between age 30-60. Ubiquinol is the active, ready-to-use form.",
-    slot:"lunch",slotLabel:"With Lunch",slotHint:"Fat-soluble — take with a fat-containing meal. Spreading CoQ10 from breakfast reduces crowding.",
+    slot:"lunch",slotLabel:"With Lunch",slotHint:"Fat-soluble. Take with a fat-containing meal. Spreading CoQ10 from breakfast reduces crowding.",
     keys:["coq10","ubiquinol","coenzyme q","убихинол","coq 10"]},
   vitC:{name:"Vitamin C (buffered)",dose:"500-1000 mg",
     why:"Collagen synthesis cofactor, immune modulator, antioxidant. Buffered sodium ascorbate is gentle on the stomach. Split dose for steady blood levels.",
@@ -1135,20 +1176,20 @@ var S={
   zinc:{name:"Zinc Bisglycinate",dose:"20-25 mg",
     getDose:function(p){if(!p)return"15-25 mg";if(p.sex==="Female")return"15 mg";return"25 mg";},
     why:"Immune function, testosterone support, skin repair, and enzyme cofactor. Bisglycinate is the best-absorbed form with minimal GI effects.",
-    slot:"dinner",slotLabel:"With Dinner",slotHint:"Never on an empty stomach — causes nausea. Separate from calcium by 2 hours",
+    slot:"dinner",slotLabel:"With Dinner",slotHint:"Never on an empty stomach. May cause nausea. Separate from calcium by 2 hours.",
     keys:["zinc","цинк","zink"]},
   nad:{name:"NMN (Nicotinamide Mononucleotide)",dose:"250-500 mg",
     getDose:function(p){if(!p)return"250-500 mg";if(p.ageGrp==="young")return"250 mg";if(p.ageGrp==="mature")return"500 mg";return"750 mg";},
     why:"NAD+ precursor. NAD+ levels decline ~50% between age 30-60. Restores cellular energy, DNA repair (sirtuins), and mitochondrial biogenesis.",
-    slot:"morning-empty",slotLabel:"Early Morning — Empty Stomach",slotHint:"30-60 min before breakfast — completely empty stomach required",
+    slot:"morning-empty",slotLabel:"Early Morning, Empty Stomach",slotHint:"30-60 min before breakfast. Empty stomach required.",
     keys:["nmn","nad","nicotinamide","нмн","nmn+"]},
   lion:{name:"Lion's Mane Mushroom",dose:"500-1000 mg",
     why:"Stimulates Nerve Growth Factor (NGF) synthesis. Supports memory, focus, and neuroprotection. Effects compound over 4-8 weeks of daily use.",
-    slot:"lunch",slotLabel:"With Lunch",slotHint:"Take with food — supports afternoon focus and cognitive clarity. Not after 5 PM.",
+    slot:"lunch",slotLabel:"With Lunch",slotHint:"Take with food. Supports afternoon focus and cognitive clarity. Not after 5 PM.",
     keys:["lion's mane","lion mane","hericium","ежовик","lions mane"]},
   melatonin:{name:"Melatonin",dose:"0.5-1 mg",
     why:"Circadian entrainment and powerful antioxidant. Low doses (0.5 mg) are as effective as high doses without next-day grogginess.",
-    slot:"prebed",slotLabel:"Before Bed",slotHint:"Exactly 30 min before your target sleep time — low dose preferred",
+    slot:"prebed",slotLabel:"Before Bed",slotHint:"Exactly 30 min before your target sleep time. Low dose preferred.",
     keys:["melatonin","мелатонин"]},
   berb:{name:"Berberine HCL",dose:"500 mg x2",
     why:"Activates AMPK — the metabolic master switch. Reduces blood sugar, insulin resistance, LDL cholesterol. Effects comparable to metformin in studies.",
@@ -1157,7 +1198,7 @@ var S={
   creatine:{name:"Creatine Monohydrate",dose:"3-5 g",
     getDose:function(p){if(!p)return"3-5 g";return p.sex==="Female"?"3 g":"5 g";},
     why:"Most studied supplement. Cellular ATP regeneration, reduced recovery time, muscle performance. Emerging evidence for cognitive benefits. No loading phase needed.",
-    slot:"lunch",slotLabel:"With Lunch",slotHint:"Timing is flexible — with any main meal. Post-workout lunch is ideal for athletes.",
+    slot:"lunch",slotLabel:"With Lunch",slotHint:"Timing is flexible. Take with any main meal. Post-workout lunch is ideal for athletes.",
     keys:["creatine","kreatin","креатин"]},
   collagen:{name:"Collagen Peptides (Type I + III)",dose:"10-15 g",
     why:"Structural protein for skin, joints, tendons, and gut lining. Must be taken with Vitamin C for synthesis. Type I + III target skin elasticity and joint cartilage.",
@@ -1165,11 +1206,11 @@ var S={
     keys:["collagen","коллаген","kollagen"]},
   probio:{name:"Probiotic (multi-strain, 50B CFU)",dose:"1 capsule",
     why:"Microbiome diversity, immune function, and gut-brain axis. Multi-strain formula with Lactobacillus and Bifidobacterium. Consistent 8-week use shifts microbiome composition.",
-    slot:"morning-empty",slotLabel:"Early Morning — Empty Stomach",slotHint:"20-30 minutes before breakfast for maximum survivability in stomach acid",
+    slot:"morning-empty",slotLabel:"Early Morning, Empty Stomach",slotHint:"20-30 minutes before breakfast for maximum survivability in stomach acid",
     keys:["probiotic","probiotics","lactobacillus","пробиотик","probiotika"]},
   curcumin:{name:"Curcumin + Bioperine",dose:"500-1000 mg",
     why:"Potent anti-inflammatory via NF-kB pathway inhibition. Reduces joint inflammation and digestive inflammatory markers. Bioperine increases absorption 2000%.",
-    slot:"lunch",slotLabel:"With Lunch",slotHint:"Must include Bioperine — curcumin alone has near-zero bioavailability",
+    slot:"lunch",slotLabel:"With Lunch",slotHint:"Use with Bioperine. Curcumin alone has very low bioavailability.",
     keys:["curcumin","turmeric","куркумин","куркума","kurkuma"]},
   maca:{name:"Maca Root (gelatinized)",dose:"1500-3000 mg",
     why:"Supports hormonal balance, energy, and libido without containing hormones. Gelatinized form is easier on digestion. Relevant for women with cycle irregularity or PMS.",
@@ -1181,27 +1222,27 @@ var S={
     keys:["saffron","affron","шафран","safran"]},
   resveratrol:{name:"Resveratrol (trans)",dose:"100-200 mg",
     why:"Sirtuin activator. Cardioprotective, anti-inflammatory, and extends healthspan in animal models. Synergistic with NAD+ protocols.",
-    slot:"dinner",slotLabel:"With Dinner",slotHint:"Evening with food for better absorption — mimics caloric restriction signaling.",
+    slot:"dinner",slotLabel:"With Dinner",slotHint:"Evening with food for better absorption. Mimics caloric restriction signaling.",
     keys:["resveratrol","trans-resveratrol","ресвератрол"]},
   iron:{name:"Iron Bisglycinate",dose:"25-30 mg",
     why:"Essential for oxygen transport and energy production. Bisglycinate form is well-tolerated and highly absorbable. Especially relevant for women.",
-    slot:"breakfast",slotLabel:"With Breakfast + Vitamin C",slotHint:"Take with Vitamin C for enhanced absorption — never with calcium",
+    slot:"breakfast",slotLabel:"With Breakfast + Vitamin C",slotHint:"Take with Vitamin C for enhanced absorption. Avoid calcium at the same time.",
     keys:["iron","железо","eisen"]},
   biotin:{name:"Biotin",dose:"5000 mcg",
     why:"Hair, skin, and nail health. Cofactor for carbohydrate and fat metabolism. Evidence for blood sugar regulation.",
-    slot:"breakfast",slotLabel:"With Breakfast",slotHint:"Water-soluble — timing is less critical",
+    slot:"breakfast",slotLabel:"With Breakfast",slotHint:"Water-soluble. Timing is less critical.",
     keys:["biotin","биотин"]},
   astaxanthin:{name:"Astaxanthin",dose:"4-8 mg",
     why:"Powerful marine antioxidant. Reduces exercise-induced inflammation, supports eye and skin health, and crosses the blood-brain barrier.",
-    slot:"dinner",slotLabel:"With Dinner",slotHint:"Fat-soluble — take with an evening meal containing healthy fats for best absorption.",
+    slot:"dinner",slotLabel:"With Dinner",slotHint:"Fat-soluble. Take with an evening meal containing healthy fats for best absorption.",
     keys:["astaxanthin","астаксантин"]},
   ala:{name:"Alpha-Lipoic Acid (ALA)",dose:"300–600 mg",
     why:"Universal antioxidant active in both fat and water environments. Regenerates vitamins C and E. Improves insulin sensitivity, supports blood sugar metabolism, and studied for neuroprotection. Excellent companion to CoQ10.",
-    slot:"dinner",slotLabel:"With Dinner",slotHint:"Take with a fat-containing meal — supports overnight cellular repair and antioxidant recycling.",
+    slot:"dinner",slotLabel:"With Dinner",slotHint:"Take with a fat-containing meal. Supports overnight cellular repair and antioxidant recycling.",
     keys:["alpha lipoic","ala","alpha-lipoic","липоевая","liponsäure"]},
   ps:{name:"Phosphatidylserine (PS)",dose:"300 mg",
     why:"The most clinically validated nootropic. Supports memory encoding, recall, and executive function. Reduces exercise-induced cortisol. FDA-qualified health claim for cognitive decline. 100mg x3 per day with meals.",
-    slot:"breakfast",slotLabel:"With Breakfast + Lunch (split dose)",slotHint:"Take 100mg with breakfast and 100mg with lunch — avoid evening doses as PS may disrupt sleep.",
+    slot:"breakfast",slotLabel:"With Breakfast + Lunch (split dose)",slotHint:"Take 100mg with breakfast and 100mg with lunch. Avoid evening doses as PS may disrupt sleep.",
     keys:["phosphatidylserine","ps","phosphatidyl","фосфатидилсерин"]}
 };
 
@@ -2266,7 +2307,7 @@ function buildResults(){
     var OPTIMIZE={
       d3k2:'Take with a fat-containing meal — absorption drops 30-40% without dietary fat.',
       mag:'Evening dose (before bed) is most effective. Start at 150mg if new to glycinate.',
-      omega:'Refrigerate after opening. Take with food — never on an empty stomach.',
+      omega:'Take with food for better absorption. Avoid taking on an empty stomach if it causes reflux.',
       vitC:'Split into 2 doses (morning + midday) for sustained plasma levels.',
       zinc:'Always take with food — zinc on empty stomach causes significant nausea.',
       bcomplex:'Morning only. B vitamins are energizing — evening doses can disrupt sleep onset.',
@@ -2381,32 +2422,32 @@ function buildResults(){
   // Unified course info: {type, on, off, bottles, note}
   // type: 'daily'|'cycle'|'asneeded'
   var COURSE={
-    d3k2:   {type:'daily', on:'Long-term daily',      bottles:'~1 bottle/month'},
-    mag:    {type:'daily', on:'Long-term daily',      bottles:'~1 bottle/month'},
-    omega:  {type:'daily', on:'Long-term daily',      bottles:'~1 bottle/month'},
-    bcomplex:{type:'daily',on:'Long-term daily',      bottles:'~1 bottle/month'},
-    coq10:  {type:'daily', on:'Long-term daily',      bottles:'~1 bottle/month'},
-    zinc:   {type:'daily', on:'Long-term daily',      bottles:'~1 bottle/month'},
-    vitC:   {type:'daily', on:'Long-term daily',      bottles:'~1 bottle/month'},
-    theanine:{type:'daily',on:'Long-term daily',      bottles:'~1 bottle/month'},
-    creatine:{type:'daily',on:'Long-term daily',      bottles:'~1 bag/month'},
-    resveratrol:{type:'daily',on:'Long-term daily',   bottles:'~1 bottle/month'},
-    astaxanthin:{type:'daily',on:'Long-term daily',   bottles:'~1 bottle/month'},
-    ala:    {type:'daily', on:'Long-term daily',      bottles:'~1 bottle/month'},
-    curcumin:{type:'daily',on:'Long-term daily',      bottles:'~1 bottle/month'},
-    nad:    {type:'daily', on:'Daily · 3+ months',    bottles:'~1 bottle/month'},
-    biotin: {type:'daily', on:'Daily · 3+ months',    bottles:'~1 bottle/month'},
-    collagen:{type:'daily',on:'Daily · 3+ months',   bottles:'~1 tub/month'},
-    probio: {type:'cycle', on:'8 weeks on',  off:'4-week break', bottles:'~2 bottles/course'},
-    ashwa:  {type:'cycle', on:'6–8 weeks on',off:'4-week break', bottles:'~2 bottles/course'},
-    rhodiola:{type:'cycle',on:'12 weeks on', off:'4-week break', bottles:'~3 bottles/course'},
-    lion:   {type:'cycle', on:'8–12 weeks on',off:'reassess',   bottles:'~2–3 bottles/course'},
-    berb:   {type:'cycle', on:'12 weeks on', off:'reassess',    bottles:'~3 bottles/course'},
-    maca:   {type:'cycle', on:'6–8 weeks on',off:'4-week break',bottles:'~2 bottles/course'},
-    ps:     {type:'cycle', on:'8–12 weeks on',off:'reassess',   bottles:'~2–3 bottles/course'},
-    saffron:{type:'cycle', on:'6–8 weeks on',off:'reassess',    bottles:'~1–2 bottles/course'},
-    melatonin:{type:'asneeded',on:'Low dose (0.5 mg)',           bottles:'~1 bottle/3 months'},
-    iron:   {type:'cycle', on:'Until levels normalised',off:'retest ferritin',bottles:'~1–2 bottles'}
+    d3k2:   {type:'cycle', on:'12 weeks',  off:'Retest first', bottles:'~3 bottles/course'},
+    mag:    {type:'cycle', on:'8-12 weeks',off:'1-2 weeks',    bottles:'~2 bottles/course'},
+    omega:  {type:'cycle', on:'12 weeks',  off:'2 weeks',      bottles:'~3 bottles/course'},
+    bcomplex:{type:'cycle',on:'8 weeks',   off:'2-4 weeks',    bottles:'~2 bottles/course'},
+    coq10:  {type:'cycle', on:'8-12 weeks',off:'2 weeks',      bottles:'~2 bottles/course'},
+    zinc:   {type:'cycle', on:'6-8 weeks', off:'4 weeks',      bottles:'~2 bottles/course'},
+    vitC:   {type:'cycle', on:'4-8 weeks', off:'1-2 weeks',    bottles:'~1 bottle/course'},
+    theanine:{type:'cycle',on:'4-8 weeks', off:'1 week',       bottles:'~1 bottle/course'},
+    creatine:{type:'cycle',on:'8-12 weeks',off:'2-4 weeks',    bottles:'~1 bag/course'},
+    resveratrol:{type:'cycle',on:'8-12 weeks',off:'4 weeks',   bottles:'~2 bottles/course'},
+    astaxanthin:{type:'cycle',on:'8-12 weeks',off:'2-4 weeks', bottles:'~2 bottles/course'},
+    ala:    {type:'cycle', on:'8-12 weeks',off:'2-4 weeks',    bottles:'~2 bottles/course'},
+    curcumin:{type:'cycle',on:'8-12 weeks',off:'2-4 weeks',    bottles:'~2 bottles/course'},
+    nad:    {type:'cycle', on:'8-12 weeks',off:'4 weeks',      bottles:'~2 bottles/course'},
+    biotin: {type:'cycle', on:'8-12 weeks',off:'2-4 weeks',    bottles:'~2 bottles/course'},
+    collagen:{type:'cycle',on:'12 weeks',  off:'2-4 weeks',    bottles:'~1 tub/course'},
+    probio: {type:'cycle', on:'8 weeks',   off:'2-4 weeks',    bottles:'~2 bottles/course'},
+    ashwa:  {type:'cycle', on:'6-8 weeks', off:'4 weeks',      bottles:'~2 bottles/course'},
+    rhodiola:{type:'cycle',on:'8-12 weeks',off:'4 weeks',      bottles:'~2 bottles/course'},
+    lion:   {type:'cycle', on:'8-12 weeks',off:'2-4 weeks',    bottles:'~2 bottles/course'},
+    berb:   {type:'cycle', on:'8-12 weeks',off:'4 weeks',      bottles:'~2 bottles/course'},
+    maca:   {type:'cycle', on:'6-8 weeks', off:'4 weeks',      bottles:'~2 bottles/course'},
+    ps:     {type:'cycle', on:'8-12 weeks',off:'2-4 weeks',    bottles:'~2 bottles/course'},
+    saffron:{type:'cycle', on:'6-8 weeks', off:'2-4 weeks',    bottles:'~1-2 bottles/course'},
+    melatonin:{type:'asneeded',on:'1-2 weeks',off:'1 week',    bottles:'~1 bottle/3 months'},
+    iron:   {type:'cycle', on:'8-12 weeks',off:'Retest first', bottles:'~1-2 bottles'}
   };
 
   // ── Add-to-Cart row builder (Amazon only for supplements)
@@ -2474,17 +2515,34 @@ function buildResults(){
     return MECHANISM[k]||sup.why;
   }
   function recommendedUseHTML(k,sup){
-    var c=COURSE[k]||{type:'daily',on:'Long-term daily',bottles:'~1 bottle/month'};
-    var onClean=(c.on||'').replace(/\s+on$/i,'');
-    var mainLabel=c.type==='cycle'
-      ? onClean
-      : c.type==='asneeded'
-      ? 'Use as needed, low dose only'
-      : 'Suitable for long-term daily use';
-    var breakVal=(c.off&&c.off.toLowerCase()!=='reassess')?c.off:'';
-    var parts=[sup.slotLabel,sup.slotHint,mainLabel];
-    if(breakVal)parts.push('Minimum break: '+breakVal);
-    return'<div class="supp-hint"><div class="supp-use-label">Recommended Use</div>'+parts.filter(Boolean).join(' • ')+'</div>';
+    var c=COURSE[k]||{type:'cycle',on:'8-12 weeks',off:'2-4 weeks',bottles:'~1 bottle/course'};
+    var duration=durationLabel(k,c);
+    var breakVal=breakLabel(c);
+    return'<div class="supp-metrics">'+
+      '<div class="supp-metric"><div class="supp-metric-value">'+sup_getDose(sup,profile)+'</div><div class="supp-metric-label">Dosage</div></div>'+
+      '<div class="supp-metric"><div class="supp-metric-value">'+timingMetric(sup)+'</div><div class="supp-metric-label">Timing</div></div>'+
+      '<div class="supp-metric"><div class="supp-metric-value">'+duration+'</div><div class="supp-metric-label">Duration</div></div>'+
+      '<div class="supp-metric"><div class="supp-metric-value">'+breakVal+'</div><div class="supp-metric-label">Break</div></div>'+
+    '</div>';
+  }
+  function durationLabel(k,c){
+    var raw=(c.on||'').replace(/\s+on$/i,'').replace(/Daily\s*[·-]\s*/i,'').trim();
+    if(c.type==='cycle')return raw||'8-12 weeks';
+    if(c.type==='asneeded')return'As needed';
+    if(raw&&raw.toLowerCase().indexOf('long-term')===-1)return raw;
+    return'8-12 weeks';
+  }
+  function breakLabel(c){
+    if(c.off&&c.off.toLowerCase()!=='reassess')return c.off;
+    if(c.type==='asneeded')return'Use as needed';
+    return'2-4 weeks';
+  }
+  function timingMetric(sup){
+    var text=((sup.slot||'')+' '+(sup.slotLabel||'')).toLowerCase();
+    if(text.indexOf('prebed')>-1||text.indexOf('bed')>-1)return'Before Bed';
+    if(text.indexOf('evening')>-1||text.indexOf('dinner')>-1)return'Evening';
+    if(text.indexOf('lunch')>-1||text.indexOf('afternoon')>-1)return'Afternoon';
+    return'Morning';
   }
   function doseMaxGrams(text){
     var nums=(text||'').match(/[\d.]+/g)||[];
@@ -2537,14 +2595,10 @@ function buildResults(){
   function listHTML(items){
     return(items||[]).map(function(x){return'<span>'+x+'</span>';}).join('');
   }
-  function intakePlanText(k,sup){
-    var c=COURSE[k]||{type:'daily',on:'Long-term daily'};
-    var dose=sup_getDose(sup,profile);
-    var onClean=(c.on||'Long-term daily').replace(/\s+on$/i,'');
-    var evalText=c.type==='cycle'?'Evaluate after '+onClean+'.':'Evaluate after 6–8 weeks of consistent use.';
-    var breakText=(c.off&&c.off.toLowerCase()!=='reassess')?'After the course, pause for at least '+c.off+'.':'Breaks are usually not required unless tolerance or side effects appear.';
-    if(c.type==='asneeded')breakText='Use only when needed rather than as a daily default.';
-    return'Take '+dose+' as directed. '+evalText+' '+breakText;
+  function timingGuidance(sup){
+    var hint=(sup.slotHint||'').replace(/\s+—\s+/g,'. ');
+    var label=(sup.slotLabel||'').replace(/\s+—\s+/g,', ');
+    return'<strong>'+label+'</strong>'+(hint?'<br>'+hint:'');
   }
   function compatibilityText(k){
     var pairs={
@@ -2565,6 +2619,9 @@ function buildResults(){
     };
     return pairs[k]||'Avoid taking too many supplements at once. Prioritize the most relevant items and space minerals or stimulant-like supplements when needed.';
   }
+  function usageDetails(k,sup){
+    return timingGuidance(sup)+'<br>'+compatibilityText(k);
+  }
   function suppCardHTML(k){
     var sup=S[k]; if(!sup) return'';
     suppIdx++;
@@ -2572,7 +2629,7 @@ function buildResults(){
     var cycleHTML=CYCLE_WARN[k]?'<div class="cycle-warn">'+cleanNote(CYCLE_WARN[k])+'</div>':'';
     var interactHTML=shouldShowInteraction(k,sup)?'<div class="interaction-note">'+cleanNote(INTERACT_NOTE[k])+'</div>':'';
     // PDF-only detailed block (print CSS shows it)
-    var c=COURSE[k]||{type:'daily',on:'Long-term daily',bottles:'~1 bottle/month'};
+    var c=COURSE[k]||{type:'cycle',on:'8-12 weeks',off:'2-4 weeks',bottles:'~1 bottle/course'};
     var onCleanPdf=(c.on||'').replace(/\s+on$/i,'');
     var breakPdf=(c.off&&c.off.toLowerCase()!=='reassess')?'Minimum break: '+c.off:'';
     var courseLine=onCleanPdf+(breakPdf?' · '+breakPdf:'')+' ('+c.bottles+')';
@@ -2591,7 +2648,6 @@ function buildResults(){
       '<div class="supp-main-col">'+
         '<div class="supp-header">'+
           '<div class="supp-name">'+sup.name+'</div>'+
-          '<div class="supp-dose">'+sup_getDose(sup,profile)+'</div>'+
         '</div>'+
         '<div class="supp-why">'+personalizedWhy(k,sup)+'</div>'+
         '<div class="supp-mini-grid">'+
@@ -2599,59 +2655,64 @@ function buildResults(){
           '<div class="supp-info-box"><div class="supp-info-title">Best suited for</div><div class="supp-info-list">'+listHTML(BEST_FOR[k]||['Your quiz pattern','Targeted nutrient support','Focused stack prioritization'])+'</div></div>'+
         '</div>'+
         recommendedUseHTML(k,sup)+
-        '<div class="supp-hint"><div class="supp-use-label">Personalized intake plan</div>'+intakePlanText(k,sup)+'</div>'+
-        '<div class="supp-hint"><div class="supp-use-label">Compatibility and safety</div>'+compatibilityText(k)+'</div>'+
+        '<div class="supp-hint"><div class="supp-use-label">How to Get the Best Results</div>'+usageDetails(k,sup)+'</div>'+
         cycleHTML+interactHTML+pdfDetail+
-        '<div class="supp-card-note">Your full answer analysis and personalized Health Protocol are available below. Click Get My Protocol to receive your PDF.</div>'+
       '</div>'+
     '</div>';
   }
 
-  var suppCardKeys=alreadyInStack.concat(newRecs).sort(function(a,b){return slotPri(a)-slotPri(b);}).slice(0,10);
+  var advRecs=[];
+  var currentSelectedKeys=alreadyTakingKeys.filter(function(k){
+    return S[k]&&adExcludedKeys.indexOf(k)===-1;
+  }).sort(function(a,b){return slotPri(a)-slotPri(b);});
+  var suppCardKeys=currentSelectedKeys.concat(newRecs.filter(function(k){
+    return currentSelectedKeys.indexOf(k)===-1;
+  }).sort(function(a,b){return slotPri(a)-slotPri(b);})).slice(0,10);
   if(newRecs.length===0){
     // User already covers the full core protocol — find advanced complementary options
     var advPool=(ADVANCED_SUPP[bestProto]||['coq10','lion','astaxanthin','curcumin','ps'])
       .filter(function(k){
         return alreadyTakingKeys.indexOf(k)<0 && adExcludedKeys.indexOf(k)<0 && S[k];
       });
-    var advRecs=advPool.slice(0,3);
-    suppCardKeys=alreadyInStack.concat(advRecs).sort(function(a,b){return slotPri(a)-slotPri(b);}).slice(0,10);
+    advRecs=advPool.slice(0,3);
+    suppCardKeys=currentSelectedKeys.concat(advRecs.filter(function(k){
+      return currentSelectedKeys.indexOf(k)===-1;
+    }).sort(function(a,b){return slotPri(a)-slotPri(b);})).slice(0,10);
     if(advRecs.length>0){
       // Update section title to reflect "advanced" framing
       var supSec=document.getElementById('suppsSection');
       if(supSec){var t=supSec.querySelector('.sec-title');if(t)t.textContent='Supplement Recommendations';}
       var metaEl=document.getElementById('suppsSectionMeta');
       if(metaEl)metaEl.textContent='Advanced Stack';
-      suppsHTML=
-        '<div style="background:var(--green-light);border:1px solid rgba(27,139,94,.22);'+
-        'border-radius:10px;padding:13px 16px;margin-bottom:18px;font-size:.84rem;color:var(--green);line-height:1.65">'+
-        'Your health foundations are strong — you\'re already covering the core protocol. '+
-        'Here are some less obvious, high-impact additions worth exploring next:'+
-        '</div>';
-      suppCardKeys.forEach(function(k){ suppsHTML+=suppCardHTML(k); });
-    }else{
-      suppCardKeys.forEach(function(k){ suppsHTML+=suppCardHTML(k); });
-      if(!suppsHTML){
-        suppsHTML='<div style="padding:16px;text-align:center;color:var(--muted);font-size:.9rem">'+
-          'Your supplement stack is exceptional — all key bases are covered.</div>';
-      }
     }
-  }else{
-    suppCardKeys.forEach(function(k){ suppsHTML+=suppCardHTML(k); });
   }
+  var shownCurrent=currentSelectedKeys.filter(function(k){
+    return suppCardKeys.indexOf(k)>-1;
+  });
+  var shownSuggested=suppCardKeys.filter(function(k){return shownCurrent.indexOf(k)===-1;});
+  function suppGroupHTML(title,keys,emptyText,kind){
+    return'<div class="supp-group '+(kind||'')+'"><div class="supp-group-title">'+title+'</div>'+
+      (keys.length?keys.map(function(k){return suppCardHTML(k);}).join(''):
+        '<div style="padding:14px 16px;border:1.5px solid var(--border);border-radius:10px;color:var(--muted);font-size:.82rem;line-height:1.6;background:var(--bg)">'+emptyText+'</div>')+
+      '</div>';
+  }
+  suppsHTML+=suppGroupHTML('You Already Take',shownCurrent,'No current supplements were selected in the quiz.','current');
+  suppsHTML+=suppGroupHTML('Recommendations',shownSuggested,'No additional supplements are recommended right now.','recommendations');
   document.getElementById('suppsContent').innerHTML=suppsHTML;
   function purchasePriceHTML(price){
     if(!price)return'';
     return price.indexOf('$')===0?'<span>$</span>'+price.slice(1):price;
   }
-  var purchaseHTML='<table class="purchase-table"><thead><tr><th>Supplement</th><th>Price</th><th>Link</th></tr></thead><tbody>'+
-    suppCardKeys.map(function(k){
+  var purchaseRows=shownSuggested.map(function(k){
       var sup=S[k], lnk=LINKS[k]||{};
       if(!sup||!lnk.amz)return'';
       var productName=encodeURIComponent(sup.name);
       return'<tr><td>'+sup.name+'</td><td><span class="purchase-price">'+purchasePriceHTML(lnk.price||'See Amazon price')+'</span></td>'+
-        '<td><a class="amazon-btn" href="'+lnk.amz+'" target="_blank" rel="noopener" data-product="'+productName+'" onclick="trackPurchaseClick(\'Amazon\', decodeURIComponent(this.getAttribute(\'data-product\')||\'\'));welmeTrackAffiliateClick(decodeURIComponent(this.getAttribute(\'data-product\')||\'\'))">🛒 Amazon</a></td></tr>';
-    }).join('')+'</tbody></table>';
+        '<td><a class="amazon-btn" href="'+lnk.amz+'" target="_blank" rel="noopener" data-product="'+productName+'" onclick="trackPurchaseClick(\'Amazon\', decodeURIComponent(this.getAttribute(\'data-product\')||\'\'));welmeTrackAffiliateClick(decodeURIComponent(this.getAttribute(\'data-product\')||\'\'))"><span class="amazon-icon">🛒</span><span>Amazon</span></a></td></tr>';
+    }).join('');
+  var purchaseHTML=purchaseRows?'<div class="amazon-links-block"><div class="amazon-links-title">Amazon Links</div>'+
+    '<table class="purchase-table"><thead><tr><th>Supplement</th><th>Price</th><th>Link</th></tr></thead><tbody>'+
+    purchaseRows+'</tbody></table></div>':'';
   var purchaseContent=document.getElementById('purchaseContent');
   if(purchaseContent)purchaseContent.innerHTML=purchaseHTML;
   // Show footer CTA below supplement cards
@@ -2662,7 +2723,7 @@ function buildResults(){
   var metaEl2=document.getElementById('suppsSectionMeta');
   if(metaEl2&&hasCards)metaEl2.textContent=newRecs.length+' supplements';
   var totalLbl=document.getElementById('stackTotalLabel');
-  if(totalLbl)totalLbl.textContent=(newRecs.length+alreadyInStack.length)+' supplements total';
+  if(totalLbl)totalLbl.textContent=suppCardKeys.length+' supplements total';
 
   // Daily Routine Tips — non-supplement guidance
   var sc2=healthScores;
