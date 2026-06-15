@@ -269,6 +269,28 @@ body{background:var(--bg);color:var(--text);
   padding:24px;background:var(--card);border:1.5px solid var(--border);border-radius:14px;margin-bottom:16px;
   animation:fadeUp .45s ease bothbox-shadow: 0 2px 12px rgba(15,23,42,.07);}
 .sec-title{font-size:1.05rem;font-weight:800;color:var(--text);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.pdf-health-only{display:none}
+.screen-only{display:block}
+.supp-disclaimer{background:#FFF7ED;border:1.5px solid rgba(180,83,9,.24);border-radius:12px;
+  padding:14px 16px;color:#92400E;font-size:.82rem;line-height:1.6;margin-bottom:16px}
+.supp-card-note{font-size:.78rem;color:var(--muted);background:var(--card);border:1.5px dashed var(--border);
+  border-radius:10px;padding:10px 12px;margin-top:12px;line-height:1.55}
+.supp-mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+@media(max-width:560px){.supp-mini-grid{grid-template-columns:1fr}}
+.supp-info-box{background:var(--card);border:1.5px solid var(--border);border-radius:10px;padding:12px}
+.supp-info-title{font-size:.7rem;font-weight:800;color:var(--green);text-transform:uppercase;
+  letter-spacing:.06em;margin-bottom:7px}
+.supp-info-list{display:flex;flex-direction:column;gap:5px;font-size:.78rem;color:var(--muted);line-height:1.45}
+.supp-info-list span::before{content:'• ';color:var(--green);font-weight:800}
+.purchase-table{width:100%;border-collapse:separate;border-spacing:0 8px}
+.purchase-table th{font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:left;padding:0 10px 4px}
+.purchase-table td{background:var(--bg);border-top:1.5px solid var(--border);border-bottom:1.5px solid var(--border);padding:10px}
+.purchase-table td:first-child{border-left:1.5px solid var(--border);border-radius:10px 0 0 10px;font-weight:700}
+.purchase-table td:last-child{border-right:1.5px solid var(--border);border-radius:0 10px 10px 0;text-align:right}
+.amazon-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;background:var(--green);
+  color:#fff;text-decoration:none;border-radius:8px;padding:9px 13px;font-size:.78rem;font-weight:800}
+.purchase-price{font-size:.9rem;font-weight:800;color:var(--text);white-space:nowrap}
+.purchase-price span{color:var(--green);font-size:1.15em}
 
 /* ── SCORE BARS ── */
 .score-overall-card{background:var(--bg);border-radius:14px;padding:18px;margin-bottom:16px;border:1.5px solid var(--border)}
@@ -605,7 +627,8 @@ body{background:var(--bg);color:var(--text);
 @media print{
   *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
   body{background:#fff!important;font-size:10.5px;color:#0F172A;-webkit-font-smoothing:antialiased}
-  .logo,.prog-area,.quiz-wrap,.screen,#emailGate{display:none!important}
+  .logo,.prog-area,.quiz-wrap,.screen,#emailGate,#resContent,.screen-only,#suppsSection,#purchaseSection,.results-cta-card,#suppDurationNote,#adWarningSection{display:none!important}
+  .pdf-health-only{display:block!important}
   .res-screen{display:block!important;padding:0!important}
   #actionButtons,.btn-next,.action-btn,.quick-scroll{display:none!important}
   .res-screen>div:last-of-type{display:none!important}
@@ -657,7 +680,7 @@ body{background:var(--bg);color:var(--text);
   .kbju-card{padding:10px;border-radius:6px!important}
   .kbju-val{font-size:1.2rem}
 
-  /* ── PDF PAGE 2: SUPPLEMENTS ── */
+  /* ── PDF HEALTH ANALYSIS ── */
   #existingStackSection{display:none!important}
   #suppDurationNote{display:none!important}
   .existing-stack-box{background:#F0FDF4!important;border:1px solid #1B8B5E!important;border-radius:8px!important}
@@ -876,18 +899,28 @@ Separate with comma or newline"></textarea>
   <div id="resScreen" class="res-screen">
     <div id="resContent"></div>
 
+    <div class="section pdf-health-only" id="personalInfoSection">
+      <div class="sec-title">👤 Personal Information</div>
+      <div id="personalInfoContent"></div>
+    </div>
+
     <!-- Health Scores section -->
-    <div class="section" id="scoresSection">
+    <div class="section pdf-health-only" id="scoresSection">
       <div class="sec-title">📈 Health Optimization Scores</div>
       <div id="overallGauge"></div>
       <div id="gaugesGrid"></div>
+    </div>
+
+    <div class="section pdf-health-only" id="analysisSection">
+      <div class="sec-title">🔎 Detailed Health Analysis</div>
+      <div id="analysisContent"></div>
     </div>
 
     <!-- Antidepressant warning -->
     <div id="adWarningSection"></div>
 
     <!-- Protocol section -->
-    <div class="section" id="protocolSection">
+    <div class="section pdf-health-only" id="protocolSection">
       <div class="sec-title">🎯 Your Protocol</div>
       <div id="protocolContent"></div>
     </div>
@@ -904,31 +937,30 @@ Separate with comma or newline"></textarea>
     </div>
 
     <!-- Supplements section -->
-    <div class="section" id="suppsSection">
-      <div class="sec-title">💊 Supplement Recommendations</div>
+    <div class="section screen-only" id="suppsSection">
+      <div class="sec-title">💊 Your Personalized Supplement Guide</div>
       <div id="suppsContent"></div>
     </div>
 
     <!-- КБЖУ section - Change 3 -->
-    <div class="section" id="kbjuSection">
+    <div class="section pdf-health-only" id="kbjuSection">
       <div class="sec-title">📊 Your Personal Nutrition Targets</div>
       <div id="kbjuContent"></div>
     </div>
 
     <!-- Daily routine tips -->
-    <div class="section" id="lifestyleSection">
+    <div class="section pdf-health-only" id="lifestyleSection">
       <div class="sec-title">🌿 Daily Routine Tips</div>
       <div id="lifestyleContent"></div>
     </div>
 
     <!-- Actions -->
-    <div style="padding:24px;background:var(--card);border:1.5px solid var(--border);
+    <div class="screen-only results-cta-card" style="padding:24px;background:var(--card);border:1.5px solid var(--border);
       border-radius:14px;margin-bottom:16px">
-      <button class="res-action-btn" onclick="downloadPDF()">⬇ Save My Protocol (PDF)</button>
+      <button class="res-action-btn" onclick="downloadPDF()">Get My Protocol</button>
       <p style="font-size:.82rem;color:var(--muted);line-height:1.65;text-align:center;
         margin:14px 0 16px;max-width:360px;margin-left:auto;margin-right:auto">
-        A comprehensive guide with your supplement schedule, high-impact lifestyle upgrades,
-        science-backed nutrition strategies, and daily routine — all in one place.
+        Your full answer analysis and personalized Health Protocol are available in the PDF.
       </p>
       <div style="text-align:center">
         <button onclick="location.reload()" style="background:none;border:none;cursor:pointer;
@@ -936,6 +968,14 @@ Separate with comma or newline"></textarea>
           Start over
         </button>
       </div>
+    </div>
+
+    <div class="section screen-only" id="purchaseSection">
+      <div class="sec-title">🛒 Optional Supplement Purchase Links</div>
+      <p style="font-size:.84rem;color:var(--muted);line-height:1.65;margin-bottom:14px">
+        If you want to purchase the recommended supplements, you can use the links below.
+      </p>
+      <div id="purchaseContent"></div>
     </div>
   </div>
 </div>
@@ -2119,6 +2159,26 @@ function buildResults(){
     buildMetricRow('nutrition','Nutrition quality',healthScores.nutrition)+
     buildMetricRow('metabolic','Metabolic health',healthScores.metabolic)+
     '</div>';
+  document.getElementById('personalInfoContent').innerHTML=
+    '<div class="res-meta-strip">'+
+      '<div class="res-meta-chip"><div class="res-meta-k">Age</div><div class="res-meta-v">'+profile.ageAns+'</div></div>'+
+      '<div class="res-meta-chip"><div class="res-meta-k">Gender</div><div class="res-meta-v">'+profile.sex+'</div></div>'+
+      '<div class="res-meta-chip"><div class="res-meta-k">Height</div><div class="res-meta-v">'+profile.heightDisplay+'</div></div>'+
+      '<div class="res-meta-chip"><div class="res-meta-k">Weight</div><div class="res-meta-v">'+profile.weightDisplay+'</div></div>'+
+      '<div class="res-meta-chip"><div class="res-meta-k">BMI</div><div class="res-meta-v">'+profile.bmi+'</div></div>'+
+    '</div>';
+  var sortedMetrics=Object.keys(healthScores).filter(function(k){return k!=='overall';})
+    .sort(function(a,b){return healthScores[a]-healthScores[b];});
+  var weak=sortedMetrics.slice(0,2);
+  var strong=sortedMetrics.slice(-2).reverse();
+  var metricName={sleep:'sleep quality',energy:'energy levels',stress:'stress resilience',activity:'physical activity',nutrition:'nutrition quality',metabolic:'metabolic health'};
+  document.getElementById('analysisContent').innerHTML=
+    '<div class="kbju-tips">'+
+      '<div class="kbju-tip"><strong>Strengths:</strong> Your strongest areas are '+strong.map(function(k){return metricName[k]+' ('+healthScores[k]+'/100)';}).join(' and ')+'. These are useful anchors for your long-term wellness plan.</div>'+
+      '<div class="kbju-tip"><strong>Areas requiring attention:</strong> The lowest-scoring areas are '+weak.map(function(k){return metricName[k]+' ('+healthScores[k]+'/100)';}).join(' and ')+'. These influenced the protocol selection most strongly.</div>'+
+      '<div class="kbju-tip"><strong>Key factors:</strong> Your answers around sleep, stress, nutrition, activity, energy, and metabolic signals were weighted together to identify the most relevant focus areas.</div>'+
+      '<div class="kbju-tip"><strong>Recommended direction:</strong> Prioritize consistent daily habits first, then layer in targeted nutrition, activity, recovery, and stress-management improvements.</div>'+
+    '</div>';
 
   // Update sticky nav
   var navId=document.getElementById('resNavId');
@@ -2145,19 +2205,14 @@ function buildResults(){
   console.log("QUIZ COMPLETE payload", quizCompletePayload);
   trackWelmeEvent(quizCompletePayload);    
 
-  // Build hero 2-col card into resContent
+  // Build supplement-focused intro into resContent
   var scoreColor=overallScore>=70?'var(--ok)':overallScore>=50?'var(--warn)':'var(--risk)';
   var scoreLabel=overallScore>=70?'Optimal':'Needs Attention';
   document.getElementById('resContent').innerHTML=
     '<div style="margin-bottom:20px">'+
-      '<div class="res-title">Your Protocol</div>'+
-      '<div class="res-meta-strip">'+
-        '<div class="res-meta-chip"><div class="res-meta-k">Age</div><div class="res-meta-v">'+profile.ageAns+'</div></div>'+
-        '<div class="res-meta-chip"><div class="res-meta-k">Sex</div><div class="res-meta-v">'+profile.sex+'</div></div>'+
-        '<div class="res-meta-chip"><div class="res-meta-k">BMI</div><div class="res-meta-v">'+profile.bmi+'</div></div>'+
-        '<div class="res-meta-chip"><div class="res-meta-k">Height</div><div class="res-meta-v">'+profile.heightDisplay+'</div></div>'+
-        '<div class="res-meta-chip"><div class="res-meta-k">Weight</div><div class="res-meta-v">'+profile.weightDisplay+'</div></div>'+
-      '</div>'+
+      '<div class="res-title">Your Supplement Guide</div>'+
+      '<p class="res-sub" style="text-align:center;margin-left:auto;margin-right:auto;max-width:560px">A practical guide to the supplements you already take and the highest-priority additions from your quiz answers.</p>'+
+      '<div class="supp-disclaimer"><strong>Medical disclaimer:</strong> This information is for educational purposes only and does not replace medical advice. Before starting any supplement, changing your dosage, or combining multiple supplements, consult a qualified healthcare professional, especially if you are pregnant, breastfeeding, taking medication, or have a medical condition.</div>'+
     '</div>';
 
   // AD warning - Change 4
@@ -2168,12 +2223,7 @@ function buildResults(){
   document.getElementById('adWarningSection').innerHTML=adWarning;
 
   // Protocol section
-  var protoHTML='<div class="proto-box"><div class="proto-name">'+proto.name+'</div><div class="proto-why">'+PROTO_WHY[bestProto]+'</div><div class="proto-supps">';
-  proto.supps.forEach(function(k){
-    var s=S[k];
-    if(s) protoHTML+='<div class="proto-tag">'+s.name+'</div>';
-  });
-  protoHTML+='</div></div>';
+  var protoHTML='<div class="proto-box"><div class="proto-name">'+proto.name+'</div><div class="proto-why">'+PROTO_WHY[bestProto]+'</div></div>';
   document.getElementById('protocolContent').innerHTML=protoHTML;
 
   // КБЖУ section - Change 3
@@ -2204,7 +2254,7 @@ function buildResults(){
 
   // ── Show duration note (replaces "Already In Your Stack" section)
   var durNote=document.getElementById('suppDurationNote');
-  if(durNote) durNote.style.display='block';
+  if(durNote) durNote.style.display='none';
 
   // ── "Already in your stack" section (hidden — kept for logic only)
   var existSec=document.getElementById('existingStackSection');
@@ -2446,6 +2496,75 @@ function buildResults(){
     if(k==='omega')return doseMaxGrams(sup_getDose(sup,profile))>3;
     return !!INTERACT_NOTE[k];
   }
+  var BENEFITS={
+    d3k2:['Immune function','Bone mineral support','Calcium metabolism'],
+    mag:['Nervous system function','Healthy sleep quality','Stress resilience','Muscle recovery'],
+    omega:['Cardiovascular health','Brain function','Visual health','Healthy inflammatory balance'],
+    ashwa:['Healthy stress response','Calm focus','Recovery support'],
+    rhodiola:['Mental stamina','Fatigue resistance','Stress adaptation'],
+    theanine:['Calm alertness','Focus support','Sleep onset support'],
+    bcomplex:['Energy production','Nervous system function','Methylation support'],
+    coq10:['Mitochondrial energy','Cardiovascular support','Antioxidant defense'],
+    vitC:['Immune function','Collagen synthesis','Antioxidant recycling'],
+    zinc:['Immune function','Skin repair','Hormonal support'],
+    nad:['Cellular energy','DNA repair pathways','Healthy aging support'],
+    lion:['Cognitive performance','Focus and concentration','Long-term brain health support'],
+    melatonin:['Sleep timing','Healthy sleep quality','Night-time antioxidant support'],
+    berb:['Glucose metabolism','Metabolic health','Healthy lipid balance'],
+    creatine:['Muscle performance','Recovery support','Cognitive energy support'],
+    collagen:['Skin elasticity','Joint and tendon support','Connective tissue repair'],
+    probio:['Gut barrier support','Microbiome diversity','Digestive regularity'],
+    curcumin:['Healthy inflammatory balance','Joint comfort','Antioxidant response'],
+    maca:['Endocrine resilience','Energy support','Libido and vitality support'],
+    saffron:['Mood support','Stress resilience','Antioxidant support'],
+    resveratrol:['Healthy aging pathways','Antioxidant defense','Cardiometabolic support'],
+    iron:['Oxygen transport','Energy production','Red blood cell support'],
+    biotin:['Hair and nail support','Fatty-acid metabolism','Glucose metabolism'],
+    astaxanthin:['Membrane antioxidant support','Skin and eye support','Exercise recovery'],
+    ala:['Insulin sensitivity','Redox balance','Metabolic support'],
+    ps:['Memory support','Cortisol rhythm support','Neuronal membrane support']
+  };
+  var BEST_FOR={
+    mag:['Poor sleep','High stress levels','Physical training','Recovery support'],
+    omega:['Low fish consumption','Cognitive support','Heart health','Long-term wellness'],
+    lion:['Productivity','Mental clarity','Learning and knowledge work','Creative professions'],
+    bcomplex:['Low energy','High stress load','Plant-forward diets','Methylation support'],
+    creatine:['Strength training','Muscle recovery','High cognitive workload'],
+    d3k2:['Low sun exposure','Bone health support','Winter months'],
+    coq10:['Low energy','Cardiovascular support','Statin medication discussions with a clinician'],
+    probio:['Digestive support','Low fermented-food intake','After diet disruption']
+  };
+  function listHTML(items){
+    return(items||[]).map(function(x){return'<span>'+x+'</span>';}).join('');
+  }
+  function intakePlanText(k,sup){
+    var c=COURSE[k]||{type:'daily',on:'Long-term daily'};
+    var dose=sup_getDose(sup,profile);
+    var onClean=(c.on||'Long-term daily').replace(/\s+on$/i,'');
+    var evalText=c.type==='cycle'?'Evaluate after '+onClean+'.':'Evaluate after 6–8 weeks of consistent use.';
+    var breakText=(c.off&&c.off.toLowerCase()!=='reassess')?'After the course, pause for at least '+c.off+'.':'Breaks are usually not required unless tolerance or side effects appear.';
+    if(c.type==='asneeded')breakText='Use only when needed rather than as a daily default.';
+    return'Take '+dose+' as directed. '+evalText+' '+breakText;
+  }
+  function compatibilityText(k){
+    var pairs={
+      mag:'Works well with B-Complex for nervous-system support. Keep 2 hours away from high-dose calcium or iron.',
+      omega:'Pairs well with vitamin D3/K2 and astaxanthin. Mention higher-dose use to a clinician if using anticoagulants.',
+      d3k2:'Works well with magnesium and omega-3. K2 is the key companion when using vitamin D long term.',
+      vitC:'Pairs well with collagen and improves non-heme iron absorption. Avoid megadosing long term.',
+      iron:'Take with vitamin C. Keep 2–4 hours away from magnesium, zinc, calcium, coffee, and tea.',
+      zinc:'Keep 2 hours away from iron, calcium, and magnesium. Consider copper balance if using higher doses long term.',
+      coq10:'Pairs well with omega-3 and resveratrol. Take with dietary fat for absorption.',
+      nad:'Pairs well with resveratrol and morning light habits. Avoid high doses without clinician guidance.',
+      resveratrol:'Pairs well with NMN/NAD+ support. Take with food; use caution with blood-thinning medication.',
+      theanine:'Pairs well with magnesium before bed or caffeine in the morning for calm focus.',
+      creatine:'Works well with B vitamins and CoQ10 in energy metabolism. Timing is flexible.',
+      collagen:'Works best with vitamin C. Keep protein intake adequate for tissue repair.',
+      probio:'Works well with fiber and fermented foods. Avoid taking with very hot drinks.',
+      berb:'Pairs well with post-meal walking and high-fiber meals. Do not combine with glucose-lowering medication without medical supervision.'
+    };
+    return pairs[k]||'Avoid taking too many supplements at once. Prioritize the most relevant items and space minerals or stimulant-like supplements when needed.';
+  }
   function suppCardHTML(k){
     var sup=S[k]; if(!sup) return'';
     suppIdx++;
@@ -2475,14 +2594,20 @@ function buildResults(){
           '<div class="supp-dose">'+sup_getDose(sup,profile)+'</div>'+
         '</div>'+
         '<div class="supp-why">'+personalizedWhy(k,sup)+'</div>'+
+        '<div class="supp-mini-grid">'+
+          '<div class="supp-info-box"><div class="supp-info-title">Supports</div><div class="supp-info-list">'+listHTML(BENEFITS[k]||['Targeted wellness support','Nutrient sufficiency','Long-term health support'])+'</div></div>'+
+          '<div class="supp-info-box"><div class="supp-info-title">Best suited for</div><div class="supp-info-list">'+listHTML(BEST_FOR[k]||['Your quiz pattern','Targeted nutrient support','Focused stack prioritization'])+'</div></div>'+
+        '</div>'+
         recommendedUseHTML(k,sup)+
+        '<div class="supp-hint"><div class="supp-use-label">Personalized intake plan</div>'+intakePlanText(k,sup)+'</div>'+
+        '<div class="supp-hint"><div class="supp-use-label">Compatibility and safety</div>'+compatibilityText(k)+'</div>'+
         cycleHTML+interactHTML+pdfDetail+
+        '<div class="supp-card-note">Your full answer analysis and personalized Health Protocol are available below. Click Get My Protocol to receive your PDF.</div>'+
       '</div>'+
-      buildAtcRow(k,sup)+
     '</div>';
   }
 
-  var suppCardKeys=newRecs.concat(alreadyInStack).sort(function(a,b){return slotPri(a)-slotPri(b);});
+  var suppCardKeys=alreadyInStack.concat(newRecs).sort(function(a,b){return slotPri(a)-slotPri(b);}).slice(0,10);
   if(newRecs.length===0){
     // User already covers the full core protocol — find advanced complementary options
     var advPool=(ADVANCED_SUPP[bestProto]||['coq10','lion','astaxanthin','curcumin','ps'])
@@ -2490,7 +2615,7 @@ function buildResults(){
         return alreadyTakingKeys.indexOf(k)<0 && adExcludedKeys.indexOf(k)<0 && S[k];
       });
     var advRecs=advPool.slice(0,3);
-    suppCardKeys=alreadyInStack.concat(advRecs).sort(function(a,b){return slotPri(a)-slotPri(b);});
+    suppCardKeys=alreadyInStack.concat(advRecs).sort(function(a,b){return slotPri(a)-slotPri(b);}).slice(0,10);
     if(advRecs.length>0){
       // Update section title to reflect "advanced" framing
       var supSec=document.getElementById('suppsSection');
@@ -2515,6 +2640,20 @@ function buildResults(){
     suppCardKeys.forEach(function(k){ suppsHTML+=suppCardHTML(k); });
   }
   document.getElementById('suppsContent').innerHTML=suppsHTML;
+  function purchasePriceHTML(price){
+    if(!price)return'';
+    return price.indexOf('$')===0?'<span>$</span>'+price.slice(1):price;
+  }
+  var purchaseHTML='<table class="purchase-table"><thead><tr><th>Supplement</th><th>Price</th><th>Link</th></tr></thead><tbody>'+
+    suppCardKeys.map(function(k){
+      var sup=S[k], lnk=LINKS[k]||{};
+      if(!sup||!lnk.amz)return'';
+      var productName=encodeURIComponent(sup.name);
+      return'<tr><td>'+sup.name+'</td><td><span class="purchase-price">'+purchasePriceHTML(lnk.price||'See Amazon price')+'</span></td>'+
+        '<td><a class="amazon-btn" href="'+lnk.amz+'" target="_blank" rel="noopener" data-product="'+productName+'" onclick="trackPurchaseClick(\'Amazon\', decodeURIComponent(this.getAttribute(\'data-product\')||\'\'));welmeTrackAffiliateClick(decodeURIComponent(this.getAttribute(\'data-product\')||\'\'))">🛒 Amazon</a></td></tr>';
+    }).join('')+'</tbody></table>';
+  var purchaseContent=document.getElementById('purchaseContent');
+  if(purchaseContent)purchaseContent.innerHTML=purchaseHTML;
   // Show footer CTA below supplement cards
   var ctaWrap=document.getElementById('suppStackCta');
   var hasCards=suppsHTML&&suppsHTML.indexOf('supp-card')>-1;
