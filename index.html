@@ -3348,13 +3348,17 @@ function trackCTA() {
 function trackPurchaseClick(store, productKey) {
   var liveStack=typeof wcGetLiveStackContents==='function'?wcGetLiveStackContents():[];
   var liveStackText=liveStack.join(', ');
+  var clickedProduct=productKey||'';
   trackWelmeEvent({
     event_name: "checkout_click",
     event_type: "checkout_click",
-    checkout_items: liveStackText,
+    checkout_items: clickedProduct,
+    checkout_item: clickedProduct,
+    checkout_item_name: clickedProduct,
+    supplement_name: clickedProduct,
     current_stack: liveStackText,
     stack: liveStackText,
-    product: productKey || '',
+    product: clickedProduct,
     purchase_intent: true,
     checkout_clicked: true
   });
@@ -3363,7 +3367,7 @@ function trackPurchaseClick(store, productKey) {
     gtag('event', 'purchase_click', {
       event_category: 'affiliate',
       store: store || '',
-      product_key: productKey || '',
+      product_key: clickedProduct,
       stack: liveStack.join(', '),
       protocol_type: window._welmeProtocol || ''
     });
