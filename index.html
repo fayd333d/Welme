@@ -3292,8 +3292,19 @@ window.addEventListener('beforeprint',preparePdfPrint);
 window.addEventListener('afterprint',restorePdfPrintTitle);
 
 function getPdfExportFileName(){
-  var stamp=new Date().toISOString().slice(0,10);
-  return 'welme-health-protocol-'+stamp+'.pdf';
+  return 'welme-protocol.pdf';
+}
+function forcePdfDownload(pdf){
+  var pdfBlob=pdf.output('blob');
+  var pdfUrl=URL.createObjectURL(pdfBlob);
+  var a=document.createElement('a');
+  a.href=pdfUrl;
+  a.download=getPdfExportFileName();
+  a.style.display='none';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(function(){URL.revokeObjectURL(pdfUrl);},1000);
 }
 function addPdfFooter(pdf,pageNum,pageW,pageH,footerY,dateText){
   pdf.setDrawColor(228,234,242);
@@ -3308,10 +3319,7 @@ function addPdfFooter(pdf,pageNum,pageW,pageH,footerY,dateText){
 }
 async function generateProtocolPdf(){
   if(!window.html2canvas||!window.jspdf||!window.jspdf.jsPDF){
-    alert('Your browser is using the print fallback. In the print dialog, turn off browser Headers and Footers before saving the PDF.');
-    preparePdfPrint();
-    window.print();
-    setTimeout(restorePdfPrintTitle,1000);
+    alert('PDF download is still loading. Please wait a moment and try again.');
     return;
   }
   var target=document.getElementById('resScreen');
@@ -3360,13 +3368,10 @@ async function generateProtocolPdf(){
       y+=currentSliceH;
       pageNum++;
     }
-    pdf.save(getPdfExportFileName());
+    forcePdfDownload(pdf);
   }catch(e){
     console.error('PDF export failed',e);
-    alert('PDF export could not finish. In the print dialog, turn off browser Headers and Footers before saving the PDF.');
-    preparePdfPrint();
-    window.print();
-    setTimeout(restorePdfPrintTitle,1000);
+    alert('PDF export could not finish. Please try again.');
   }finally{
     document.body.classList.remove('pdf-exporting');
     window.scrollTo(0,previousScroll);
