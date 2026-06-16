@@ -33,9 +33,9 @@ src="https://www.facebook.com/tr?id=1028962489819655&ev=PageView&noscript=1"
    
 <meta charset="UTF-8">
 <link rel="icon" href="/favicon.ico" type="image/x-icon">
-<meta name="description" content="Get a personalized supplement and health protocol in 2 minutes. Science-backed recommendations for energy, longevity, and performance.">
+<meta name="description" content="Get a personalised supplement guide in 2 minutes with recommendations, dosage guidance, practical tips, and a saved Health Protocol.">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Welme — Your Personalised Health Protocol</title>
+<title>Welme — Your Personalised Supplement Guide</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
@@ -320,13 +320,20 @@ body{background:var(--bg);color:var(--text);
 .purchase-price span{color:var(--green);font-size:1.15em}
 @media(max-width:560px){
   .purchase-table thead{display:none}
-  .purchase-table,.purchase-table tbody,.purchase-table tr,.purchase-table td{display:block;width:100%}
-  .purchase-table tr{background:var(--bg);border:1.5px solid var(--border);border-radius:10px;margin-bottom:10px;padding:10px}
-  .purchase-table td{border:none!important;background:transparent;padding:4px 0}
-  .purchase-table td:first-child{border-radius:0;font-weight:800;font-size:.92rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .purchase-table td:nth-child(2){padding-top:6px}
-  .purchase-table td:last-child{border-radius:0;text-align:left;padding-top:8px}
-  .amazon-btn{min-height:36px;padding:7px 12px;width:auto;display:inline-flex;flex-wrap:nowrap}
+  .purchase-table,.purchase-table tbody{display:block;width:100%}
+  .purchase-table tr{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"name cta" "price cta";
+    align-items:center;column-gap:12px;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;
+    margin-bottom:9px;padding:10px 10px 10px 12px}
+  .purchase-table td{border:none!important;background:transparent;padding:0!important;width:auto!important}
+  .purchase-table td:first-child{grid-area:name;border-radius:0;font-weight:800;font-size:.92rem;white-space:nowrap;
+    overflow:hidden;text-overflow:ellipsis;min-width:0;line-height:1.25}
+  .purchase-table td:nth-child(2){grid-area:price;margin-top:4px}
+  .purchase-table td:last-child{grid-area:cta;border-radius:0;text-align:right;align-self:center}
+  .amazon-btn{min-height:38px;padding:8px 12px;width:auto;display:inline-flex;flex-wrap:nowrap}
+}
+@media(max-width:360px){
+  .purchase-table tr{grid-template-columns:minmax(0,1fr) auto;column-gap:8px;padding:9px}
+  .amazon-btn{padding:8px 10px;font-size:.7rem}
 }
 
 /* ── SCORE BARS ── */
@@ -802,32 +809,32 @@ body{background:var(--bg);color:var(--text);
        INTRO SCREEN
        ═══════════════════════════════════════════════════════════ -->
   <div id="introScreen" class="screen on">
-    <div class="intro-eyebrow">2-Minute Health Assessment</div>
-    <h1 class="intro-h1">Your <span>Health Protocol</span></h1>
-    <p class="intro-sub">Answer 10 quick questions to receive a complete health protocol — including supplements, daily routine, nutrition, and lifestyle guidance, built on the latest scientific research.</p>
+    <div class="intro-eyebrow">2-Minute Supplement Assessment</div>
+    <h1 class="intro-h1">Your Personalised <span>Supplement Guide</span></h1>
+    <p class="intro-sub">Answer a few questions and get a clear supplement plan with recommendations, dosage guidance, and practical tips for everyday use, saved inside your Health Protocol.</p>
     <div class="intro-stats">
       <div class="stat-box">
-        <div class="stat-num">16</div>
-        <div class="stat-label">targeted protocols</div>
+        <div class="stat-num">💊</div>
+        <div class="stat-label">Supplement recommendations</div>
       </div>
       <div class="stat-box">
-        <div class="stat-num">24+</div>
-        <div class="stat-label">evidence-based supplements</div>
+        <div class="stat-num">⏱️</div>
+        <div class="stat-label">Dosage &amp; timing guidance</div>
       </div>
       <div class="stat-box">
-        <div class="stat-num">2 min</div>
-        <div class="stat-label">to get your results</div>
+        <div class="stat-num">📈</div>
+        <div class="stat-label">Personalised health protocol</div>
       </div>
     </div>
     <button class="btn-start" onclick="if(typeof trackCTA==='function'){trackCTA();} startQuiz();">
-  Start My Assessment → </button>
+  Start Assessment → </button>
     <div class="intro-trust">
-      <div class="trust-item">BMI &amp; metabolic insights</div>
-      <div class="trust-item">Daily schedule</div>
-      <div class="trust-item">Direct brand links</div>
+      <div class="trust-item">Evidence-based recommendations</div>
+      <div class="trust-item">Reviewed by qualified nutritionists</div>
+      <div class="trust-item">Easy-to-follow guidance</div>
     </div>
     <div class="home-disclaimer">
-      <strong>Medical disclaimer:</strong> Welme does not provide medical services. Recommendations are informational only and are not intended to diagnose, treat, cure, or prevent disease. Consult a qualified healthcare professional before making health decisions or starting supplements.
+      <strong>Personal data &amp; medical disclaimer:</strong> Your answers are used to generate your supplement guide and Health Protocol. Welme does not sell personal data. Recommendations are informational only and are not intended to diagnose, treat, cure, or prevent disease. Consult a qualified healthcare professional before making health decisions or starting supplements.
     </div>
   </div>
 
@@ -1043,7 +1050,7 @@ Separate with comma or newline"></textarea>
     <!-- Actions -->
     <div class="screen-only results-cta-card" style="padding:24px;background:var(--card);border:1.5px solid var(--border);
       border-radius:14px;margin-bottom:16px">
-      <button class="res-action-btn" onclick="downloadPDF()">View My Protocol</button>
+      <button class="res-action-btn" onclick="downloadPDF()">Get My Free Protocol</button>
     </div>
   </div>
 </div>
