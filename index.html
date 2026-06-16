@@ -2930,7 +2930,7 @@ function buildResults(){
       if(!sup||!lnk.amz)return'';
       var productName=encodeURIComponent(sup.name);
       return'<tr><td>'+sup.name+'</td><td><span class="purchase-price">'+purchasePriceHTML(lnk.price||'See Amazon price')+'</span></td>'+
-        '<td><a class="amazon-btn" href="'+lnk.amz+'" target="_blank" rel="noopener" data-product="'+productName+'" onclick="trackPurchaseClick(\'Amazon\', decodeURIComponent(this.getAttribute(\'data-product\')||\'\'));welmeTrackAffiliateClick(decodeURIComponent(this.getAttribute(\'data-product\')||\'\'))"><span class="amazon-icon">🛒</span><span>Amazon</span></a></td></tr>';
+        '<td><a class="amazon-btn" href="'+lnk.amz+'" target="_blank" rel="noopener" data-product="'+productName+'" onclick="trackPurchaseClick(\'Amazon\', decodeURIComponent(this.getAttribute(\'data-product\')||\'\'), this);welmeTrackAffiliateClick(decodeURIComponent(this.getAttribute(\'data-product\')||\'\'))"><span class="amazon-icon">🛒</span><span>Amazon</span></a></td></tr>';
     }).join('');
   var purchaseHTML=purchaseRows?'<div class="amazon-links-block"><div class="amazon-links-title">Amazon Links</div>'+
     '<table class="purchase-table"><thead><tr><th>Supplement</th><th>Price</th><th>Link</th></tr></thead><tbody>'+
@@ -3174,7 +3174,7 @@ function wcRenderDrawer(){
   keys.forEach(function(k){
     var d=wcCart[k];
     var productName=encodeURIComponent(d.name||'');
-    var amzLink=d.amz?'<a class="ci-store-btn ci-amz" href="'+d.amz+'" target="_blank" rel="noopener" data-product="'+productName+'" onclick="trackPurchaseClick(\'Amazon\', decodeURIComponent(this.getAttribute(\'data-product\')||\'\'));welmeTrackAffiliateClick(decodeURIComponent(this.getAttribute(\'data-product\')||\'\'))">📦 Amazon</a>':'';
+    var amzLink=d.amz?'<a class="ci-store-btn ci-amz" href="'+d.amz+'" target="_blank" rel="noopener" data-product="'+productName+'" onclick="trackPurchaseClick(\'Amazon\', decodeURIComponent(this.getAttribute(\'data-product\')||\'\'), this);welmeTrackAffiliateClick(decodeURIComponent(this.getAttribute(\'data-product\')||\'\'))">📦 Amazon</a>':'';
     html+='<div class="cart-item">'+
       '<div class="cart-item-main">'+
         '<div class="cart-item-name">'+d.name+'</div>'+
@@ -3345,23 +3345,39 @@ function trackCTA() {
 </script>
 
 <script>
-function trackPurchaseClick(store, productKey) {
+function getClickedPurchaseName(productKey, linkEl){
+  var name=(productKey||'').trim();
+  if(name)return name;
+  try{
+    if(linkEl){
+      var row=linkEl.closest&&linkEl.closest('tr');
+      if(row&&row.cells&&row.cells[0])name=(row.cells[0].textContent||'').trim();
+      if(!name){
+        var item=linkEl.closest&&linkEl.closest('.cart-item');
+        var itemName=item&&item.querySelector?item.querySelector('.cart-item-name'):null;
+        if(itemName)name=(itemName.textContent||'').trim();
+      }
+    }
+  }catch(e){}
+  return name;
+}
+
+function trackPurchaseClick(store, productKey, linkEl) {
   var liveStack=typeof wcGetLiveStackContents==='function'?wcGetLiveStackContents():[];
-  var liveStackText=liveStack.join(', ');
-  var clickedProduct=productKey||'';
-  trackWelmeEvent({
+  var clickedProduct=getClickedPurchaseName(productKey,linkEl);
+  if(!clickedProduct)return;
+  var payload={
     event_name: "checkout_click",
     event_type: "checkout_click",
+    selected_supplements: clickedProduct,
     checkout_items: clickedProduct,
-    checkout_item: clickedProduct,
-    checkout_item_name: clickedProduct,
-    supplement_name: clickedProduct,
-    current_stack: liveStackText,
-    stack: liveStackText,
-    product: clickedProduct,
+    current_stack: clickedProduct,
+    stack: clickedProduct,
     purchase_intent: true,
     checkout_clicked: true
-  });
+  };
+  console.log("CHECKOUT_CLICK PAYLOAD", payload);
+  trackWelmeEvent(payload);
 
   if (typeof gtag === 'function') {
     gtag('event', 'purchase_click', {
