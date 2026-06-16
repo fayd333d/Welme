@@ -641,6 +641,7 @@ body{background:var(--bg);color:var(--text);
 .site-footer-links{display:flex;justify-content:center;gap:18px;flex-wrap:wrap;margin-bottom:10px}
 .site-footer a{color:var(--muted);text-decoration:none;font-weight:700}
 .site-footer a:hover{color:var(--green)}
+.pdf-print-footer{display:none}
 
 /* Processing indicators */
 .proc-step{font-size:.82rem;color:var(--muted);padding:8px 0;margin-bottom:8px;display:flex;align-items:center;gap:8px}
@@ -688,7 +689,15 @@ body{background:var(--bg);color:var(--text);
 @media print{
   *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
   body{background:#fff!important;font-size:10.5px;color:#0F172A;-webkit-font-smoothing:antialiased}
-  .logo,.prog-area,.quiz-wrap,.screen,#emailGate,#resContent,.screen-only,#suppsSection,#purchaseSection,.results-cta-card,#suppDurationNote,#adWarningSection{display:none!important}
+  .logo,.prog-area,.quiz-wrap,.screen,#emailGate,#resContent,.screen-only,#suppsSection,#purchaseSection,.results-cta-card,#suppDurationNote,#adWarningSection,.site-footer{display:none!important}
+  .pdf-print-footer{position:fixed;left:0;right:0;bottom:0;display:grid!important;
+    grid-template-columns:1fr 1fr 1fr;align-items:center;gap:8px;
+    color:#64748B;font-size:.66rem;line-height:1;border-top:1px solid #E4EAF2;
+    padding:5px 0;background:#fff}
+  .pdf-print-footer span:nth-child(1){text-align:left}
+  .pdf-print-footer span:nth-child(2){text-align:center}
+  .pdf-print-footer span:nth-child(3){text-align:right}
+  .pdf-page-number::after{content:counter(page)}
   .pdf-health-only{display:block!important}
   .res-screen{display:block!important;padding:0!important}
   #actionButtons,.btn-next,.action-btn,.quick-scroll{display:none!important}
@@ -793,7 +802,7 @@ body{background:var(--bg);color:var(--text);
   table th,table td{border:1px solid #E4EAF2;padding:7px;text-align:left}
   table th{background:#F7F9FC!important;font-weight:700}
 
-  @page{margin:12mm 10mm;size:A4 portrait;orphans:3;widows:3}
+  @page{margin:12mm 10mm 16mm;size:A4 portrait;orphans:3;widows:3}
 }
 </style>
 </head>
@@ -1063,6 +1072,11 @@ Separate with comma or newline"></textarea>
   </div>
   <div>Welme provides informational wellness guidance only and is not a medical provider.</div>
 </footer>
+<div class="pdf-print-footer" aria-hidden="true">
+  <span>welme.io</span>
+  <span id="pdfPrintDate"></span>
+  <span>Page <span class="pdf-page-number"></span></span>
+</div>
 
 <script>
 // ═══════════════════════════════════════════════════════════
@@ -3217,6 +3231,26 @@ function closeEmailGate(){
   // "Skip for now" — close modal, no PDF download
 }
 
+var welmeOriginalTitle=document.title;
+function formatPdfPrintDate(){
+  try{
+    return new Date().toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'});
+  }catch(e){
+    return new Date().toLocaleDateString();
+  }
+}
+function preparePdfPrint(){
+  var dateEl=document.getElementById('pdfPrintDate');
+  if(dateEl)dateEl.textContent=formatPdfPrintDate();
+  welmeOriginalTitle=document.title;
+  document.title='';
+}
+function restorePdfPrintTitle(){
+  if(welmeOriginalTitle)document.title=welmeOriginalTitle;
+}
+window.addEventListener('beforeprint',preparePdfPrint);
+window.addEventListener('afterprint',restorePdfPrintTitle);
+
 // ── REPLACE THIS WITH YOUR GOOGLE APPS SCRIPT URL ──────────────────────────
 var WELME_SHEET_URL = 'https://script.google.com/macros/s/AKfycbxPBvnPylbFWc4StA5PkMAxskagtgZzTljWV72qNMvGAkAWcM6kriRkiUxmzKWAOJXW/exec';
 var WELME_TRACKING_URL = 'https://script.google.com/macros/s/AKfycbwtmkpCjsC3VnJ_970C-cnPB3nqL1Lhe4HtNeDENSFHfQ0P6ivfvY33GSc4-HdJaImc/exec';
@@ -3291,7 +3325,9 @@ if (WELME_SHEET_URL) {
   } catch (e) {}
 }
 
+  preparePdfPrint();
   window.print();
+  setTimeout(restorePdfPrintTitle,1000);
 }
 
 </script>
