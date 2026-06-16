@@ -644,6 +644,12 @@ body{background:var(--bg);color:var(--text);
 .pdf-print-footer{display:none}
 
 body.pdf-exporting{background:#fff!important}
+body.pdf-exporting,
+body.pdf-exporting *{
+  opacity:1!important;filter:none!important;backdrop-filter:none!important;
+  mix-blend-mode:normal!important;animation:none!important;transition:none!important;
+  transform:none!important
+}
 body.pdf-exporting .logo,
 body.pdf-exporting .prog-area,
 body.pdf-exporting .quiz-wrap,
@@ -3320,9 +3326,10 @@ async function generateProtocolPdf(){
     await new Promise(function(resolve){setTimeout(resolve,80);});
     var canvas=await html2canvas(target,{
       backgroundColor:'#FFFFFF',
-      scale:2,
+      scale:3,
       useCORS:true,
       logging:false,
+      imageTimeout:0,
       windowWidth:target.scrollWidth
     });
     var jsPDF=window.jspdf.jsPDF;
@@ -3350,7 +3357,7 @@ async function generateProtocolPdf(){
       ctx.drawImage(canvas,0,y,canvas.width,currentSliceH,0,0,canvas.width,currentSliceH);
       if(pageNum>1)pdf.addPage();
       var imgH=currentSliceH*(contentW/canvas.width);
-      pdf.addImage(pageCanvas.toDataURL('image/jpeg',.94),'JPEG',marginX,marginTop,contentW,imgH);
+      pdf.addImage(pageCanvas.toDataURL('image/png'),'PNG',marginX,marginTop,contentW,imgH);
       addPdfFooter(pdf,pageNum,pageW,pageH,footerY,dateText);
       y+=currentSliceH;
       pageNum++;
