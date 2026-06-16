@@ -685,6 +685,7 @@ body{background:var(--bg);color:var(--text);
 .pdf-export-root .sch-body{padding:9px 10px!important}
 .pdf-export-root .sch-pill{font-size:.6rem!important;padding:3px 7px!important}
 .pdf-export-root .sch-guidance{font-size:.62rem!important;line-height:1.35!important}
+.pdf-export-root .pdf-section{break-inside:avoid;page-break-inside:avoid}
 .pdf-loading-note{display:none;position:fixed;left:50%;bottom:24px;transform:translateX(-50%);
   background:#0F172A;color:#fff;border-radius:999px;padding:10px 16px;font-size:.82rem;
   font-weight:800;z-index:1000;box-shadow:0 10px 30px rgba(15,23,42,.22)}
@@ -2875,9 +2876,9 @@ function buildResults(){
     });
     var orderedSlots=Object.keys(groups).sort(function(a,b){return slotPri(a)-slotPri(b);});
     if(!orderedSlots.length){
-      return'<div class="schedule-empty">No timed supplement schedule is available for this protocol yet.</div>';
+      return'<div class="pdf-section"><div class="schedule-empty">No timed supplement schedule is available for this protocol yet.</div></div>';
     }
-    return'<div class="proto-name pdf-block" style="margin-top:12px">Supplement Intake Schedule</div>'+
+    return'<div class="pdf-section"><div class="proto-name pdf-block" style="margin-top:12px">Supplement Intake Schedule</div>'+
       '<div class="schedule-intro pdf-block">A simple timing guide for the recommended and current supplements. Use it as a flexible starting point and adjust with your clinician if needed.</div>'+
       '<div class="schedule-wrap">'+orderedSlots.map(function(slot){
         var meta=SLOT_META[slot]||{label:'Anytime',hour:'Flexible'};
@@ -2891,7 +2892,7 @@ function buildResults(){
             '<div class="sch-guidance">'+scheduleGuidanceForSlot(slot)+'</div>'+
           '</div>'+
         '</div>';
-      }).join('')+'</div>';
+      }).join('')+'</div></div>';
   }
   function suppCardHTML(k){
     var sup=S[k]; if(!sup) return'';
@@ -2967,8 +2968,8 @@ function buildResults(){
   });
   var pdfRecListHTML=buildPdfRecommendedList(pdfRecommendedKeys);
   document.getElementById('protocolContent').innerHTML=
-    protoHTML+
-    (pdfRecListHTML?'<div class="proto-name" style="margin-top:12px">Recommended Supplements</div>'+pdfRecListHTML:'');
+    '<div class="pdf-section">'+protoHTML+'</div>'+
+    (pdfRecListHTML?'<div class="pdf-section"><div class="proto-name" style="margin-top:12px">Recommended Supplements</div>'+pdfRecListHTML+'</div>':'');
   function suppOverviewHTML(keys){
     return'<div class="supp-overview">'+keys.map(function(k){
       var sup=S[k];
@@ -3328,43 +3329,6 @@ function createPdfRenderTarget(source){
   document.body.appendChild(host);
   return{host:host,target:clone};
 }
-function collectPdfAvoidRanges(target,scale,sliceH){
-  var rootRect=target.getBoundingClientRect();
-  var selectors=[
-    '.section','.sec-title','.pdf-block','.schedule-wrap','.sch-slot','.pdf-rec-item',
-    '.kbju-card','.kbju-tip','.routine-card','.routine-item','.metric-row',
-    '.proto-box','.score-overall-card','tr'
-  ].join(',');
-  return Array.prototype.slice.call(target.querySelectorAll(selectors)).map(function(el){
-    var rect=el.getBoundingClientRect();
-    return{
-      start:Math.max(0,(rect.top-rootRect.top)*scale),
-      end:Math.max(0,(rect.bottom-rootRect.top)*scale),
-      height:rect.height*scale
-    };
-  }).filter(function(r){
-    return r.height>18&&r.height<sliceH*.86;
-  }).sort(function(a,b){return a.start-b.start;});
-}
-function adjustPdfPageBreak(pageStart,proposedEnd,maxEnd,avoidRanges,minSlice){
-  var pageEnd=Math.min(proposedEnd,maxEnd);
-  var orphanGuard=90;
-  for(var i=0;i<avoidRanges.length;i++){
-    var r=avoidRanges[i];
-    if(r.start<=pageStart+8)continue;
-    if(r.start<pageEnd&&r.end>pageEnd){
-      var adjusted=Math.floor(r.start)-6;
-      if(adjusted-pageStart>=minSlice)return adjusted;
-    }
-    if(r.start<pageEnd&&pageEnd-r.start<orphanGuard&&r.start-pageStart>=minSlice){
-      return Math.floor(r.start)-6;
-    }
-    if(r.end>pageEnd&&r.end-pageEnd<orphanGuard&&r.start-pageStart>=minSlice){
-      return Math.floor(r.start)-6;
-    }
-  }
-  return pageEnd;
-}
 function addPdfFooter(pdf,pageNum,pageW,pageH,footerY,dateText){
   pdf.setDrawColor(228,234,242);
   pdf.setLineWidth(.2);
@@ -3375,6 +3339,73 @@ function addPdfFooter(pdf,pageNum,pageW,pageH,footerY,dateText){
   pdf.text('welme.io',10,footerY);
   pdf.text(dateText,pageW/2,footerY,{align:'center'});
   pdf.text('Page '+pageNum,pageW-10,footerY,{align:'right'});
+}
+function getPdfRenderUnits(target){
+  var units=[];
+  var scratch=document.createElement('div');
+  target.appendChild(scratch);
+  function addUnit(title,content){
+    if(!content)return;
+    var wrap=document.createElement('div');
+    wrap.className='section pdf-health-only pdf-section';
+    if(title)wrap.appendChild(title.cloneNode(true));
+    wrap.appendChild(content.cloneNode(true));
+    scratch.appendChild(wrap);
+    units.push(wrap);
+  }
+  function addBlockUnits(section,selector){
+    var title=section.querySelector('.sec-title');
+    var blocks=Array.prototype.slice.call(section.querySelectorAll(selector));
+    if(!blocks.length){
+      units.push(section);
+      return;
+    }
+    blocks.forEach(function(block,idx){
+      addUnit(idx===0?title:null,block);
+    });
+  }
+  Array.prototype.slice.call(target.querySelectorAll('.pdf-health-only.section')).forEach(function(section){
+    if(section.id==='protocolSection'){
+      var title=section.querySelector('.sec-title');
+      var first=true;
+      Array.prototype.slice.call(section.querySelectorAll('#protocolContent > .pdf-section, #protocolScheduleContent > .pdf-section')).forEach(function(part){
+        addUnit(first&&title?title:null,part);
+        first=false;
+      });
+    }else if(section.id==='analysisSection'){
+      addBlockUnits(section,'#analysisContent .kbju-tip.pdf-block');
+    }else if(section.id==='kbjuSection'){
+      var kbjuTitle=section.querySelector('.sec-title');
+      var kbjuGrid=section.querySelector('#kbjuContent > .kbju-grid');
+      var tipTitle=section.querySelector('#kbjuContent .kbju-tip-title');
+      if(kbjuGrid)addUnit(kbjuTitle,kbjuGrid);
+      Array.prototype.slice.call(section.querySelectorAll('#kbjuContent .kbju-tip.pdf-block')).forEach(function(tip,idx){
+        var wrap=document.createElement('div');
+        wrap.className='section pdf-health-only pdf-section';
+        if(!kbjuGrid&&idx===0&&kbjuTitle)wrap.appendChild(kbjuTitle.cloneNode(true));
+        if(idx===0&&tipTitle)wrap.appendChild(tipTitle.cloneNode(true));
+        wrap.appendChild(tip.cloneNode(true));
+        scratch.appendChild(wrap);
+        units.push(wrap);
+      });
+      if(!kbjuGrid&&!section.querySelector('#kbjuContent .kbju-tip.pdf-block'))units.push(section);
+    }else if(section.id==='lifestyleSection'){
+      addBlockUnits(section,'#lifestyleContent .routine-card.pdf-block');
+    }else{
+      units.push(section);
+    }
+  });
+  return units;
+}
+async function renderPdfUnitCanvas(unit){
+  return html2canvas(unit,{
+    backgroundColor:'#FFFFFF',
+    scale:3,
+    useCORS:true,
+    logging:false,
+    imageTimeout:0,
+    windowWidth:unit.scrollWidth
+  });
 }
 async function buildProtocolPdfBlob(){
   if(!window.html2canvas||!window.jspdf||!window.jspdf.jsPDF){
@@ -3387,14 +3418,6 @@ async function buildProtocolPdfBlob(){
   var target=render.target;
   try{
     await new Promise(function(resolve){setTimeout(resolve,80);});
-    var canvas=await html2canvas(target,{
-      backgroundColor:'#FFFFFF',
-      scale:3,
-      useCORS:true,
-      logging:false,
-      imageTimeout:0,
-      windowWidth:target.scrollWidth
-    });
     var jsPDF=window.jspdf.jsPDF;
     var pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a4',compress:true});
     var pageW=pdf.internal.pageSize.getWidth();
@@ -3404,30 +3427,56 @@ async function buildProtocolPdfBlob(){
     var footerY=pageH-8;
     var contentW=pageW-(marginX*2);
     var contentH=pageH-marginTop-20;
-    var sliceH=Math.floor(canvas.width*(contentH/contentW));
-    var avoidRanges=collectPdfAvoidRanges(target,canvas.width/target.scrollWidth,sliceH);
-    var minSlice=Math.floor(sliceH*.64);
-    var y=0;
+    var cursorY=marginTop;
     var pageNum=1;
-    while(y<canvas.height-4){
-      var remaining=canvas.height-y;
-      var pageEnd=adjustPdfPageBreak(y,y+sliceH,canvas.height,avoidRanges,minSlice);
-      var currentSliceH=Math.min(pageEnd-y,remaining);
-      if(currentSliceH<8)break;
-      var pageCanvas=document.createElement('canvas');
-      pageCanvas.width=canvas.width;
-      pageCanvas.height=currentSliceH;
-      var ctx=pageCanvas.getContext('2d');
-      ctx.fillStyle='#FFFFFF';
-      ctx.fillRect(0,0,pageCanvas.width,pageCanvas.height);
-      ctx.drawImage(canvas,0,y,canvas.width,currentSliceH,0,0,canvas.width,currentSliceH);
-      if(pageNum>1)pdf.addPage();
-      var imgH=currentSliceH*(contentW/canvas.width);
-      pdf.addImage(pageCanvas.toDataURL('image/png'),'PNG',marginX,marginTop,contentW,imgH);
-      addPdfFooter(pdf,pageNum,pageW,pageH,footerY,dateText);
-      y+=currentSliceH;
-      pageNum++;
+    var units=getPdfRenderUnits(target);
+    for(var i=0;i<units.length;i++){
+      var canvas=await renderPdfUnitCanvas(units[i]);
+      var imgH=canvas.height*(contentW/canvas.width);
+      if(cursorY>marginTop&&cursorY+imgH>marginTop+contentH){
+        addPdfFooter(pdf,pageNum,pageW,pageH,footerY,dateText);
+        pdf.addPage();
+        pageNum++;
+        cursorY=marginTop;
+      }
+      if(imgH<=contentH){
+        pdf.addImage(canvas.toDataURL('image/png'),'PNG',marginX,cursorY,contentW,imgH);
+        cursorY+=imgH+4;
+      }else{
+        if(cursorY>marginTop){
+          addPdfFooter(pdf,pageNum,pageW,pageH,footerY,dateText);
+          pdf.addPage();
+          pageNum++;
+          cursorY=marginTop;
+        }
+        var sliceH=Math.floor(canvas.width*(contentH/contentW));
+        var y=0;
+        while(y<canvas.height-4){
+          var currentSliceH=Math.min(sliceH,canvas.height-y);
+          var pageCanvas=document.createElement('canvas');
+          pageCanvas.width=canvas.width;
+          pageCanvas.height=currentSliceH;
+          var ctx=pageCanvas.getContext('2d');
+          ctx.fillStyle='#FFFFFF';
+          ctx.fillRect(0,0,pageCanvas.width,pageCanvas.height);
+          ctx.drawImage(canvas,0,y,canvas.width,currentSliceH,0,0,canvas.width,currentSliceH);
+          var partH=currentSliceH*(contentW/canvas.width);
+          pdf.addImage(pageCanvas.toDataURL('image/png'),'PNG',marginX,marginTop,contentW,partH);
+          addPdfFooter(pdf,pageNum,pageW,pageH,footerY,dateText);
+          y+=currentSliceH;
+          if(y<canvas.height-4){
+            pdf.addPage();
+            pageNum++;
+          }
+        }
+        cursorY=marginTop;
+        if(i<units.length-1){
+          pdf.addPage();
+          pageNum++;
+        }
+      }
     }
+    addPdfFooter(pdf,pageNum,pageW,pageH,footerY,dateText);
     return pdf.output('blob');
   }catch(e){
     console.error('PDF export failed',e);
