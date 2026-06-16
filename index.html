@@ -641,6 +641,49 @@ body{background:var(--bg);color:var(--text);
 .site-footer-links{display:flex;justify-content:center;gap:18px;flex-wrap:wrap;margin-bottom:10px}
 .site-footer a{color:var(--muted);text-decoration:none;font-weight:700}
 .site-footer a:hover{color:var(--green)}
+.pdf-print-footer{display:none}
+
+body.pdf-exporting{background:#fff!important}
+body.pdf-exporting,
+body.pdf-exporting *{
+  opacity:1!important;filter:none!important;backdrop-filter:none!important;
+  mix-blend-mode:normal!important;animation:none!important;transition:none!important;
+  transform:none!important
+}
+body.pdf-exporting .logo,
+body.pdf-exporting .prog-area,
+body.pdf-exporting .quiz-wrap,
+body.pdf-exporting .screen,
+body.pdf-exporting #emailGate,
+body.pdf-exporting #resContent,
+body.pdf-exporting .screen-only,
+body.pdf-exporting #suppsSection,
+body.pdf-exporting #purchaseSection,
+body.pdf-exporting .results-cta-card,
+body.pdf-exporting #suppDurationNote,
+body.pdf-exporting #adWarningSection,
+body.pdf-exporting .site-footer,
+body.pdf-exporting .cart-float,
+body.pdf-exporting .cart-overlay,
+body.pdf-exporting .pdf-print-footer{display:none!important}
+body.pdf-exporting .wrap{padding:0!important;max-width:780px!important;margin:0 auto!important}
+body.pdf-exporting .res-screen{display:block!important;padding:0!important}
+body.pdf-exporting .pdf-health-only{display:block!important}
+body.pdf-exporting .section{box-shadow:none!important;border:1px solid #E4EAF2!important;
+  margin-bottom:12px;padding:14px 16px;border-radius:8px!important;background:#fff!important}
+body.pdf-exporting .sec-title{font-size:1.12rem!important;font-weight:800;margin-bottom:12px;
+  color:#1B8B5E;padding-bottom:6px;border-bottom:1px solid #E4EAF2}
+body.pdf-exporting .score-overall-card{box-shadow:none!important;border:1px solid #ddd!important}
+body.pdf-exporting .proto-box{box-shadow:none!important}
+body.pdf-exporting .pdf-rec-list{grid-template-columns:1fr 1fr!important;gap:7px!important}
+body.pdf-exporting .schedule-intro{font-size:.68rem!important;margin-bottom:8px!important}
+body.pdf-exporting .sch-slot{grid-template-columns:98px 1fr!important}
+body.pdf-exporting .sch-time{padding:8px 7px!important}
+body.pdf-exporting .sch-time-label{font-size:.5rem!important;letter-spacing:.08em!important;margin-bottom:3px!important}
+body.pdf-exporting .sch-time-hour{font-size:.66rem!important;line-height:1.2!important}
+body.pdf-exporting .sch-body{padding:9px 10px!important}
+body.pdf-exporting .sch-pill{font-size:.6rem!important;padding:3px 7px!important}
+body.pdf-exporting .sch-guidance{font-size:.62rem!important;line-height:1.35!important}
 
 /* Processing indicators */
 .proc-step{font-size:.82rem;color:var(--muted);padding:8px 0;margin-bottom:8px;display:flex;align-items:center;gap:8px}
@@ -688,7 +731,15 @@ body{background:var(--bg);color:var(--text);
 @media print{
   *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
   body{background:#fff!important;font-size:10.5px;color:#0F172A;-webkit-font-smoothing:antialiased}
-  .logo,.prog-area,.quiz-wrap,.screen,#emailGate,#resContent,.screen-only,#suppsSection,#purchaseSection,.results-cta-card,#suppDurationNote,#adWarningSection{display:none!important}
+  .logo,.prog-area,.quiz-wrap,.screen,#emailGate,#resContent,.screen-only,#suppsSection,#purchaseSection,.results-cta-card,#suppDurationNote,#adWarningSection,.site-footer{display:none!important}
+  .pdf-print-footer{position:fixed;left:0;right:0;bottom:0;display:grid!important;
+    grid-template-columns:1fr 1fr 1fr;align-items:center;gap:8px;
+    color:#64748B;font-size:.66rem;line-height:1;border-top:1px solid #E4EAF2;
+    padding:5px 0;background:#fff}
+  .pdf-print-footer span:nth-child(1){text-align:left}
+  .pdf-print-footer span:nth-child(2){text-align:center}
+  .pdf-print-footer span:nth-child(3){text-align:right}
+  .pdf-page-number::after{content:counter(page)}
   .pdf-health-only{display:block!important}
   .res-screen{display:block!important;padding:0!important}
   #actionButtons,.btn-next,.action-btn,.quick-scroll{display:none!important}
@@ -793,7 +844,7 @@ body{background:var(--bg);color:var(--text);
   table th,table td{border:1px solid #E4EAF2;padding:7px;text-align:left}
   table th{background:#F7F9FC!important;font-weight:700}
 
-  @page{margin:12mm 10mm;size:A4 portrait;orphans:3;widows:3}
+  @page{margin:12mm 10mm 16mm;size:A4 portrait;orphans:3;widows:3}
 }
 </style>
 </head>
@@ -1063,6 +1114,11 @@ Separate with comma or newline"></textarea>
   </div>
   <div>Welme provides informational wellness guidance only and is not a medical provider.</div>
 </footer>
+<div class="pdf-print-footer" aria-hidden="true">
+  <span>welme.io</span>
+  <span id="pdfPrintDate"></span>
+  <span>Page <span class="pdf-page-number"></span></span>
+</div>
 
 <script>
 // ═══════════════════════════════════════════════════════════
@@ -3217,6 +3273,108 @@ function closeEmailGate(){
   // "Skip for now" — close modal, no PDF download
 }
 
+var welmeOriginalTitle=document.title;
+function formatPdfPrintDate(){
+  try{
+    return new Date().toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'});
+  }catch(e){
+    return new Date().toLocaleDateString();
+  }
+}
+function preparePdfPrint(){
+  var dateEl=document.getElementById('pdfPrintDate');
+  if(dateEl)dateEl.textContent=formatPdfPrintDate();
+  welmeOriginalTitle=document.title;
+  document.title='';
+}
+function restorePdfPrintTitle(){
+  if(welmeOriginalTitle)document.title=welmeOriginalTitle;
+}
+window.addEventListener('beforeprint',preparePdfPrint);
+window.addEventListener('afterprint',restorePdfPrintTitle);
+
+function getPdfExportFileName(){
+  var stamp=new Date().toISOString().slice(0,10);
+  return 'welme-health-protocol-'+stamp+'.pdf';
+}
+function addPdfFooter(pdf,pageNum,pageW,pageH,footerY,dateText){
+  pdf.setDrawColor(228,234,242);
+  pdf.setLineWidth(.2);
+  pdf.line(10,footerY-5,pageW-10,footerY-5);
+  pdf.setFont('helvetica','normal');
+  pdf.setFontSize(8);
+  pdf.setTextColor(100,116,139);
+  pdf.text('welme.io',10,footerY);
+  pdf.text(dateText,pageW/2,footerY,{align:'center'});
+  pdf.text('Page '+pageNum,pageW-10,footerY,{align:'right'});
+}
+async function generateProtocolPdf(){
+  if(!window.html2canvas||!window.jspdf||!window.jspdf.jsPDF){
+    alert('Your browser is using the print fallback. In the print dialog, turn off browser Headers and Footers before saving the PDF.');
+    preparePdfPrint();
+    window.print();
+    setTimeout(restorePdfPrintTitle,1000);
+    return;
+  }
+  var target=document.getElementById('resScreen');
+  if(!target)return;
+  var dateText=formatPdfPrintDate();
+  var previousScroll=window.scrollY||window.pageYOffset||0;
+  document.body.classList.add('pdf-exporting');
+  try{
+    window.scrollTo(0,0);
+    await new Promise(function(resolve){setTimeout(resolve,80);});
+    var canvas=await html2canvas(target,{
+      backgroundColor:'#FFFFFF',
+      scale:3,
+      useCORS:true,
+      logging:false,
+      imageTimeout:0,
+      windowWidth:target.scrollWidth
+    });
+    var jsPDF=window.jspdf.jsPDF;
+    var pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a4',compress:true});
+    var pageW=pdf.internal.pageSize.getWidth();
+    var pageH=pdf.internal.pageSize.getHeight();
+    var marginX=10;
+    var marginTop=10;
+    var footerY=pageH-8;
+    var contentW=pageW-(marginX*2);
+    var contentH=pageH-marginTop-20;
+    var sliceH=Math.floor(canvas.width*(contentH/contentW));
+    var y=0;
+    var pageNum=1;
+    while(y<canvas.height-4){
+      var remaining=canvas.height-y;
+      var currentSliceH=Math.min(sliceH,remaining);
+      if(currentSliceH<8)break;
+      var pageCanvas=document.createElement('canvas');
+      pageCanvas.width=canvas.width;
+      pageCanvas.height=currentSliceH;
+      var ctx=pageCanvas.getContext('2d');
+      ctx.fillStyle='#FFFFFF';
+      ctx.fillRect(0,0,pageCanvas.width,pageCanvas.height);
+      ctx.drawImage(canvas,0,y,canvas.width,currentSliceH,0,0,canvas.width,currentSliceH);
+      if(pageNum>1)pdf.addPage();
+      var imgH=currentSliceH*(contentW/canvas.width);
+      pdf.addImage(pageCanvas.toDataURL('image/png'),'PNG',marginX,marginTop,contentW,imgH);
+      addPdfFooter(pdf,pageNum,pageW,pageH,footerY,dateText);
+      y+=currentSliceH;
+      pageNum++;
+    }
+    pdf.save(getPdfExportFileName());
+  }catch(e){
+    console.error('PDF export failed',e);
+    alert('PDF export could not finish. In the print dialog, turn off browser Headers and Footers before saving the PDF.');
+    preparePdfPrint();
+    window.print();
+    setTimeout(restorePdfPrintTitle,1000);
+  }finally{
+    document.body.classList.remove('pdf-exporting');
+    window.scrollTo(0,previousScroll);
+  }
+}
+
 // ── REPLACE THIS WITH YOUR GOOGLE APPS SCRIPT URL ──────────────────────────
 var WELME_SHEET_URL = 'https://script.google.com/macros/s/AKfycbxPBvnPylbFWc4StA5PkMAxskagtgZzTljWV72qNMvGAkAWcM6kriRkiUxmzKWAOJXW/exec';
 var WELME_TRACKING_URL = 'https://script.google.com/macros/s/AKfycbwtmkpCjsC3VnJ_970C-cnPB3nqL1Lhe4HtNeDENSFHfQ0P6ivfvY33GSc4-HdJaImc/exec';
@@ -3291,7 +3449,7 @@ if (WELME_SHEET_URL) {
   } catch (e) {}
 }
 
-  window.print();
+  generateProtocolPdf();
 }
 
 </script>
