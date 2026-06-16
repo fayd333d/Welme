@@ -269,7 +269,6 @@ body{background:var(--bg);color:var(--text);
   padding:24px;background:var(--card);border:1.5px solid var(--border);border-radius:14px;margin-bottom:16px;
   animation:fadeUp .45s ease bothbox-shadow: 0 2px 12px rgba(15,23,42,.07);}
 .sec-title{font-size:1.05rem;font-weight:800;color:var(--text);margin-bottom:14px;display:flex;align-items:center;gap:8px}
-#suppsSection>.sec-title{font-size:1.48rem;margin-bottom:26px;padding-bottom:14px;border-bottom:1.5px solid var(--border)}
 .pdf-health-only{display:none}
 .screen-only{display:block}
 .supp-disclaimer{background:#FFF7ED;border:1.5px solid rgba(180,83,9,.24);border-radius:12px;
@@ -282,6 +281,14 @@ body{background:var(--bg);color:var(--text);
 .supp-group-title::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block}
 .supp-group.recommendations .supp-group-title::before{background:var(--blue)}
 .supp-group-sub{font-size:.78rem;color:var(--muted);line-height:1.55;margin:-6px 0 14px}
+.supp-overview{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:18px}
+.supp-overview-card{display:flex;align-items:center;gap:8px;background:var(--card);border:1.5px solid var(--border);
+  border-radius:11px;padding:10px 11px;min-width:0}
+.supp-overview-icon{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  background:var(--green-light);color:var(--green);font-size:.85rem;flex-shrink:0}
+.supp-group.recommendations .supp-overview-icon{background:rgba(26,95,168,.1);color:var(--blue)}
+.supp-overview-name{font-size:.82rem;font-weight:800;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.supp-detail-list{display:flex;flex-direction:column;gap:0}
 .supp-mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
 @media(max-width:560px){.supp-mini-grid{grid-template-columns:1fr}}
 .supp-info-box{background:var(--card);border:1.5px solid var(--border);border-radius:10px;padding:12px}
@@ -534,28 +541,31 @@ body{background:var(--bg);color:var(--text);
 
 /* ── Schedule table ───────────────────────────────────── */
 .schedule-wrap{border:1.5px solid var(--border);border-radius:14px;overflow:hidden}
-.sch-slot{display:grid;grid-template-columns:100px 1fr;border-bottom:1px solid var(--border)}
+.sch-slot{display:grid;grid-template-columns:116px 1fr;border-bottom:1px solid var(--border)}
 .sch-slot:last-child{border-bottom:none}
-.sch-time{background:var(--bg);padding:16px 14px;border-right:1px solid var(--border)}
-.sch-time-label{font-size:.72rem;font-weight:700;color:var(--green);text-transform:uppercase;
-  letter-spacing:.05em;margin-bottom:4px}
-.sch-time-hour{font-size:1.1rem;font-weight:800;color:var(--text)}
-.sch-body{padding:14px 16px}
+.sch-time{background:#F8FBFA;padding:12px 10px;border-right:1px solid var(--border)}
+.sch-time-label{font-size:.58rem;font-weight:800;color:var(--green);text-transform:uppercase;
+  letter-spacing:.1em;margin-bottom:5px}
+.sch-time-hour{font-size:.78rem;font-weight:700;line-height:1.25;color:#243046}
+.sch-body{padding:12px 14px}
 .sch-pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
 .sch-pill{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;
-  border-radius:20px;font-size:.72rem;font-weight:600;
+  border-radius:20px;font-size:.68rem;font-weight:600;
   background:var(--green-light);color:var(--green);border:1px solid rgba(27,139,94,.2)}
+.schedule-intro{font-size:.74rem;color:var(--muted);line-height:1.55;margin:0 0 10px}
+.schedule-empty{padding:14px 16px;background:var(--bg);border:1.5px solid var(--border);
+  border-radius:12px;font-size:.8rem;color:var(--muted);line-height:1.6}
+.sch-pill-dose{opacity:.78}
 .pdf-supp-detail{display:none}
 .print-only{display:none}
-.sch-tip{margin-top:6px}
-.sch-tip-item{display:flex;gap:8px;align-items:flex-start;font-size:.79rem;color:var(--muted);
-  margin-bottom:7px;line-height:1.55}
-.sch-num{color:var(--green);font-weight:800;font-size:.75rem;min-width:18px;flex-shrink:0;
-  padding-top:1px;font-variant-numeric:tabular-nums}
-.sch-tip-text{flex:1}
+.sch-guidance{font-size:.7rem;color:var(--muted);line-height:1.45;margin-top:6px}
+.pdf-rec-list{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0 14px}
+.pdf-rec-item{background:#F8FBFA;border:1px solid var(--border);border-radius:8px;padding:9px 10px}
+.pdf-rec-name{font-size:.78rem;font-weight:800;color:var(--text);margin-bottom:3px}
+.pdf-rec-meta{font-size:.68rem;color:var(--muted);line-height:1.4}
 @media(max-width:480px){.sch-slot{grid-template-columns:1fr}
-  .sch-time{border-right:none;border-bottom:1px solid var(--border);padding:10px 14px}
-  .sch-time-hour{font-size:.9rem}}
+  .sch-time{border-right:none;border-bottom:1px solid var(--border);padding:9px 10px}
+  .sch-time-hour{font-size:.68rem}}
 
 /* ── Cart float button ────────────────────────────────── */
 .cart-float{display:none;position:fixed;bottom:24px;right:24px;z-index:300;
@@ -642,10 +652,11 @@ body{background:var(--bg);color:var(--text);
   .res-title{font-size:1.4rem}
   .section{padding:18px}
   #suppsSection{padding:4px 0 0;background:transparent;border:none;border-radius:0}
-  #suppsSection>.sec-title{font-size:1.38rem;padding:0 2px 13px;margin-bottom:22px}
   .supp-group{padding:16px 10px 4px;margin:0 -10px 30px;border-radius:14px}
   .supp-group.recommendations{margin-top:34px;padding-top:18px}
   .supp-group-title{font-size:1.12rem;padding:0 2px;margin-bottom:15px}
+  .supp-overview{grid-template-columns:1fr;gap:7px;margin-bottom:16px}
+  .supp-overview-card{padding:9px 10px}
   .supp-name{font-size:.98rem}
   .supp-card{padding:14px;margin-bottom:16px;border-radius:14px}
   .opt{min-height:52px;padding:14px 12px}
@@ -659,6 +670,11 @@ body{background:var(--bg);color:var(--text);
   .supp-metric{padding:10px 6px}
   .kbju-grid{grid-template-columns:repeat(2,1fr)}
   .home-disclaimer{font-size:.74rem}
+  .sch-slot{grid-template-columns:1fr}
+  .sch-time{border-right:none;border-bottom:1px solid var(--border);padding:9px 10px}
+  .sch-body{padding:10px}
+  .sch-pill{font-size:.64rem}
+  .pdf-rec-list{grid-template-columns:1fr}
 }
 
 /* ── PRINT / PDF ── */
@@ -695,7 +711,7 @@ body{background:var(--bg);color:var(--text);
     margin-bottom:14px;padding:14px 16px;border-radius:8px!important
   }
   .sec-title{
-    font-size:.92rem;font-weight:800;margin-bottom:12px;
+    font-size:1.12rem!important;font-weight:800;margin-bottom:12px;
     color:#1B8B5E;padding-bottom:6px;border-bottom:1px solid #E4EAF2;
     page-break-after:avoid
   }
@@ -734,6 +750,17 @@ body{background:var(--bg);color:var(--text);
   .metrics-list{width:100%!important}
   .metric-row{margin-bottom:9px!important}
   .metric-bar{height:8px!important;border-radius:4px!important}
+  .schedule-intro{font-size:.68rem!important;margin-bottom:8px!important}
+  .sch-slot{grid-template-columns:98px 1fr!important}
+  .sch-time{padding:8px 7px!important}
+  .sch-time-label{font-size:.5rem!important;letter-spacing:.08em!important;margin-bottom:3px!important}
+  .sch-time-hour{font-size:.66rem!important;line-height:1.2!important}
+  .sch-body{padding:9px 10px!important}
+  .sch-pill{font-size:.6rem!important;padding:3px 7px!important}
+  .sch-guidance{font-size:.62rem!important;line-height:1.35!important}
+  .pdf-rec-list{grid-template-columns:1fr 1fr!important;gap:7px!important}
+  .pdf-rec-name{font-size:.72rem!important}
+  .pdf-rec-meta{font-size:.62rem!important}
   /* Lifestyle section visible in PDF */
   #lifestyleSection{display:block!important}
   .supp-card{
@@ -949,7 +976,7 @@ Separate with comma or newline"></textarea>
     </div>
 
     <div class="section pdf-health-only" id="analysisSection">
-      <div class="sec-title">🔎 Detailed Health Analysis</div>
+      <div class="sec-title">🔎 Health Analysis</div>
       <div id="analysisContent"></div>
     </div>
 
@@ -960,6 +987,7 @@ Separate with comma or newline"></textarea>
     <div class="section pdf-health-only" id="protocolSection">
       <div class="sec-title">🎯 Your Protocol</div>
       <div id="protocolContent"></div>
+      <div id="protocolScheduleContent"></div>
     </div>
 
     <!-- Supplement duration note (replaces "Already In Your Stack") -->
@@ -975,7 +1003,6 @@ Separate with comma or newline"></textarea>
 
     <!-- Supplements section -->
     <div class="section screen-only" id="suppsSection">
-      <div class="sec-title">💊 Personalized Supplement Guide</div>
       <div id="suppsContent"></div>
       <div id="purchaseContent"></div>
       <div id="protocolSummarySection" class="protocol-summary">
@@ -1003,7 +1030,7 @@ Separate with comma or newline"></textarea>
 
     <!-- КБЖУ section - Change 3 -->
     <div class="section pdf-health-only" id="kbjuSection">
-      <div class="sec-title">📊 Your Personal Nutrition Targets</div>
+      <div class="sec-title">📊 Personal Nutrition Targets</div>
       <div id="kbjuContent"></div>
     </div>
 
@@ -2037,6 +2064,13 @@ function calcScores(){
 function assignBestProto(scores){
   var sc={};
   function add(k,v){sc[k]=(sc[k]||0)+v;}
+  var trackedKeys=['sleep','energy','stress','activity','nutrition','metabolic'];
+  var vals=trackedKeys.map(function(k){return scores[k];});
+  var minScore=Math.min.apply(null,vals);
+  var maxScore=Math.max.apply(null,vals);
+  if((minScore>=60&&maxScore<=74)||(scores.overall>=62&&minScore>=58&&(maxScore-minScore)<=12)){
+    return 'baseline';
+  }
   if(scores.sleep<40) add('sleep',3); else if(scores.sleep<65) add('sleep',2);
   if(scores.energy<40){add('longevity',1);add('metabolic',1);}
   if(scores.energy<55){add('cognitive',1);}
@@ -2118,26 +2152,86 @@ function getPersonalizedExtras(scores, profile, answers){
 
 // ── SCORE BAR BUILDERS
 var METRIC_ICONS={sleep:'🌙',energy:'⚡',stress:'🧠',activity:'💪',nutrition:'🥗',metabolic:'⚖️'};
-function scoreColor(v){return v>=75?'#059669':v>=50?'#C87A00':'#DC2626';}
-function scoreBadgeClass(v){return v>=75?'badge-green':v>=50?'badge-yellow':'badge-red';}
-function scoreLabel(v){return v>=75?'Excellent':v>=50?'Good':'Needs work';}
+function clampNum(v,min,max){return Math.max(min,Math.min(max,v));}
+function hexToRgb(hex){
+  var clean=(hex||'').replace('#','');
+  return{
+    r:parseInt(clean.slice(0,2),16),
+    g:parseInt(clean.slice(2,4),16),
+    b:parseInt(clean.slice(4,6),16)
+  };
+}
+function rgbToHex(rgb){
+  function part(v){
+    var n=clampNum(Math.round(v),0,255).toString(16);
+    return n.length===1?'0'+n:n;
+  }
+  return'#'+part(rgb.r)+part(rgb.g)+part(rgb.b);
+}
+function mixHex(a,b,t){
+  var ca=hexToRgb(a), cb=hexToRgb(b), ratio=clampNum(t,0,1);
+  return rgbToHex({
+    r:ca.r+(cb.r-ca.r)*ratio,
+    g:ca.g+(cb.g-ca.g)*ratio,
+    b:ca.b+(cb.b-ca.b)*ratio
+  });
+}
+function scoreColor(v){
+  var stops=[
+    {value:0,color:'#DC2626'},
+    {value:25,color:'#F97316'},
+    {value:50,color:'#F59E0B'},
+    {value:65,color:'#EAB308'},
+    {value:80,color:'#84CC16'},
+    {value:100,color:'#059669'}
+  ];
+  var val=clampNum(v,0,100);
+  for(var i=0;i<stops.length-1;i++){
+    var from=stops[i], to=stops[i+1];
+    if(val<=to.value){
+      return mixHex(from.color,to.color,(val-from.value)/(to.value-from.value||1));
+    }
+  }
+  return stops[stops.length-1].color;
+}
+function scoreLabel(v){
+  if(v>=85) return'Excellent';
+  if(v>=70) return'Good';
+  if(v>=60) return'Normal';
+  if(v>=45) return'Fair';
+  return'Needs support';
+}
+function scoreBaselineLabel(v){
+  if(v>=85) return'Strong Baseline';
+  if(v>=70) return'Good Baseline';
+  if(v>=60) return'Moderate Baseline';
+  if(v>=45) return'Early Imbalances';
+  return'Needs Focus';
+}
+function scoreBadgeStyle(v){
+  var col=scoreColor(v);
+  return'background:'+mixHex(col,'#FFFFFF',0.9)+';color:'+col+';border:1px solid '+mixHex(col,'#FFFFFF',0.68);
+}
 
 function buildScoreOverall(val){
   var col=scoreColor(val);
-  var lbl=val>=75?'Strong baseline':val>=50?'Moderate baseline':'Needs focus';
+  var lbl=scoreBaselineLabel(val);
+  var statusColor=lbl==='Moderate Baseline'?'#1A5FA8':col;
   return'<div class="score-overall-card">'+
     '<div class="score-top-row">'+
       '<div class="score-num-giant" style="color:'+col+'">'+val+'</div>'+
       '<div class="score-info-col">'+
-        '<div class="score-status-label" style="color:'+col+'">'+lbl+'</div>'+
+        '<div class="score-status-label" style="color:'+statusColor+'">'+lbl+'</div>'+
         '<div class="score-detail-text">Sleep &middot; Energy &middot; Stress<br>Activity &middot; Nutrition &middot; Metabolic health</div>'+
       '</div>'+
     '</div>'+
     '<div class="bar-track"><div class="bar-fill" style="width:'+val+'%;background:'+col+'"></div></div>'+
     '<div class="score-legend-row">'+
-      '<span class="score-legend-item"><span style="color:#059669">●</span> 75–100 Excellent</span>'+
-      '<span class="score-legend-item"><span style="color:#C87A00">●</span> 50–74 Good</span>'+
-      '<span class="score-legend-item"><span style="color:#DC2626">●</span> 0–49 Needs work</span>'+
+      '<span class="score-legend-item"><span style="color:'+scoreColor(92)+'">●</span> 85–100 Excellent</span>'+
+      '<span class="score-legend-item"><span style="color:'+scoreColor(76)+'">●</span> 70–84 Good</span>'+
+      '<span class="score-legend-item"><span style="color:'+scoreColor(64)+'">●</span> 60–69 Moderate</span>'+
+      '<span class="score-legend-item"><span style="color:'+scoreColor(52)+'">●</span> 45–59 Fair</span>'+
+      '<span class="score-legend-item"><span style="color:'+scoreColor(25)+'">●</span> 0–44 Needs focus</span>'+
     '</div>'+
   '</div>';
 }
@@ -2149,7 +2243,7 @@ function buildMetricRow(key,label,val){
     '<div class="metric-body">'+
       '<div class="metric-header">'+
         '<span class="metric-name">'+label+'</span>'+
-        '<span class="metric-badge '+scoreBadgeClass(val)+'">'+val+' · '+scoreLabel(val)+'</span>'+
+        '<span class="metric-badge" style="'+scoreBadgeStyle(val)+'">'+val+' · '+scoreLabel(val)+'</span>'+
       '</div>'+
       '<div class="metric-track"><div class="metric-fill" style="width:'+val+'%;background:'+col+'"></div></div>'+
     '</div>'+
@@ -2213,12 +2307,58 @@ function buildResults(){
   var weak=sortedMetrics.slice(0,2);
   var strong=sortedMetrics.slice(-2).reverse();
   var metricName={sleep:'sleep quality',energy:'energy levels',stress:'stress resilience',activity:'physical activity',nutrition:'nutrition quality',metabolic:'metabolic health'};
+  var metricAction={
+    sleep:{
+      improve:'Keep a stable wake time, reduce bright light 60-90 minutes before bed, avoid alcohol close to bedtime, and keep late meals at least 3 hours before sleep.',
+      supps:['mag','theanine','melatonin','ashwa','probio'],
+      why:'Magnesium and L-Theanine support nervous-system downshifting; low-dose melatonin can help reset sleep timing when used briefly.'
+    },
+    energy:{
+      improve:'Prioritize morning light, protein at breakfast, hydration, and consistent movement. If energy crashes after meals, pair carbohydrates with protein and fat.',
+      supps:['bcomplex','coq10','creatine','nad','iron'],
+      why:'B vitamins support energy metabolism, CoQ10 supports mitochondrial electron transport, and creatine helps buffer cellular ATP demand.'
+    },
+    stress:{
+      improve:'Use short daily recovery blocks: 2-5 minutes of slow breathing, a walk after work, and a clear cutoff for caffeine and work notifications.',
+      supps:['mag','theanine','ashwa','rhodiola','saffron'],
+      why:'Magnesium and L-Theanine support calmer neural signaling; adaptogens such as ashwagandha or rhodiola may support stress adaptation when cycled.'
+    },
+    activity:{
+      improve:'Aim for a minimum baseline of walking plus 2-3 resistance sessions weekly. Increase volume gradually rather than jumping into high-intensity training.',
+      supps:['creatine','collagen','omega','coq10','mag'],
+      why:'Creatine supports strength output, collagen supports connective tissue when paired with vitamin C, and magnesium supports muscle function.'
+    },
+    nutrition:{
+      improve:'Build meals around protein, fiber-rich carbohydrates, colorful plants, and healthy fats. Reduce refined carbohydrates and sugary drinks first.',
+      supps:['omega','vitC','probio','collagen','bcomplex'],
+      why:'Omega-3s support inflammatory balance, probiotics support the gut environment, and vitamin C supports collagen synthesis and antioxidant recycling.'
+    },
+    metabolic:{
+      improve:'Keep a consistent meal rhythm, walk 10 minutes after higher-carb meals, prioritize sleep, and avoid large late-night meals.',
+      supps:['omega','berb','ala','creatine','d3k2'],
+      why:'Berberine and alpha-lipoic acid support glucose handling, omega-3s support cardiometabolic health, and creatine supports lean mass.'
+    }
+  };
+  function metricAnalysisHTML(k){
+    var cfg=metricAction[k], val=healthScores[k];
+    var relevant=(cfg.supps||[]).filter(function(s){return proto.supps.indexOf(s)>-1&&S[s];}).slice(0,3);
+    if(!relevant.length) relevant=(cfg.supps||[]).filter(function(s){return S[s];}).slice(0,2);
+    var suppText=relevant.map(function(s){
+      var sup=S[s];
+      return sup.name+' ('+sup_getDose(sup,profile)+', '+sup.slotLabel+')';
+    }).join('; ');
+    return'<div class="kbju-tip">'+
+      '<strong>'+metricName[k]+' — '+val+'/100:</strong> '+cfg.improve+
+      '<br><strong>Supplement support:</strong> '+(suppText||'No supplement priority for this area right now.')+
+      '<br><strong>Why it helps:</strong> '+cfg.why+
+    '</div>';
+  }
   document.getElementById('analysisContent').innerHTML=
     '<div class="kbju-tips">'+
       '<div class="kbju-tip"><strong>Strengths:</strong> Your strongest areas are '+strong.map(function(k){return metricName[k]+' ('+healthScores[k]+'/100)';}).join(' and ')+'. These are useful anchors for your long-term wellness plan.</div>'+
       '<div class="kbju-tip"><strong>Areas requiring attention:</strong> The lowest-scoring areas are '+weak.map(function(k){return metricName[k]+' ('+healthScores[k]+'/100)';}).join(' and ')+'. These influenced the protocol selection most strongly.</div>'+
-      '<div class="kbju-tip"><strong>Key factors:</strong> Your answers around sleep, stress, nutrition, activity, energy, and metabolic signals were weighted together to identify the most relevant focus areas.</div>'+
-      '<div class="kbju-tip"><strong>Recommended direction:</strong> Prioritize consistent daily habits first, then layer in targeted nutrition, activity, recovery, and stress-management improvements.</div>'+
+      ['sleep','energy','stress','activity','nutrition','metabolic'].map(metricAnalysisHTML).join('')+
+      '<div class="kbju-tip"><strong>Recommended direction:</strong> Start with the two lowest-scoring areas first, then reassess after 6-8 weeks. Use supplements as support for habits, not as a substitute for sleep, nutrition, movement, or medical care.</div>'+
     '</div>';
 
   // Update sticky nav
@@ -2246,14 +2386,10 @@ function buildResults(){
   console.log("QUIZ COMPLETE payload", quizCompletePayload);
   trackWelmeEvent(quizCompletePayload);    
 
-  // Build supplement-focused intro into resContent
-  var scoreColor=overallScore>=70?'var(--ok)':overallScore>=50?'var(--warn)':'var(--risk)';
-  var scoreLabel=overallScore>=70?'Optimal':'Needs Attention';
   document.getElementById('resContent').innerHTML=
     '<div style="margin-bottom:20px">'+
       '<div class="res-title">Your Supplement Guide</div>'+
       '<p class="res-sub" style="text-align:center;margin-left:auto;margin-right:auto;max-width:560px">A practical guide to the supplements you already take and the highest-priority additions from your quiz answers.</p>'+
-      '<div class="supp-disclaimer"><strong>Medical disclaimer:</strong> This information is for educational purposes only and does not replace medical advice. Before starting any supplement, changing your dosage, or combining multiple supplements, consult a qualified healthcare professional, especially if you are pregnant, breastfeeding, taking medication, or have a medical condition.</div>'+
     '</div>';
 
   // AD warning - Change 4
@@ -2622,6 +2758,73 @@ function buildResults(){
   function usageDetails(k,sup){
     return timingGuidance(sup)+'<br>'+compatibilityText(k);
   }
+  function cleanScheduleText(s){
+    return(s||'').replace(/⚕️\s*/g,'').replace(/\s+—\s+/g,'. ').replace(/\s{2,}/g,' ').trim();
+  }
+  function scheduleGuidanceForSlot(slot){
+    var notes={
+      'morning-empty':'Take with water before breakfast when possible.',
+      'morning-drink':'Take with your first morning drink.',
+      'breakfast':'Take with breakfast or another morning meal.',
+      'prelunch':'Take before lunch if it does not upset your stomach.',
+      'lunch':'Take with lunch or a midday meal.',
+      'dinner':'Take with dinner, preferably with food.',
+      'evening':'Take in the evening with food if tolerated.',
+      'prebed':'Take before bed; avoid combining with alcohol.'
+    };
+    return notes[slot]||'Use the timing that is easiest to keep consistent.';
+  }
+  function buildPdfRecommendedList(keys){
+    var list=(keys||[]).slice(0,4).filter(function(k){return S[k];});
+    if(!list.length)return'';
+    return'<div class="pdf-rec-list">'+list.map(function(k){
+      var sup=S[k];
+      var c=COURSE[k]||{type:'cycle',on:'8-12 weeks',off:'2-4 weeks'};
+      return'<div class="pdf-rec-item">'+
+        '<div class="pdf-rec-name">'+sup.name+'</div>'+
+        '<div class="pdf-rec-meta">'+sup_getDose(sup,profile)+' · '+timingMetric(sup)+' · '+durationLabel(k,c)+'</div>'+
+      '</div>';
+    }).join('')+'</div>';
+  }
+  function buildProtocolSchedule(keys){
+    var SLOT_META={
+      'morning-empty':{label:'Morning',hour:'Empty stomach'},
+      'morning-drink':{label:'Morning',hour:'With first drink'},
+      'breakfast':{label:'Breakfast',hour:'With breakfast'},
+      'prelunch':{label:'Midday',hour:'Before lunch'},
+      'lunch':{label:'Lunch',hour:'With lunch'},
+      'dinner':{label:'Evening',hour:'With dinner'},
+      'evening':{label:'Evening',hour:'After dinner'},
+      'prebed':{label:'Bedtime',hour:'Before bed'}
+    };
+    var groups={};
+    (keys||[]).forEach(function(k){
+      var sup=S[k];
+      if(!sup) return;
+      var slot=sup.slot||'lunch';
+      if(!groups[slot]) groups[slot]=[];
+      groups[slot].push(k);
+    });
+    var orderedSlots=Object.keys(groups).sort(function(a,b){return slotPri(a)-slotPri(b);});
+    if(!orderedSlots.length){
+      return'<div class="schedule-empty">No timed supplement schedule is available for this protocol yet.</div>';
+    }
+    return'<div class="proto-name" style="margin-top:12px">Supplement Intake Schedule</div>'+
+      '<div class="schedule-intro">A simple timing guide for the recommended and current supplements. Use it as a flexible starting point and adjust with your clinician if needed.</div>'+
+      '<div class="schedule-wrap">'+orderedSlots.map(function(slot){
+        var meta=SLOT_META[slot]||{label:'Anytime',hour:'Flexible'};
+        return'<div class="sch-slot">'+
+          '<div class="sch-time"><div class="sch-time-label">'+meta.label+'</div><div class="sch-time-hour">'+meta.hour+'</div></div>'+
+          '<div class="sch-body">'+
+            '<div class="sch-pills">'+groups[slot].map(function(k){
+              var sup=S[k];
+              return'<span class="sch-pill">'+sup.name+' <span class="sch-pill-dose">· '+sup_getDose(sup,profile)+'</span></span>';
+            }).join('')+'</div>'+
+            '<div class="sch-guidance">'+scheduleGuidanceForSlot(slot)+'</div>'+
+          '</div>'+
+        '</div>';
+      }).join('')+'</div>';
+  }
   function suppCardHTML(k){
     var sup=S[k]; if(!sup) return'';
     suppIdx++;
@@ -2689,16 +2892,35 @@ function buildResults(){
   var shownCurrent=currentSelectedKeys.filter(function(k){
     return suppCardKeys.indexOf(k)>-1;
   });
-  var shownSuggested=suppCardKeys.filter(function(k){return shownCurrent.indexOf(k)===-1;});
+  var shownSuggested=suppCardKeys.filter(function(k){return shownCurrent.indexOf(k)===-1;}).slice(0,4);
+  var pdfRecommendedKeys=shownSuggested.slice(0,4);
+  var scheduleKeys=shownCurrent.concat(pdfRecommendedKeys).filter(function(k,idx,arr){
+    return arr.indexOf(k)===idx;
+  });
+  var pdfRecListHTML=buildPdfRecommendedList(pdfRecommendedKeys);
+  document.getElementById('protocolContent').innerHTML=
+    protoHTML+
+    (pdfRecListHTML?'<div class="proto-name" style="margin-top:12px">Recommended Supplements</div>'+pdfRecListHTML:'');
+  function suppOverviewHTML(keys){
+    return'<div class="supp-overview">'+keys.map(function(k){
+      var sup=S[k];
+      if(!sup)return'';
+      return'<div class="supp-overview-card">'+
+        '<span class="supp-overview-icon">💊</span>'+
+        '<span class="supp-overview-name">'+sup.name+'</span>'+
+      '</div>';
+    }).join('')+'</div>';
+  }
   function suppGroupHTML(title,keys,emptyText,kind){
     return'<div class="supp-group '+(kind||'')+'"><div class="supp-group-title">'+title+'</div>'+
-      (keys.length?keys.map(function(k){return suppCardHTML(k);}).join(''):
+      (keys.length?suppOverviewHTML(keys)+'<div class="supp-detail-list">'+keys.map(function(k){return suppCardHTML(k);}).join('')+'</div>':
         '<div style="padding:14px 16px;border:1.5px solid var(--border);border-radius:10px;color:var(--muted);font-size:.82rem;line-height:1.6;background:var(--bg)">'+emptyText+'</div>')+
       '</div>';
   }
-  suppsHTML+=suppGroupHTML('You Already Take',shownCurrent,'No current supplements were selected in the quiz.','current');
-  suppsHTML+=suppGroupHTML('Recommendations',shownSuggested,'No additional supplements are recommended right now.','recommendations');
+  suppsHTML+=suppGroupHTML('What You Already Take',shownCurrent,'No current supplements were selected in the quiz.','current');
+  suppsHTML+=suppGroupHTML('Your Recommendations',shownSuggested,'No additional supplements are recommended right now.','recommendations');
   document.getElementById('suppsContent').innerHTML=suppsHTML;
+  document.getElementById('protocolScheduleContent').innerHTML=buildProtocolSchedule(scheduleKeys);
   function purchasePriceHTML(price){
     if(!price)return'';
     return price.indexOf('$')===0?'<span>$</span>'+price.slice(1):price;
