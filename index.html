@@ -634,11 +634,6 @@ body{background:var(--bg);color:var(--text);
 .cart-checkout-btn .btn-label{display:flex;align-items:center;gap:6px}
 .cart-checkout-btn .btn-count{background:rgba(255,255,255,.25);border-radius:8px;
   padding:2px 8px;font-size:.72rem}
-.protocol-preview-list{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:18px 0 20px;text-align:left}
-.protocol-preview-item{background:#F7F9FC;border:1px solid #E4EAF2;border-radius:10px;
-  padding:10px 12px;color:#334155;font-size:.78rem;font-weight:700;line-height:1.35}
-@media(max-width:480px){.protocol-preview-list{grid-template-columns:1fr}}
-
 /* ── Footer / legal pages ─────────────────────────────── */
 .site-footer{max-width:680px;margin:0 auto;padding:24px 20px 38px;color:var(--muted);
   font-size:.76rem;text-align:center}
@@ -3276,18 +3271,6 @@ function closeEmailGate(){
   document.getElementById('emailGate').style.display='none';
   // "Skip for now" — close modal, no PDF download
 }
-function showProtocolPreview(){
-  var modal=document.getElementById('protocolPreviewGate');
-  if(modal)modal.style.display='flex';
-}
-function closeProtocolPreview(){
-  var modal=document.getElementById('protocolPreviewGate');
-  if(modal)modal.style.display='none';
-}
-function downloadGeneratedProtocol(){
-  generateProtocolPdf();
-}
-
 var welmeOriginalTitle=document.title;
 function formatPdfPrintDate(){
   try{
@@ -3464,7 +3447,7 @@ if (WELME_SHEET_URL) {
   } catch (e) {}
 }
 
-  showProtocolPreview();
+  generateProtocolPdf();
 }
 
 </script>
@@ -3513,39 +3496,6 @@ if (WELME_SHEET_URL) {
   </div>
 </div>
 
-<!-- Protocol Preview / Download Modal -->
-<div id="protocolPreviewGate" style="display:none;position:fixed;inset:0;background:rgba(11,21,19,.72);backdrop-filter:blur(6px);z-index:999;align-items:center;justify-content:center">
-  <div style="background:#fff;border:1px solid rgba(11,21,19,.12);border-radius:16px;padding:32px;max-width:520px;width:90%;text-align:center;box-shadow:0 24px 72px rgba(10,63,61,.34)">
-    <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:18px">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="2.5" y="2.5" width="19" height="19" rx="4" stroke="var(--teal-deep)" stroke-width="1.5"/><path d="M8 12h8M8 16h5M8 8h8" stroke="var(--teal-deep)" stroke-width="1.5" stroke-linecap="round"/></svg>
-      <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-muted);letter-spacing:.08em;text-transform:uppercase">Welme · Protocol Ready</span>
-    </div>
-    <h2 style="font-size:22px;font-weight:700;color:var(--ink);letter-spacing:-.02em;margin-bottom:8px">
-      Your protocol is ready
-    </h2>
-    <p style="color:var(--ink-soft);font-size:14px;margin-bottom:4px;line-height:1.65">
-      Review what is included, then download the PDF when you are ready.
-    </p>
-    <div class="protocol-preview-list">
-      <div class="protocol-preview-item">Personal health analysis</div>
-      <div class="protocol-preview-item">Health optimization scores</div>
-      <div class="protocol-preview-item">Nutrition and meal guidance</div>
-      <div class="protocol-preview-item">Sleep, recovery, and stress support</div>
-      <div class="protocol-preview-item">Daily routine recommendations</div>
-      <div class="protocol-preview-item">Supplement timing and schedule</div>
-    </div>
-    <button onclick="downloadGeneratedProtocol()"
-      style="width:100%;padding:14px;background:#EAF7F2;color:#0B1513;border:1.5px solid rgba(10,63,61,.22);border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:12px;font-family:inherit;transition:opacity .15s"
-      onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">
-      Download PDF
-    </button>
-    <div onclick="closeProtocolPreview()"
-      style="color:var(--ink-muted);font-size:13px;cursor:pointer;font-family:'JetBrains Mono',monospace;letter-spacing:.04em">
-      Back to results
-    </div>
-  </div>
-</div>
-   
 <script>
 function trackCTA() {
   if (typeof gtag === 'function') {
