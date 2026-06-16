@@ -487,6 +487,7 @@ body{background:var(--bg);color:var(--text);
 .kbju-tip-title{font-size:.8rem;font-weight:700;margin-bottom:8px;color:var(--text)}
 .kbju-tip{font-size:.78rem;color:var(--muted);margin-bottom:6px;line-height:1.5;
   padding-left:12px;border-left:2px solid var(--border)}
+.pdf-block{break-inside:avoid;page-break-inside:avoid}
 
 .routine-grid{display:grid;grid-template-columns:1fr;gap:12px}
 .routine-card{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius);
@@ -667,6 +668,8 @@ body{background:var(--bg);color:var(--text);
 .pdf-export-root .routine-card,
 .pdf-export-root .routine-item,
 .pdf-export-root .metric-row,
+.pdf-export-root .kbju-tip,
+.pdf-export-root .pdf-block,
 .pdf-export-root .proto-box,
 .pdf-export-root .score-overall-card{break-inside:avoid;page-break-inside:avoid}
 .pdf-export-root .sec-title{font-size:1.12rem!important;font-weight:800;margin-bottom:12px;
@@ -2412,7 +2415,7 @@ function buildResults(){
       var sup=S[s];
       return sup.name+' ('+sup_getDose(sup,profile)+', '+sup.slotLabel+')';
     }).join('; ');
-    return'<div class="kbju-tip">'+
+    return'<div class="kbju-tip pdf-block">'+
       '<strong>'+metricName[k]+' — '+val+'/100:</strong> '+cfg.improve+
       '<br><strong>Supplement support:</strong> '+(suppText||'No supplement priority for this area right now.')+
       '<br><strong>Why it helps:</strong> '+cfg.why+
@@ -2420,10 +2423,10 @@ function buildResults(){
   }
   document.getElementById('analysisContent').innerHTML=
     '<div class="kbju-tips">'+
-      '<div class="kbju-tip"><strong>Strengths:</strong> Your strongest areas are '+strong.map(function(k){return metricName[k]+' ('+healthScores[k]+'/100)';}).join(' and ')+'. These are useful anchors for your long-term wellness plan.</div>'+
-      '<div class="kbju-tip"><strong>Areas requiring attention:</strong> The lowest-scoring areas are '+weak.map(function(k){return metricName[k]+' ('+healthScores[k]+'/100)';}).join(' and ')+'. These influenced the protocol selection most strongly.</div>'+
+      '<div class="kbju-tip pdf-block"><strong>Strengths:</strong> Your strongest areas are '+strong.map(function(k){return metricName[k]+' ('+healthScores[k]+'/100)';}).join(' and ')+'. These are useful anchors for your long-term wellness plan.</div>'+
+      '<div class="kbju-tip pdf-block"><strong>Areas requiring attention:</strong> The lowest-scoring areas are '+weak.map(function(k){return metricName[k]+' ('+healthScores[k]+'/100)';}).join(' and ')+'. These influenced the protocol selection most strongly.</div>'+
       ['sleep','energy','stress','activity','nutrition','metabolic'].map(metricAnalysisHTML).join('')+
-      '<div class="kbju-tip"><strong>Recommended direction:</strong> Start with the two lowest-scoring areas first, then reassess after 6-8 weeks. Use supplements as support for habits, not as a substitute for sleep, nutrition, movement, or medical care.</div>'+
+      '<div class="kbju-tip pdf-block"><strong>Recommended direction:</strong> Start with the two lowest-scoring areas first, then reassess after 6-8 weeks. Use supplements as support for habits, not as a substitute for sleep, nutrition, movement, or medical care.</div>'+
     '</div>';
 
   // Update sticky nav
@@ -2478,11 +2481,11 @@ function buildResults(){
   '</div>'+
   '<div class="kbju-tips">'+
     '<div class="kbju-tip-title">Application Tips</div>'+
-    '<div class="kbju-tip"><strong>Protein ('+kbju.protein+'g/day):</strong> Distribute evenly across 3 meals — 25–35g per meal supports muscle protein synthesis. Best sources: eggs, chicken, fish, Greek yogurt, cottage cheese, legumes, tofu.</div>'+
-    '<div class="kbju-tip"><strong>Complex Carbohydrates ('+kbju.carbs+'g/day):</strong> Focus on slow-digesting, fiber-rich sources that stabilize blood glucose and sustain energy. Best sources: oats, brown rice, quinoa, sweet potatoes, lentils, chickpeas, beans, whole grain bread, and most vegetables. Avoid refined carbs (white bread, white rice, pastries, sugary drinks) — they spike and crash blood sugar. Time the majority of your carb intake around training for best body composition results.</div>'+
-    '<div class="kbju-tip"><strong>Fats ('+kbju.fat+'g/day):</strong> Prioritize omega-3s (fatty fish, flaxseed, chia seeds) and monounsaturated fats (olive oil, avocado). Note: Nuts (almonds, walnuts, cashews, pistachios) are an excellent source of <em>healthy fats and protein</em> — they are NOT complex carbohydrates. Count them toward your fat target and eat in moderation (a small handful = 15–20g fat, ~160–180 kcal).</div>'+
-    '<div class="kbju-tip"><strong>Carb timing:</strong> Higher carb intake before and after workouts is optimal — lower carbs on rest days. Pair every meal with protein and fat to reduce the glycemic response of the carbohydrates you eat.</div>'+
-    '<div class="kbju-tip"><strong>Adherence:</strong> Consistency matters more than perfection. Start with the targets above, track for 2–3 weeks, and adjust ±10% based on your energy, hunger, and body composition changes.</div>'+
+    '<div class="kbju-tip pdf-block"><strong>Protein ('+kbju.protein+'g/day):</strong> Distribute evenly across 3 meals — 25–35g per meal supports muscle protein synthesis. Best sources: eggs, chicken, fish, Greek yogurt, cottage cheese, legumes, tofu.</div>'+
+    '<div class="kbju-tip pdf-block"><strong>Complex Carbohydrates ('+kbju.carbs+'g/day):</strong> Focus on slow-digesting, fiber-rich sources that stabilize blood glucose and sustain energy. Best sources: oats, brown rice, quinoa, sweet potatoes, lentils, chickpeas, beans, whole grain bread, and most vegetables. Avoid refined carbs (white bread, white rice, pastries, sugary drinks) — they spike and crash blood sugar. Time the majority of your carb intake around training for best body composition results.</div>'+
+    '<div class="kbju-tip pdf-block"><strong>Fats ('+kbju.fat+'g/day):</strong> Prioritize omega-3s (fatty fish, flaxseed, chia seeds) and monounsaturated fats (olive oil, avocado). Note: Nuts (almonds, walnuts, cashews, pistachios) are an excellent source of <em>healthy fats and protein</em> — they are NOT complex carbohydrates. Count them toward your fat target and eat in moderation (a small handful = 15–20g fat, ~160–180 kcal).</div>'+
+    '<div class="kbju-tip pdf-block"><strong>Carb timing:</strong> Higher carb intake before and after workouts is optimal — lower carbs on rest days. Pair every meal with protein and fat to reduce the glycemic response of the carbohydrates you eat.</div>'+
+    '<div class="kbju-tip pdf-block"><strong>Adherence:</strong> Consistency matters more than perfection. Start with the targets above, track for 2–3 weeks, and adjust ±10% based on your energy, hunger, and body composition changes.</div>'+
   '</div>';
   document.getElementById('kbjuContent').innerHTML=kbjuHTML;
 
@@ -2874,11 +2877,11 @@ function buildResults(){
     if(!orderedSlots.length){
       return'<div class="schedule-empty">No timed supplement schedule is available for this protocol yet.</div>';
     }
-    return'<div class="proto-name" style="margin-top:12px">Supplement Intake Schedule</div>'+
-      '<div class="schedule-intro">A simple timing guide for the recommended and current supplements. Use it as a flexible starting point and adjust with your clinician if needed.</div>'+
+    return'<div class="proto-name pdf-block" style="margin-top:12px">Supplement Intake Schedule</div>'+
+      '<div class="schedule-intro pdf-block">A simple timing guide for the recommended and current supplements. Use it as a flexible starting point and adjust with your clinician if needed.</div>'+
       '<div class="schedule-wrap">'+orderedSlots.map(function(slot){
         var meta=SLOT_META[slot]||{label:'Anytime',hour:'Flexible'};
-        return'<div class="sch-slot">'+
+        return'<div class="sch-slot pdf-block">'+
           '<div class="sch-time"><div class="sch-time-label">'+meta.label+'</div><div class="sch-time-hour">'+meta.hour+'</div></div>'+
           '<div class="sch-body">'+
             '<div class="sch-pills">'+groups[slot].map(function(k){
@@ -3048,9 +3051,9 @@ function buildResults(){
   var lifeCont=document.getElementById('lifestyleContent');
   if(lifeCont){
     lifeCont.innerHTML='<div class="routine-grid">'+routineGroups.map(function(group){
-      return'<div class="routine-card">'+
+      return'<div class="routine-card pdf-block">'+
         '<div class="routine-title">'+group.title+'</div>'+
-        group.items.map(function(item){return'<div class="routine-item">'+item+'</div>';}).join('')+
+        group.items.map(function(item){return'<div class="routine-item pdf-block">'+item+'</div>';}).join('')+
       '</div>';
     }).join('')+'</div>';
   }
@@ -3328,8 +3331,9 @@ function createPdfRenderTarget(source){
 function collectPdfAvoidRanges(target,scale,sliceH){
   var rootRect=target.getBoundingClientRect();
   var selectors=[
-    '.section','.sec-title','.sch-slot','.pdf-rec-item','.kbju-card','.routine-card',
-    '.routine-item','.metric-row','.proto-box','.score-overall-card','tr'
+    '.section','.sec-title','.pdf-block','.schedule-wrap','.sch-slot','.pdf-rec-item',
+    '.kbju-card','.kbju-tip','.routine-card','.routine-item','.metric-row',
+    '.proto-box','.score-overall-card','tr'
   ].join(',');
   return Array.prototype.slice.call(target.querySelectorAll(selectors)).map(function(el){
     var rect=el.getBoundingClientRect();
@@ -3353,6 +3357,9 @@ function adjustPdfPageBreak(pageStart,proposedEnd,maxEnd,avoidRanges,minSlice){
       if(adjusted-pageStart>=minSlice)return adjusted;
     }
     if(r.start<pageEnd&&pageEnd-r.start<orphanGuard&&r.start-pageStart>=minSlice){
+      return Math.floor(r.start)-6;
+    }
+    if(r.end>pageEnd&&r.end-pageEnd<orphanGuard&&r.start-pageStart>=minSlice){
       return Math.floor(r.start)-6;
     }
   }
