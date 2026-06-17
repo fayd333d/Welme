@@ -487,6 +487,7 @@ body{background:var(--bg);color:var(--text);
 .kbju-tip-title{font-size:.8rem;font-weight:700;margin-bottom:8px;color:var(--text)}
 .kbju-tip{font-size:.78rem;color:var(--muted);margin-bottom:6px;line-height:1.5;
   padding-left:12px;border-left:2px solid var(--border)}
+.pdf-block{break-inside:avoid;page-break-inside:avoid}
 
 .routine-grid{display:grid;grid-template-columns:1fr;gap:12px}
 .routine-card{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius);
@@ -667,6 +668,8 @@ body{background:var(--bg);color:var(--text);
 .pdf-export-root .routine-card,
 .pdf-export-root .routine-item,
 .pdf-export-root .metric-row,
+.pdf-export-root .kbju-tip,
+.pdf-export-root .pdf-block,
 .pdf-export-root .proto-box,
 .pdf-export-root .score-overall-card{break-inside:avoid;page-break-inside:avoid}
 .pdf-export-root .sec-title{font-size:1.12rem!important;font-weight:800;margin-bottom:12px;
@@ -682,6 +685,24 @@ body{background:var(--bg);color:var(--text);
 .pdf-export-root .sch-body{padding:9px 10px!important}
 .pdf-export-root .sch-pill{font-size:.6rem!important;padding:3px 7px!important}
 .pdf-export-root .sch-guidance{font-size:.62rem!important;line-height:1.35!important}
+.pdf-export-root .pdf-section{break-inside:avoid;page-break-inside:avoid}
+.pdf-export-root .analysis-block{border:1px solid #E4EAF2;border-radius:8px;padding:10px 12px;
+  background:#F8FAFC;margin-bottom:8px;break-inside:avoid;page-break-inside:avoid}
+.pdf-export-root .analysis-summary{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pdf-export-root .analysis-mini{background:#fff;border:1px solid #E4EAF2;border-radius:8px;padding:9px}
+.pdf-export-root .analysis-label{font-size:.58rem;font-weight:800;color:#1B8B5E;
+  letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}
+.pdf-export-root .analysis-text{font-size:.68rem;line-height:1.45;color:#334155}
+.pdf-export-root .analysis-table{display:grid;gap:7px}
+.pdf-export-root .analysis-focus-row{display:grid;grid-template-columns:110px 1fr;gap:10px;
+  background:#fff;border:1px solid #E4EAF2;border-radius:8px;padding:9px;break-inside:avoid;page-break-inside:avoid}
+.pdf-export-root .analysis-focus-name{font-size:.7rem;font-weight:800;color:#0F172A}
+.pdf-export-root .analysis-focus-score{font-size:.62rem;color:#64748B;margin-top:2px}
+.pdf-export-root .analysis-focus-body{font-size:.66rem;line-height:1.42;color:#334155}
+.pdf-loading-note{display:none;position:fixed;left:50%;bottom:24px;transform:translateX(-50%);
+  background:#0F172A;color:#fff;border-radius:999px;padding:10px 16px;font-size:.82rem;
+  font-weight:800;z-index:1000;box-shadow:0 10px 30px rgba(15,23,42,.22)}
+.pdf-loading-note.show{display:block}
 
 /* Processing indicators */
 .proc-step{font-size:.82rem;color:var(--muted);padding:8px 0;margin-bottom:8px;display:flex;align-items:center;gap:8px}
@@ -2400,26 +2421,43 @@ function buildResults(){
       why:'Berberine and alpha-lipoic acid support glucose handling, omega-3s support cardiometabolic health, and creatine supports lean mass.'
     }
   };
-  function metricAnalysisHTML(k){
+  function metricSupportText(k){
     var cfg=metricAction[k], val=healthScores[k];
     var relevant=(cfg.supps||[]).filter(function(s){return proto.supps.indexOf(s)>-1&&S[s];}).slice(0,3);
     if(!relevant.length) relevant=(cfg.supps||[]).filter(function(s){return S[s];}).slice(0,2);
-    var suppText=relevant.map(function(s){
+    return relevant.map(function(s){
       var sup=S[s];
       return sup.name+' ('+sup_getDose(sup,profile)+', '+sup.slotLabel+')';
     }).join('; ');
-    return'<div class="kbju-tip">'+
-      '<strong>'+metricName[k]+' — '+val+'/100:</strong> '+cfg.improve+
-      '<br><strong>Supplement support:</strong> '+(suppText||'No supplement priority for this area right now.')+
-      '<br><strong>Why it helps:</strong> '+cfg.why+
+  }
+  function metricFocusRowHTML(k){
+    var cfg=metricAction[k], val=healthScores[k];
+    var suppText=metricSupportText(k);
+    return'<div class="analysis-focus-row pdf-block">'+
+      '<div><div class="analysis-focus-name">'+metricName[k]+'</div><div class="analysis-focus-score">'+val+'/100</div></div>'+
+      '<div class="analysis-focus-body">'+
+        '<strong>What to improve:</strong> '+cfg.improve+
+        '<br><strong>Supplement support:</strong> '+(suppText||'No supplement priority for this area right now.')+
+        '<br><strong>Why this matters:</strong> '+cfg.why+
+      '</div>'+
     '</div>';
   }
+  var priorityMetrics=sortedMetrics.filter(function(k){return healthScores[k]<70;}).slice(0,3);
+  if(priorityMetrics.length<2) priorityMetrics=weak.slice();
   document.getElementById('analysisContent').innerHTML=
-    '<div class="kbju-tips">'+
-      '<div class="kbju-tip"><strong>Strengths:</strong> Your strongest areas are '+strong.map(function(k){return metricName[k]+' ('+healthScores[k]+'/100)';}).join(' and ')+'. These are useful anchors for your long-term wellness plan.</div>'+
-      '<div class="kbju-tip"><strong>Areas requiring attention:</strong> The lowest-scoring areas are '+weak.map(function(k){return metricName[k]+' ('+healthScores[k]+'/100)';}).join(' and ')+'. These influenced the protocol selection most strongly.</div>'+
-      ['sleep','energy','stress','activity','nutrition','metabolic'].map(metricAnalysisHTML).join('')+
-      '<div class="kbju-tip"><strong>Recommended direction:</strong> Start with the two lowest-scoring areas first, then reassess after 6-8 weeks. Use supplements as support for habits, not as a substitute for sleep, nutrition, movement, or medical care.</div>'+
+    '<div class="analysis-block pdf-block">'+
+      '<div class="analysis-summary">'+
+        '<div class="analysis-mini"><div class="analysis-label">Strongest signals</div><div class="analysis-text">'+strong.map(function(k){return metricName[k]+' ('+healthScores[k]+'/100)';}).join(' and ')+'. Keep these routines steady while improving lower-scoring areas.</div></div>'+
+        '<div class="analysis-mini"><div class="analysis-label">Priority areas</div><div class="analysis-text">'+priorityMetrics.map(function(k){return metricName[k]+' ('+healthScores[k]+'/100)';}).join(' and ')+'. These areas most shaped your protocol.</div></div>'+
+      '</div>'+
+    '</div>'+
+    '<div class="analysis-block pdf-block">'+
+      '<div class="analysis-label">Personalized focus table</div>'+
+      '<div class="analysis-table">'+priorityMetrics.map(metricFocusRowHTML).join('')+'</div>'+
+    '</div>'+
+    '<div class="analysis-block pdf-block">'+
+      '<div class="analysis-label">Recommended direction</div>'+
+      '<div class="analysis-text">Start with the priority areas above first, then reassess after 6-8 weeks. Use supplements as support for habits, not as a substitute for sleep, nutrition, movement, or medical care.</div>'+
     '</div>';
 
   // Update sticky nav
@@ -2474,11 +2512,11 @@ function buildResults(){
   '</div>'+
   '<div class="kbju-tips">'+
     '<div class="kbju-tip-title">Application Tips</div>'+
-    '<div class="kbju-tip"><strong>Protein ('+kbju.protein+'g/day):</strong> Distribute evenly across 3 meals — 25–35g per meal supports muscle protein synthesis. Best sources: eggs, chicken, fish, Greek yogurt, cottage cheese, legumes, tofu.</div>'+
-    '<div class="kbju-tip"><strong>Complex Carbohydrates ('+kbju.carbs+'g/day):</strong> Focus on slow-digesting, fiber-rich sources that stabilize blood glucose and sustain energy. Best sources: oats, brown rice, quinoa, sweet potatoes, lentils, chickpeas, beans, whole grain bread, and most vegetables. Avoid refined carbs (white bread, white rice, pastries, sugary drinks) — they spike and crash blood sugar. Time the majority of your carb intake around training for best body composition results.</div>'+
-    '<div class="kbju-tip"><strong>Fats ('+kbju.fat+'g/day):</strong> Prioritize omega-3s (fatty fish, flaxseed, chia seeds) and monounsaturated fats (olive oil, avocado). Note: Nuts (almonds, walnuts, cashews, pistachios) are an excellent source of <em>healthy fats and protein</em> — they are NOT complex carbohydrates. Count them toward your fat target and eat in moderation (a small handful = 15–20g fat, ~160–180 kcal).</div>'+
-    '<div class="kbju-tip"><strong>Carb timing:</strong> Higher carb intake before and after workouts is optimal — lower carbs on rest days. Pair every meal with protein and fat to reduce the glycemic response of the carbohydrates you eat.</div>'+
-    '<div class="kbju-tip"><strong>Adherence:</strong> Consistency matters more than perfection. Start with the targets above, track for 2–3 weeks, and adjust ±10% based on your energy, hunger, and body composition changes.</div>'+
+    '<div class="kbju-tip pdf-block"><strong>Protein ('+kbju.protein+'g/day):</strong> Distribute evenly across 3 meals — 25–35g per meal supports muscle protein synthesis. Best sources: eggs, chicken, fish, Greek yogurt, cottage cheese, legumes, tofu.</div>'+
+    '<div class="kbju-tip pdf-block"><strong>Complex Carbohydrates ('+kbju.carbs+'g/day):</strong> Focus on slow-digesting, fiber-rich sources that stabilize blood glucose and sustain energy. Best sources: oats, brown rice, quinoa, sweet potatoes, lentils, chickpeas, beans, whole grain bread, and most vegetables. Avoid refined carbs (white bread, white rice, pastries, sugary drinks) — they spike and crash blood sugar. Time the majority of your carb intake around training for best body composition results.</div>'+
+    '<div class="kbju-tip pdf-block"><strong>Fats ('+kbju.fat+'g/day):</strong> Prioritize omega-3s (fatty fish, flaxseed, chia seeds) and monounsaturated fats (olive oil, avocado). Note: Nuts (almonds, walnuts, cashews, pistachios) are an excellent source of <em>healthy fats and protein</em> — they are NOT complex carbohydrates. Count them toward your fat target and eat in moderation (a small handful = 15–20g fat, ~160–180 kcal).</div>'+
+    '<div class="kbju-tip pdf-block"><strong>Carb timing:</strong> Higher carb intake before and after workouts is optimal — lower carbs on rest days. Pair every meal with protein and fat to reduce the glycemic response of the carbohydrates you eat.</div>'+
+    '<div class="kbju-tip pdf-block"><strong>Adherence:</strong> Consistency matters more than perfection. Start with the targets above, track for 2–3 weeks, and adjust ±10% based on your energy, hunger, and body composition changes.</div>'+
   '</div>';
   document.getElementById('kbjuContent').innerHTML=kbjuHTML;
 
@@ -2868,13 +2906,13 @@ function buildResults(){
     });
     var orderedSlots=Object.keys(groups).sort(function(a,b){return slotPri(a)-slotPri(b);});
     if(!orderedSlots.length){
-      return'<div class="schedule-empty">No timed supplement schedule is available for this protocol yet.</div>';
+      return'<div class="pdf-section"><div class="schedule-empty">No timed supplement schedule is available for this protocol yet.</div></div>';
     }
-    return'<div class="proto-name" style="margin-top:12px">Supplement Intake Schedule</div>'+
-      '<div class="schedule-intro">A simple timing guide for the recommended and current supplements. Use it as a flexible starting point and adjust with your clinician if needed.</div>'+
+    return'<div class="pdf-section"><div class="proto-name pdf-block" style="margin-top:12px">Supplement Intake Schedule</div>'+
+      '<div class="schedule-intro pdf-block">A simple timing guide for the recommended and current supplements. Use it as a flexible starting point and adjust with your clinician if needed.</div>'+
       '<div class="schedule-wrap">'+orderedSlots.map(function(slot){
         var meta=SLOT_META[slot]||{label:'Anytime',hour:'Flexible'};
-        return'<div class="sch-slot">'+
+        return'<div class="sch-slot pdf-block">'+
           '<div class="sch-time"><div class="sch-time-label">'+meta.label+'</div><div class="sch-time-hour">'+meta.hour+'</div></div>'+
           '<div class="sch-body">'+
             '<div class="sch-pills">'+groups[slot].map(function(k){
@@ -2884,7 +2922,7 @@ function buildResults(){
             '<div class="sch-guidance">'+scheduleGuidanceForSlot(slot)+'</div>'+
           '</div>'+
         '</div>';
-      }).join('')+'</div>';
+      }).join('')+'</div></div>';
   }
   function suppCardHTML(k){
     var sup=S[k]; if(!sup) return'';
@@ -2960,8 +2998,8 @@ function buildResults(){
   });
   var pdfRecListHTML=buildPdfRecommendedList(pdfRecommendedKeys);
   document.getElementById('protocolContent').innerHTML=
-    protoHTML+
-    (pdfRecListHTML?'<div class="proto-name" style="margin-top:12px">Recommended Supplements</div>'+pdfRecListHTML:'');
+    '<div class="pdf-section">'+protoHTML+'</div>'+
+    (pdfRecListHTML?'<div class="pdf-section"><div class="proto-name" style="margin-top:12px">Recommended Supplements</div>'+pdfRecListHTML+'</div>':'');
   function suppOverviewHTML(keys){
     return'<div class="supp-overview">'+keys.map(function(k){
       var sup=S[k];
@@ -3044,14 +3082,15 @@ function buildResults(){
   var lifeCont=document.getElementById('lifestyleContent');
   if(lifeCont){
     lifeCont.innerHTML='<div class="routine-grid">'+routineGroups.map(function(group){
-      return'<div class="routine-card">'+
+      return'<div class="routine-card pdf-block">'+
         '<div class="routine-title">'+group.title+'</div>'+
-        group.items.map(function(item){return'<div class="routine-item">'+item+'</div>';}).join('')+
+        group.items.map(function(item){return'<div class="routine-item pdf-block">'+item+'</div>';}).join('')+
       '</div>';
     }).join('')+'</div>';
   }
 
   welmeTrackQuizCompleted();
+  scheduleProtocolPdfGeneration();
 
 
   }catch(err){
@@ -3291,19 +3330,64 @@ window.addEventListener('beforeprint',preparePdfPrint);
 window.addEventListener('afterprint',restorePdfPrintTitle);
 
 function getPdfExportFileName(){
-  return 'welme-protocol.pdf';
+  var email=(window._welmeProtocolEmail||localStorage.getItem('welmeUserEmail')||'').trim();
+  var name=email?email.split('@')[0]:'welme';
+  name=name.toLowerCase()
+    .replace(/[^a-z0-9]+/g,'-')
+    .replace(/^-+|-+$/g,'')||'welme';
+  return name+'-health-protocol.pdf';
 }
-function forcePdfDownload(pdf){
-  var pdfBlob=pdf.output('blob');
-  var pdfUrl=URL.createObjectURL(pdfBlob);
-  var a=document.createElement('a');
-  a.href=pdfUrl;
-  a.download=getPdfExportFileName();
-  a.style.display='none';
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  setTimeout(function(){URL.revokeObjectURL(pdfUrl);},1000);
+var welmePdfBlob=null;
+var welmePdfPromise=null;
+function showPdfLoading(show){
+  var el=document.getElementById('pdfLoadingNote');
+  if(el)el.classList.toggle('show',!!show);
+}
+function pdfDispositionName(filename){
+  return filename.replace(/["\\]/g,'');
+}
+function canUseNamedPdfPreview(){
+  return location.protocol==='https:'&&'serviceWorker' in navigator&&'caches' in window;
+}
+async function getNamedPdfPreviewUrl(file){
+  if(!canUseNamedPdfPreview())return null;
+  var filename=file.name||getPdfExportFileName();
+  var pdfUrl=new URL('/__welme_pdf/'+encodeURIComponent(filename),location.origin).href;
+  await navigator.serviceWorker.register('/pdf-sw.js',{scope:'/'});
+  await navigator.serviceWorker.ready;
+  var cache=await caches.open('welme-pdf-cache-v1');
+  await cache.put(pdfUrl,new Response(file,{
+    headers:{
+      'Content-Type':'application/pdf',
+      'Content-Disposition':'inline; filename="'+pdfDispositionName(filename)+'"; filename*=UTF-8\'\''+encodeURIComponent(filename),
+      'Cache-Control':'no-store'
+    }
+  }));
+  return pdfUrl;
+}
+async function openProtocolPdfPreview(pdfBlob,previewWindow){
+  if(!pdfBlob)return;
+  var file=new File([pdfBlob],getPdfExportFileName(),{type:'application/pdf'});
+  var namedUrl=null;
+  try{
+    namedUrl=await getNamedPdfPreviewUrl(file);
+  }catch(e){
+    console.warn('Named PDF preview unavailable; using Blob URL fallback',e);
+  }
+  var pdfUrl=namedUrl||URL.createObjectURL(file);
+  var opened=previewWindow&&!previewWindow.closed?previewWindow:window.open(pdfUrl,'_blank');
+  if(opened&&opened!==previewWindow){
+    try{opened.opener=null;}catch(e){}
+  }
+  if(previewWindow&&!previewWindow.closed){
+    previewWindow.location.href=pdfUrl;
+  }
+  if(!opened){
+    alert('Please allow pop-ups to preview your PDF.');
+    if(!namedUrl)URL.revokeObjectURL(pdfUrl);
+    return;
+  }
+  if(!namedUrl)setTimeout(function(){URL.revokeObjectURL(pdfUrl);},60000);
 }
 function createPdfRenderTarget(source){
   var host=document.createElement('div');
@@ -3313,35 +3397,6 @@ function createPdfRenderTarget(source){
   host.appendChild(clone);
   document.body.appendChild(host);
   return{host:host,target:clone};
-}
-function collectPdfAvoidRanges(target,scale,sliceH){
-  var rootRect=target.getBoundingClientRect();
-  var selectors=[
-    '.section','.sch-slot','.pdf-rec-item','.kbju-card','.routine-card',
-    '.routine-item','.metric-row','.proto-box','.score-overall-card','tr'
-  ].join(',');
-  return Array.prototype.slice.call(target.querySelectorAll(selectors)).map(function(el){
-    var rect=el.getBoundingClientRect();
-    return{
-      start:Math.max(0,(rect.top-rootRect.top)*scale),
-      end:Math.max(0,(rect.bottom-rootRect.top)*scale),
-      height:rect.height*scale
-    };
-  }).filter(function(r){
-    return r.height>18&&r.height<sliceH*.86;
-  }).sort(function(a,b){return a.start-b.start;});
-}
-function adjustPdfPageBreak(pageStart,proposedEnd,maxEnd,avoidRanges,minSlice){
-  var pageEnd=Math.min(proposedEnd,maxEnd);
-  for(var i=0;i<avoidRanges.length;i++){
-    var r=avoidRanges[i];
-    if(r.start<=pageStart+8)continue;
-    if(r.start<pageEnd&&r.end>pageEnd){
-      var adjusted=Math.floor(r.start)-6;
-      if(adjusted-pageStart>=minSlice)return adjusted;
-    }
-  }
-  return pageEnd;
 }
 function addPdfFooter(pdf,pageNum,pageW,pageH,footerY,dateText){
   pdf.setDrawColor(228,234,242);
@@ -3354,26 +3409,87 @@ function addPdfFooter(pdf,pageNum,pageW,pageH,footerY,dateText){
   pdf.text(dateText,pageW/2,footerY,{align:'center'});
   pdf.text('Page '+pageNum,pageW-10,footerY,{align:'right'});
 }
-async function generateProtocolPdf(){
+function getPdfRenderUnits(target){
+  var units=[];
+  var scratch=document.createElement('div');
+  target.appendChild(scratch);
+  function addUnit(title,content,opts){
+    if(!content)return;
+    var wrap=document.createElement('div');
+    wrap.className='section pdf-health-only pdf-section';
+    if(opts&&opts.newPage)wrap.setAttribute('data-pdf-new-page','true');
+    if(title)wrap.appendChild(title.cloneNode(true));
+    wrap.appendChild(content.cloneNode(true));
+    scratch.appendChild(wrap);
+    units.push(wrap);
+  }
+  function addBlockUnits(section,selector,opts){
+    var title=section.querySelector('.sec-title');
+    var blocks=Array.prototype.slice.call(section.querySelectorAll(selector));
+    if(!blocks.length){
+      if(opts&&opts.newPage)section.setAttribute('data-pdf-new-page','true');
+      units.push(section);
+      return;
+    }
+    blocks.forEach(function(block,idx){
+      addUnit(idx===0?title:null,block,{newPage:idx===0&&opts&&opts.newPage});
+    });
+  }
+  Array.prototype.slice.call(target.querySelectorAll('.pdf-health-only.section')).forEach(function(section){
+    if(section.id==='protocolSection'){
+      var title=section.querySelector('.sec-title');
+      var first=true;
+      Array.prototype.slice.call(section.querySelectorAll('#protocolContent > .pdf-section, #protocolScheduleContent > .pdf-section')).forEach(function(part){
+        addUnit(first&&title?title:null,part,{newPage:first});
+        first=false;
+      });
+    }else if(section.id==='analysisSection'){
+      addBlockUnits(section,'#analysisContent .analysis-block.pdf-block',{newPage:true});
+    }else if(section.id==='kbjuSection'){
+      var kbjuTitle=section.querySelector('.sec-title');
+      var kbjuGrid=section.querySelector('#kbjuContent > .kbju-grid');
+      var tipTitle=section.querySelector('#kbjuContent .kbju-tip-title');
+      if(kbjuGrid)addUnit(kbjuTitle,kbjuGrid,{newPage:true});
+      Array.prototype.slice.call(section.querySelectorAll('#kbjuContent .kbju-tip.pdf-block')).forEach(function(tip,idx){
+        var wrap=document.createElement('div');
+        wrap.className='section pdf-health-only pdf-section';
+        if(idx===0&&!kbjuGrid)wrap.setAttribute('data-pdf-new-page','true');
+        if(!kbjuGrid&&idx===0&&kbjuTitle)wrap.appendChild(kbjuTitle.cloneNode(true));
+        if(idx===0&&tipTitle)wrap.appendChild(tipTitle.cloneNode(true));
+        wrap.appendChild(tip.cloneNode(true));
+        scratch.appendChild(wrap);
+        units.push(wrap);
+      });
+      if(!kbjuGrid&&!section.querySelector('#kbjuContent .kbju-tip.pdf-block'))units.push(section);
+    }else if(section.id==='lifestyleSection'){
+      addBlockUnits(section,'#lifestyleContent .routine-card.pdf-block',{newPage:true});
+    }else{
+      units.push(section);
+    }
+  });
+  return units;
+}
+async function renderPdfUnitCanvas(unit){
+  return html2canvas(unit,{
+    backgroundColor:'#FFFFFF',
+    scale:3,
+    useCORS:true,
+    logging:false,
+    imageTimeout:0,
+    windowWidth:unit.scrollWidth
+  });
+}
+async function buildProtocolPdfBlob(){
   if(!window.html2canvas||!window.jspdf||!window.jspdf.jsPDF){
-    alert('PDF download is still loading. Please wait a moment and try again.');
-    return;
+    throw new Error('PDF libraries are still loading');
   }
   var source=document.getElementById('resScreen');
-  if(!source)return;
+  if(!source)throw new Error('Results are not ready');
   var dateText=formatPdfPrintDate();
   var render=createPdfRenderTarget(source);
   var target=render.target;
   try{
     await new Promise(function(resolve){setTimeout(resolve,80);});
-    var canvas=await html2canvas(target,{
-      backgroundColor:'#FFFFFF',
-      scale:3,
-      useCORS:true,
-      logging:false,
-      imageTimeout:0,
-      windowWidth:target.scrollWidth
-    });
     var jsPDF=window.jspdf.jsPDF;
     var pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a4',compress:true});
     var pageW=pdf.internal.pageSize.getWidth();
@@ -3383,36 +3499,106 @@ async function generateProtocolPdf(){
     var footerY=pageH-8;
     var contentW=pageW-(marginX*2);
     var contentH=pageH-marginTop-20;
-    var sliceH=Math.floor(canvas.width*(contentH/contentW));
-    var avoidRanges=collectPdfAvoidRanges(target,canvas.width/target.scrollWidth,sliceH);
-    var minSlice=Math.floor(sliceH*.32);
-    var y=0;
+    var cursorY=marginTop;
     var pageNum=1;
-    while(y<canvas.height-4){
-      var remaining=canvas.height-y;
-      var pageEnd=adjustPdfPageBreak(y,y+sliceH,canvas.height,avoidRanges,minSlice);
-      var currentSliceH=Math.min(pageEnd-y,remaining);
-      if(currentSliceH<8)break;
-      var pageCanvas=document.createElement('canvas');
-      pageCanvas.width=canvas.width;
-      pageCanvas.height=currentSliceH;
-      var ctx=pageCanvas.getContext('2d');
-      ctx.fillStyle='#FFFFFF';
-      ctx.fillRect(0,0,pageCanvas.width,pageCanvas.height);
-      ctx.drawImage(canvas,0,y,canvas.width,currentSliceH,0,0,canvas.width,currentSliceH);
-      if(pageNum>1)pdf.addPage();
-      var imgH=currentSliceH*(contentW/canvas.width);
-      pdf.addImage(pageCanvas.toDataURL('image/png'),'PNG',marginX,marginTop,contentW,imgH);
-      addPdfFooter(pdf,pageNum,pageW,pageH,footerY,dateText);
-      y+=currentSliceH;
-      pageNum++;
+    var units=getPdfRenderUnits(target);
+    for(var i=0;i<units.length;i++){
+      var canvas=await renderPdfUnitCanvas(units[i]);
+      var imgH=canvas.height*(contentW/canvas.width);
+      if(units[i].getAttribute('data-pdf-new-page')==='true'&&cursorY>marginTop){
+        addPdfFooter(pdf,pageNum,pageW,pageH,footerY,dateText);
+        pdf.addPage();
+        pageNum++;
+        cursorY=marginTop;
+      }
+      if(cursorY>marginTop&&cursorY+imgH>marginTop+contentH){
+        addPdfFooter(pdf,pageNum,pageW,pageH,footerY,dateText);
+        pdf.addPage();
+        pageNum++;
+        cursorY=marginTop;
+      }
+      if(imgH<=contentH){
+        pdf.addImage(canvas.toDataURL('image/png'),'PNG',marginX,cursorY,contentW,imgH);
+        cursorY+=imgH+4;
+      }else{
+        if(cursorY>marginTop){
+          addPdfFooter(pdf,pageNum,pageW,pageH,footerY,dateText);
+          pdf.addPage();
+          pageNum++;
+          cursorY=marginTop;
+        }
+        var sliceH=Math.floor(canvas.width*(contentH/contentW));
+        var y=0;
+        while(y<canvas.height-4){
+          var currentSliceH=Math.min(sliceH,canvas.height-y);
+          var pageCanvas=document.createElement('canvas');
+          pageCanvas.width=canvas.width;
+          pageCanvas.height=currentSliceH;
+          var ctx=pageCanvas.getContext('2d');
+          ctx.fillStyle='#FFFFFF';
+          ctx.fillRect(0,0,pageCanvas.width,pageCanvas.height);
+          ctx.drawImage(canvas,0,y,canvas.width,currentSliceH,0,0,canvas.width,currentSliceH);
+          var partH=currentSliceH*(contentW/canvas.width);
+          pdf.addImage(pageCanvas.toDataURL('image/png'),'PNG',marginX,marginTop,contentW,partH);
+          addPdfFooter(pdf,pageNum,pageW,pageH,footerY,dateText);
+          y+=currentSliceH;
+          if(y<canvas.height-4){
+            pdf.addPage();
+            pageNum++;
+          }
+        }
+        cursorY=marginTop;
+        if(i<units.length-1){
+          pdf.addPage();
+          pageNum++;
+        }
+      }
     }
-    forcePdfDownload(pdf);
+    addPdfFooter(pdf,pageNum,pageW,pageH,footerY,dateText);
+    return pdf.output('blob');
   }catch(e){
     console.error('PDF export failed',e);
-    alert('PDF export could not finish. Please try again.');
+    throw e;
   }finally{
     if(render&&render.host&&render.host.parentNode)render.host.parentNode.removeChild(render.host);
+  }
+}
+function startProtocolPdfGeneration(){
+  if(welmePdfBlob)return Promise.resolve(welmePdfBlob);
+  if(welmePdfPromise)return welmePdfPromise;
+  welmePdfPromise=buildProtocolPdfBlob().then(function(blob){
+    welmePdfBlob=blob;
+    return blob;
+  }).catch(function(err){
+    welmePdfPromise=null;
+    throw err;
+  });
+  return welmePdfPromise;
+}
+function scheduleProtocolPdfGeneration(){
+  welmePdfBlob=null;
+  welmePdfPromise=null;
+  setTimeout(function(){
+    startProtocolPdfGeneration().catch(function(err){
+      console.warn('Background PDF generation failed',err);
+    });
+  },350);
+}
+async function downloadPreparedProtocolPdf(previewWindow){
+  try{
+    if(welmePdfBlob){
+      await openProtocolPdfPreview(welmePdfBlob,previewWindow);
+      return;
+    }
+    showPdfLoading(true);
+    var blob=await startProtocolPdfGeneration();
+    await openProtocolPdfPreview(blob,previewWindow);
+  }catch(e){
+    console.error('PDF export failed',e);
+    if(previewWindow&&!previewWindow.closed)previewWindow.close();
+    alert('PDF export could not finish. Please try again.');
+  }finally{
+    showPdfLoading(false);
   }
 }
 
@@ -3470,6 +3656,7 @@ function submitEmailAndDownload(){
     return;
   }
   localStorage.setItem('welmeUserEmail',email);
+  window._welmeProtocolEmail=email;
   document.getElementById('emailGate').style.display='none';
 
   // Send email + protocol to Google Sheets (fire-and-forget)
@@ -3490,7 +3677,8 @@ if (WELME_SHEET_URL) {
   } catch (e) {}
 }
 
-  generateProtocolPdf();
+  var previewWindow=window.open('', '_blank');
+  downloadPreparedProtocolPdf(previewWindow);
 }
 
 </script>
@@ -3511,18 +3699,34 @@ if (WELME_SHEET_URL) {
   </div>
 </div>
 
+<div id="pdfLoadingNote" class="pdf-loading-note">Preparing your PDF...</div>
+
 <!-- Email Gate Modal -->
 <div id="emailGate" style="display:none;position:fixed;inset:0;background:rgba(11,21,19,.72);backdrop-filter:blur(6px);z-index:999;align-items:center;justify-content:center">
-  <div style="background:#fff;border:1px solid rgba(11,21,19,.12);border-radius:16px;padding:36px;max-width:420px;width:90%;text-align:center;box-shadow:0 24px 72px rgba(10,63,61,.34)">
-    <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:20px">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="2.5" y="2.5" width="19" height="19" rx="4" stroke="var(--teal-deep)" stroke-width="1.5"/><path d="M12 7v10M7 12h10" stroke="var(--teal-deep)" stroke-width="1.5" stroke-linecap="round"/></svg>
-      <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-muted);letter-spacing:.08em;text-transform:uppercase">Welme · Download</span>
-    </div>
-    <h2 style="font-size:22px;font-weight:500;color:var(--ink);letter-spacing:-.02em;margin-bottom:8px">
-      Receive your protocol
+  <div style="background:#fff;border:1px solid rgba(11,21,19,.12);border-radius:18px;padding:30px;max-width:410px;width:90%;text-align:left;box-shadow:0 24px 72px rgba(10,63,61,.34);box-sizing:border-box">
+    <h2 style="font-size:28px;font-weight:800;color:var(--ink);letter-spacing:-.03em;margin-bottom:22px;text-align:center">
+      Your Health Protocol
     </h2>
-    <p style="color:var(--ink-soft);font-size:14px;margin-bottom:24px;line-height:1.65">
-      Enter your email to download your personalised protocol as a PDF.
+    <div style="display:grid;gap:13px;margin-bottom:24px">
+      <div style="display:flex;align-items:center;gap:12px;color:var(--ink);font-size:15px;font-weight:700">
+        <span style="width:28px;height:28px;border-radius:9px;background:#F1F8F5;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0">⏰</span>
+        <span>Daily supplement schedule</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;color:var(--ink);font-size:15px;font-weight:700">
+        <span style="width:28px;height:28px;border-radius:9px;background:#F1F8F5;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0">🍎</span>
+        <span>Personal nutrition targets</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;color:var(--ink);font-size:15px;font-weight:700">
+        <span style="width:28px;height:28px;border-radius:9px;background:#F1F8F5;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0">🌱</span>
+        <span>Practical daily habits</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;color:var(--ink);font-size:15px;font-weight:700">
+        <span style="width:28px;height:28px;border-radius:9px;background:#F1F8F5;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0">📋</span>
+        <span>A plan you can save and follow</span>
+      </div>
+    </div>
+    <p style="color:var(--ink-soft);font-size:14px;margin-bottom:14px;line-height:1.55;text-align:center">
+      Enter your email to view and save your protocol.
     </p>
     <input id="emailInput" type="email" placeholder="your@email.com"
       style="width:100%;padding:13px 16px;border:2px solid #94A3B8;border-radius:8px;font-size:15px;margin-bottom:12px;outline:none;color:var(--ink);background:#fff;font-family:inherit;transition:border-color .15s;box-sizing:border-box"
