@@ -686,6 +686,19 @@ body{background:var(--bg);color:var(--text);
 .pdf-export-root .sch-pill{font-size:.6rem!important;padding:3px 7px!important}
 .pdf-export-root .sch-guidance{font-size:.62rem!important;line-height:1.35!important}
 .pdf-export-root .pdf-section{break-inside:avoid;page-break-inside:avoid}
+.pdf-export-root .analysis-block{border:1px solid #E4EAF2;border-radius:8px;padding:10px 12px;
+  background:#F8FAFC;margin-bottom:8px;break-inside:avoid;page-break-inside:avoid}
+.pdf-export-root .analysis-summary{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pdf-export-root .analysis-mini{background:#fff;border:1px solid #E4EAF2;border-radius:8px;padding:9px}
+.pdf-export-root .analysis-label{font-size:.58rem;font-weight:800;color:#1B8B5E;
+  letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}
+.pdf-export-root .analysis-text{font-size:.68rem;line-height:1.45;color:#334155}
+.pdf-export-root .analysis-table{display:grid;gap:7px}
+.pdf-export-root .analysis-focus-row{display:grid;grid-template-columns:110px 1fr;gap:10px;
+  background:#fff;border:1px solid #E4EAF2;border-radius:8px;padding:9px;break-inside:avoid;page-break-inside:avoid}
+.pdf-export-root .analysis-focus-name{font-size:.7rem;font-weight:800;color:#0F172A}
+.pdf-export-root .analysis-focus-score{font-size:.62rem;color:#64748B;margin-top:2px}
+.pdf-export-root .analysis-focus-body{font-size:.66rem;line-height:1.42;color:#334155}
 .pdf-loading-note{display:none;position:fixed;left:50%;bottom:24px;transform:translateX(-50%);
   background:#0F172A;color:#fff;border-radius:999px;padding:10px 16px;font-size:.82rem;
   font-weight:800;z-index:1000;box-shadow:0 10px 30px rgba(15,23,42,.22)}
@@ -2408,26 +2421,43 @@ function buildResults(){
       why:'Berberine and alpha-lipoic acid support glucose handling, omega-3s support cardiometabolic health, and creatine supports lean mass.'
     }
   };
-  function metricAnalysisHTML(k){
+  function metricSupportText(k){
     var cfg=metricAction[k], val=healthScores[k];
     var relevant=(cfg.supps||[]).filter(function(s){return proto.supps.indexOf(s)>-1&&S[s];}).slice(0,3);
     if(!relevant.length) relevant=(cfg.supps||[]).filter(function(s){return S[s];}).slice(0,2);
-    var suppText=relevant.map(function(s){
+    return relevant.map(function(s){
       var sup=S[s];
       return sup.name+' ('+sup_getDose(sup,profile)+', '+sup.slotLabel+')';
     }).join('; ');
-    return'<div class="kbju-tip pdf-block">'+
-      '<strong>'+metricName[k]+' — '+val+'/100:</strong> '+cfg.improve+
-      '<br><strong>Supplement support:</strong> '+(suppText||'No supplement priority for this area right now.')+
-      '<br><strong>Why it helps:</strong> '+cfg.why+
+  }
+  function metricFocusRowHTML(k){
+    var cfg=metricAction[k], val=healthScores[k];
+    var suppText=metricSupportText(k);
+    return'<div class="analysis-focus-row pdf-block">'+
+      '<div><div class="analysis-focus-name">'+metricName[k]+'</div><div class="analysis-focus-score">'+val+'/100</div></div>'+
+      '<div class="analysis-focus-body">'+
+        '<strong>What to improve:</strong> '+cfg.improve+
+        '<br><strong>Supplement support:</strong> '+(suppText||'No supplement priority for this area right now.')+
+        '<br><strong>Why this matters:</strong> '+cfg.why+
+      '</div>'+
     '</div>';
   }
+  var priorityMetrics=sortedMetrics.filter(function(k){return healthScores[k]<70;}).slice(0,3);
+  if(priorityMetrics.length<2) priorityMetrics=weak.slice();
   document.getElementById('analysisContent').innerHTML=
-    '<div class="kbju-tips">'+
-      '<div class="kbju-tip pdf-block"><strong>Strengths:</strong> Your strongest areas are '+strong.map(function(k){return metricName[k]+' ('+healthScores[k]+'/100)';}).join(' and ')+'. These are useful anchors for your long-term wellness plan.</div>'+
-      '<div class="kbju-tip pdf-block"><strong>Areas requiring attention:</strong> The lowest-scoring areas are '+weak.map(function(k){return metricName[k]+' ('+healthScores[k]+'/100)';}).join(' and ')+'. These influenced the protocol selection most strongly.</div>'+
-      ['sleep','energy','stress','activity','nutrition','metabolic'].map(metricAnalysisHTML).join('')+
-      '<div class="kbju-tip pdf-block"><strong>Recommended direction:</strong> Start with the two lowest-scoring areas first, then reassess after 6-8 weeks. Use supplements as support for habits, not as a substitute for sleep, nutrition, movement, or medical care.</div>'+
+    '<div class="analysis-block pdf-block">'+
+      '<div class="analysis-summary">'+
+        '<div class="analysis-mini"><div class="analysis-label">Strongest signals</div><div class="analysis-text">'+strong.map(function(k){return metricName[k]+' ('+healthScores[k]+'/100)';}).join(' and ')+'. Keep these routines steady while improving lower-scoring areas.</div></div>'+
+        '<div class="analysis-mini"><div class="analysis-label">Priority areas</div><div class="analysis-text">'+priorityMetrics.map(function(k){return metricName[k]+' ('+healthScores[k]+'/100)';}).join(' and ')+'. These areas most shaped your protocol.</div></div>'+
+      '</div>'+
+    '</div>'+
+    '<div class="analysis-block pdf-block">'+
+      '<div class="analysis-label">Personalized focus table</div>'+
+      '<div class="analysis-table">'+priorityMetrics.map(metricFocusRowHTML).join('')+'</div>'+
+    '</div>'+
+    '<div class="analysis-block pdf-block">'+
+      '<div class="analysis-label">Recommended direction</div>'+
+      '<div class="analysis-text">Start with the priority areas above first, then reassess after 6-8 weeks. Use supplements as support for habits, not as a substitute for sleep, nutrition, movement, or medical care.</div>'+
     '</div>';
 
   // Update sticky nav
@@ -3300,7 +3330,10 @@ window.addEventListener('beforeprint',preparePdfPrint);
 window.addEventListener('afterprint',restorePdfPrintTitle);
 
 function getPdfExportFileName(){
-  return 'welme-protocol.pdf';
+  var email=(window._welmeProtocolEmail||localStorage.getItem('welmeUserEmail')||'').trim();
+  var name=email?email.split('@')[0]:'Welme';
+  name=name.replace(/[^\w\s.-]/g,'').replace(/\s+/g,' ').trim()||'Welme';
+  return name+' Health Protocol.pdf';
 }
 var welmePdfBlob=null;
 var welmePdfPromise=null;
@@ -3310,7 +3343,7 @@ function showPdfLoading(show){
 }
 function openProtocolPdfPreview(pdfBlob,previewWindow){
   if(!pdfBlob)return;
-  var file=(pdfBlob.type==='application/pdf')?pdfBlob:new Blob([pdfBlob],{type:'application/pdf'});
+  var file=new File([pdfBlob],getPdfExportFileName(),{type:'application/pdf'});
   var pdfUrl=URL.createObjectURL(file);
   var opened=previewWindow&&!previewWindow.closed?previewWindow:window.open(pdfUrl,'_blank');
   if(opened&&opened!==previewWindow){
@@ -3350,24 +3383,26 @@ function getPdfRenderUnits(target){
   var units=[];
   var scratch=document.createElement('div');
   target.appendChild(scratch);
-  function addUnit(title,content){
+  function addUnit(title,content,opts){
     if(!content)return;
     var wrap=document.createElement('div');
     wrap.className='section pdf-health-only pdf-section';
+    if(opts&&opts.newPage)wrap.setAttribute('data-pdf-new-page','true');
     if(title)wrap.appendChild(title.cloneNode(true));
     wrap.appendChild(content.cloneNode(true));
     scratch.appendChild(wrap);
     units.push(wrap);
   }
-  function addBlockUnits(section,selector){
+  function addBlockUnits(section,selector,opts){
     var title=section.querySelector('.sec-title');
     var blocks=Array.prototype.slice.call(section.querySelectorAll(selector));
     if(!blocks.length){
+      if(opts&&opts.newPage)section.setAttribute('data-pdf-new-page','true');
       units.push(section);
       return;
     }
     blocks.forEach(function(block,idx){
-      addUnit(idx===0?title:null,block);
+      addUnit(idx===0?title:null,block,{newPage:idx===0&&opts&&opts.newPage});
     });
   }
   Array.prototype.slice.call(target.querySelectorAll('.pdf-health-only.section')).forEach(function(section){
@@ -3375,19 +3410,20 @@ function getPdfRenderUnits(target){
       var title=section.querySelector('.sec-title');
       var first=true;
       Array.prototype.slice.call(section.querySelectorAll('#protocolContent > .pdf-section, #protocolScheduleContent > .pdf-section')).forEach(function(part){
-        addUnit(first&&title?title:null,part);
+        addUnit(first&&title?title:null,part,{newPage:first});
         first=false;
       });
     }else if(section.id==='analysisSection'){
-      addBlockUnits(section,'#analysisContent .kbju-tip.pdf-block');
+      addBlockUnits(section,'#analysisContent .analysis-block.pdf-block',{newPage:true});
     }else if(section.id==='kbjuSection'){
       var kbjuTitle=section.querySelector('.sec-title');
       var kbjuGrid=section.querySelector('#kbjuContent > .kbju-grid');
       var tipTitle=section.querySelector('#kbjuContent .kbju-tip-title');
-      if(kbjuGrid)addUnit(kbjuTitle,kbjuGrid);
+      if(kbjuGrid)addUnit(kbjuTitle,kbjuGrid,{newPage:true});
       Array.prototype.slice.call(section.querySelectorAll('#kbjuContent .kbju-tip.pdf-block')).forEach(function(tip,idx){
         var wrap=document.createElement('div');
         wrap.className='section pdf-health-only pdf-section';
+        if(idx===0&&!kbjuGrid)wrap.setAttribute('data-pdf-new-page','true');
         if(!kbjuGrid&&idx===0&&kbjuTitle)wrap.appendChild(kbjuTitle.cloneNode(true));
         if(idx===0&&tipTitle)wrap.appendChild(tipTitle.cloneNode(true));
         wrap.appendChild(tip.cloneNode(true));
@@ -3396,7 +3432,7 @@ function getPdfRenderUnits(target){
       });
       if(!kbjuGrid&&!section.querySelector('#kbjuContent .kbju-tip.pdf-block'))units.push(section);
     }else if(section.id==='lifestyleSection'){
-      addBlockUnits(section,'#lifestyleContent .routine-card.pdf-block');
+      addBlockUnits(section,'#lifestyleContent .routine-card.pdf-block',{newPage:true});
     }else{
       units.push(section);
     }
@@ -3439,6 +3475,12 @@ async function buildProtocolPdfBlob(){
     for(var i=0;i<units.length;i++){
       var canvas=await renderPdfUnitCanvas(units[i]);
       var imgH=canvas.height*(contentW/canvas.width);
+      if(units[i].getAttribute('data-pdf-new-page')==='true'&&cursorY>marginTop){
+        addPdfFooter(pdf,pageNum,pageW,pageH,footerY,dateText);
+        pdf.addPage();
+        pageNum++;
+        cursorY=marginTop;
+      }
       if(cursorY>marginTop&&cursorY+imgH>marginTop+contentH){
         addPdfFooter(pdf,pageNum,pageW,pageH,footerY,dateText);
         pdf.addPage();
@@ -3584,6 +3626,7 @@ function submitEmailAndDownload(){
     return;
   }
   localStorage.setItem('welmeUserEmail',email);
+  window._welmeProtocolEmail=email;
   document.getElementById('emailGate').style.display='none';
 
   // Send email + protocol to Google Sheets (fire-and-forget)
