@@ -3308,17 +3308,23 @@ function showPdfLoading(show){
   var el=document.getElementById('pdfLoadingNote');
   if(el)el.classList.toggle('show',!!show);
 }
-function forcePdfDownload(pdfBlob){
+function openProtocolPdfPreview(pdfBlob,previewWindow){
   if(!pdfBlob)return;
-  var pdfUrl=URL.createObjectURL(pdfBlob);
-  var a=document.createElement('a');
-  a.href=pdfUrl;
-  a.download=getPdfExportFileName();
-  a.style.display='none';
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  setTimeout(function(){URL.revokeObjectURL(pdfUrl);},15000);
+  var file=(pdfBlob.type==='application/pdf')?pdfBlob:new Blob([pdfBlob],{type:'application/pdf'});
+  var pdfUrl=URL.createObjectURL(file);
+  var opened=previewWindow&&!previewWindow.closed?previewWindow:window.open(pdfUrl,'_blank');
+  if(opened&&opened!==previewWindow){
+    try{opened.opener=null;}catch(e){}
+  }
+  if(previewWindow&&!previewWindow.closed){
+    previewWindow.location.href=pdfUrl;
+  }
+  if(!opened){
+    alert('Please allow pop-ups to preview your PDF.');
+    URL.revokeObjectURL(pdfUrl);
+    return;
+  }
+  setTimeout(function(){URL.revokeObjectURL(pdfUrl);},60000);
 }
 function createPdfRenderTarget(source){
   var host=document.createElement('div');
@@ -3506,17 +3512,18 @@ function scheduleProtocolPdfGeneration(){
     });
   },350);
 }
-async function downloadPreparedProtocolPdf(){
+async function downloadPreparedProtocolPdf(previewWindow){
   try{
     if(welmePdfBlob){
-      forcePdfDownload(welmePdfBlob);
+      openProtocolPdfPreview(welmePdfBlob,previewWindow);
       return;
     }
     showPdfLoading(true);
     var blob=await startProtocolPdfGeneration();
-    forcePdfDownload(blob);
+    openProtocolPdfPreview(blob,previewWindow);
   }catch(e){
     console.error('PDF export failed',e);
+    if(previewWindow&&!previewWindow.closed)previewWindow.close();
     alert('PDF export could not finish. Please try again.');
   }finally{
     showPdfLoading(false);
@@ -3597,7 +3604,8 @@ if (WELME_SHEET_URL) {
   } catch (e) {}
 }
 
-  downloadPreparedProtocolPdf();
+  var previewWindow=welmePdfBlob?null:window.open('', '_blank');
+  downloadPreparedProtocolPdf(previewWindow);
 }
 
 </script>
