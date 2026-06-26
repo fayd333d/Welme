@@ -852,11 +852,13 @@ body{background:var(--page);color:var(--text);
 .pdf-export-root .pdf-template-page .schedule-wrap{display:flex!important;flex-direction:column!important;gap:16px!important;border:0!important;overflow:visible!important}
 .pdf-export-root .pdf-template-page .sch-slot{border:1px solid #EAEEE8!important;border-radius:20px!important;background:#fff!important;
   box-shadow:0 6px 20px rgba(17,35,27,.04)!important;overflow:hidden!important}
-.pdf-export-root .pdf-template-page .sch-time{padding:18px 22px 14px!important;border-bottom:1px solid #F0F3EF!important}
+.pdf-export-root .pdf-template-page .sch-time{padding:18px 22px 10px!important;border-right:0!important;border-bottom:0!important;background:#fff!important}
 .pdf-export-root .pdf-template-page .sch-time-label{font-size:16px!important;letter-spacing:.02em!important;text-transform:uppercase!important}
 .pdf-export-root .pdf-template-page .sch-time-hour{font-size:12px!important;color:#9AA79F!important}
-.pdf-export-root .pdf-template-page .sch-body{padding:8px 22px 16px!important}
+.pdf-export-root .pdf-template-page .sch-body{padding:0 22px 16px!important}
+.pdf-export-root .pdf-template-page .sch-pills{margin:0!important}
 .pdf-export-root .pdf-template-page .sch-pill{font-size:13px!important;padding:13px 0!important}
+.pdf-export-root .pdf-template-page .sch-pill:first-child{border-top:1px solid #F0F3EF!important}
 .pdf-export-root .pdf-template-page .sch-pill-dose{font-size:13px!important}
 .pdf-export-root .pdf-template-page .sch-pill-status{font-size:9.5px!important;padding:3px 9px!important}
 .pdf-export-root .pdf-template-note-grid{display:flex;gap:10px;margin-top:16px}
@@ -880,13 +882,14 @@ body{background:var(--page);color:var(--text);
 .pdf-export-root .pdf-template-page .routine-card{border:1px solid #EAEEE8!important;border-radius:16px!important;background:#fff!important;
   box-shadow:0 5px 16px rgba(17,35,27,.04)!important;padding:13px 18px!important}
 .pdf-export-root .pdf-template-page .routine-title{font-size:12px!important;letter-spacing:.07em!important;margin-bottom:8px!important}
-.pdf-export-root .pdf-template-page .routine-item{font-size:12.5px!important;line-height:1.45!important;color:#56625A!important;padding-left:18px!important;position:relative!important}
-.pdf-export-root .pdf-template-page .routine-item::before{content:'';position:absolute;left:0;top:.62em;width:6px;height:6px;border-radius:999px;background:#0DA66B}
+.pdf-export-root .pdf-template-page .routine-item{font-size:12.5px!important;line-height:1.45!important;color:#56625A!important;
+  padding:5px 0 5px 22px!important;border-top:0!important;position:relative!important}
+.pdf-export-root .pdf-template-page .routine-item::before{content:'';position:absolute;left:3px;top:1.05em;width:6px;height:6px;border-radius:999px;background:#0DA66B}
 .pdf-export-root .pdf-template-one-thing{margin-top:14px;background:#F4F1FB;border:1px solid #E4DDF4;border-radius:16px;padding:13px 18px;
   font-size:12.5px;line-height:1.45;color:#56536B}
 .pdf-export-root .pdf-template-one-thing strong{display:block;font-family:'Bricolage Grotesque',Arial,sans-serif;font-weight:800;
   font-size:14px;color:#5B4AA8;margin-bottom:5px}
-.pdf-export-root .pdf-template-disclaimer{margin:20px 4px 0;text-align:center;font-size:11px;line-height:1.5;color:#A4AFA6}
+.pdf-export-root .pdf-template-disclaimer{margin:12px 4px 0;text-align:center;font-size:10px;line-height:1.35;color:#A4AFA6}
 .pdf-loading-note{display:none;position:fixed;left:50%;bottom:24px;transform:translateX(-50%);
   background:#0F172A;color:#fff;border-radius:999px;padding:10px 16px;font-size:.82rem;
   font-weight:800;z-index:1000;box-shadow:0 10px 30px rgba(15,23,42,.22)}
