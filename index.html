@@ -4405,6 +4405,16 @@ function getPdfExportFileName(){
     .replace(/^-+|-+$/g,'')||'welme';
   return name+'-health-protocol.pdf';
 }
+function setProtocolPdfMetadata(pdf){
+  if(!pdf||typeof pdf.setProperties!=='function')return;
+  var filename=getPdfExportFileName();
+  pdf.setProperties({
+    title:filename,
+    subject:'Welme Health Protocol',
+    author:'Welme',
+    creator:'Welme'
+  });
+}
 var welmePdfBlob=null;
 var welmePdfPromise=null;
 var welmePdfObjectUrl=null;
@@ -4434,19 +4444,26 @@ async function openProtocolPdfPreviewBlob(pdfBlob,previewWindow){
   }
   var pdfUrl=URL.createObjectURL(file);
   welmePdfObjectUrl=pdfUrl;
+  var filename=getPdfExportFileName();
   console.log('WELME PDF PREVIEW', {
-    filename:getPdfExportFileName(),
+    filename:filename,
     type:file.type||blob.type,
     size:file.size,
     urlType:pdfUrl.indexOf('blob:')===0?'blob':'other'
   });
   var opened=false;
   if(previewWindow&&!previewWindow.closed){
+    try{previewWindow.document.title=filename;}catch(e){}
     previewWindow.location.href=pdfUrl;
     opened=true;
   }else{
-    var win=window.open(pdfUrl,'_blank','noopener');
-    opened=!!win;
+    var win=window.open('', '_blank');
+    if(win){
+      win.opener=null;
+      try{win.document.title=filename;}catch(e){}
+      win.location.href=pdfUrl;
+      opened=true;
+    }
   }
   if(!opened){
     alert('Your PDF is ready. Please allow pop-ups for Welme to open the protocol preview.');
@@ -4620,6 +4637,7 @@ async function buildProtocolPdfBlob(){
     await new Promise(function(resolve){setTimeout(resolve,80);});
     var jsPDF=window.jspdf.jsPDF;
     var pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a4',compress:true});
+    setProtocolPdfMetadata(pdf);
     var pageW=pdf.internal.pageSize.getWidth();
     var pageH=pdf.internal.pageSize.getHeight();
     var marginX=10;
@@ -4825,6 +4843,8 @@ function submitEmailAndDownload(){
   }
   localStorage.setItem('welmeUserEmail',email);
   window._welmeProtocolEmail=email;
+  welmePdfBlob=null;
+  welmePdfPromise=null;
   document.getElementById('emailGate').style.display='none';
 
   // Send email + protocol to Google Sheets (fire-and-forget)
