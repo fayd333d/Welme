@@ -795,9 +795,8 @@ body{background:var(--page);color:var(--text);
 .pdf-export-root .kbju-val{font-size:1.65rem!important;color:#102B22!important}
 .pdf-export-root .kbju-lbl{font-size:.7rem!important;font-weight:900!important;color:#102B22!important}
 .pdf-export-root .kbju-sub{font-size:.62rem!important;color:#99A59D!important}
-.pdf-export-root .kbju-tips{background:transparent!important;padding:0!important}
-.pdf-export-root .kbju-tip{background:#fff!important;border:1px solid #E3EAE3!important;border-left:0!important;border-radius:16px!important;
-  padding:16px 18px!important;font-size:.8rem!important;color:#5F6E65!important;box-shadow:0 10px 24px rgba(20,39,31,.045)!important}
+.pdf-export-root .kbju-tips{display:none!important}
+.pdf-export-root .kbju-tip{display:none!important}
 .pdf-export-root .routine-card{background:#fff!important;border:1px solid #E3EAE3!important;border-radius:18px!important;
   padding:18px 22px!important;box-shadow:0 10px 24px rgba(20,39,31,.045)!important}
 .pdf-export-root .routine-title{font-size:.86rem!important;color:#0B8B5B!important;letter-spacing:.1em!important}
@@ -4524,19 +4523,10 @@ function getPdfRenderUnits(target){
     }else if(section.id==='kbjuSection'){
       var kbjuTitle=section.querySelector('.sec-title');
       var kbjuGrid=section.querySelector('#kbjuContent > .kbju-grid');
-      var tipTitle=section.querySelector('#kbjuContent .kbju-tip-title');
+      if(kbjuTitle)kbjuTitle=kbjuTitle.cloneNode(true);
+      if(kbjuTitle)kbjuTitle.textContent='Nutrition Targets';
       if(kbjuGrid)addUnit(kbjuTitle,kbjuGrid,{newPage:false});
-      Array.prototype.slice.call(section.querySelectorAll('#kbjuContent .kbju-tip.pdf-block')).forEach(function(tip,idx){
-        var wrap=document.createElement('div');
-        wrap.className='section pdf-health-only pdf-section';
-        if(idx===0&&!kbjuGrid)wrap.setAttribute('data-pdf-new-page','true');
-        if(!kbjuGrid&&idx===0&&kbjuTitle)wrap.appendChild(kbjuTitle.cloneNode(true));
-        if(idx===0&&tipTitle)wrap.appendChild(tipTitle.cloneNode(true));
-        wrap.appendChild(tip.cloneNode(true));
-        scratch.appendChild(wrap);
-        units.push(wrap);
-      });
-      if(!kbjuGrid&&!section.querySelector('#kbjuContent .kbju-tip.pdf-block'))units.push(section);
+      if(!kbjuGrid)units.push(section);
     }else if(section.id==='lifestyleSection'){
       addBlockUnits(section,'#lifestyleContent .routine-card.pdf-block',{newPage:true});
     }else{
