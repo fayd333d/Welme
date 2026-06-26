@@ -4468,6 +4468,7 @@ async function openProtocolPdfPreviewBlob(pdfBlob,previewWindow){
   if(!opened){
     alert('Your PDF is ready. Please allow pop-ups for Welme to open the protocol preview.');
   }
+  return opened;
 }
 function createPdfRenderTarget(source){
   var host=document.createElement('div');
@@ -4744,16 +4745,16 @@ function scheduleProtocolPdfGeneration(){
 async function previewPreparedProtocolPdf(previewWindow){
   try{
     if(welmePdfBlob){
-      openProtocolPdfPreviewBlob(welmePdfBlob,previewWindow);
-      return;
+      return openProtocolPdfPreviewBlob(welmePdfBlob,previewWindow);
     }
     showPdfLoading(true);
     var blob=await startProtocolPdfGeneration();
-    openProtocolPdfPreviewBlob(blob,previewWindow);
+    return openProtocolPdfPreviewBlob(blob,previewWindow);
   }catch(e){
     console.error('PDF export failed',e);
     if(previewWindow&&!previewWindow.closed)previewWindow.close();
     alert('PDF export could not finish. Please try again.');
+    return false;
   }finally{
     showPdfLoading(false);
   }
@@ -4833,8 +4834,22 @@ function trackWelmeEvent(eventData) {
     }
   } catch (e) {}
 }
-   
-function submitEmailAndDownload(){
+
+function setProtocolSubmitLoading(isLoading){
+  var btn=document.getElementById('emailSubmitBtn');
+  var input=document.getElementById('emailInput');
+  if(btn){
+    btn.disabled=!!isLoading;
+    btn.textContent=isLoading?'Preparing your protocol...':'Save My Protocol';
+    btn.style.opacity=isLoading?'.72':'1';
+    btn.style.cursor=isLoading?'wait':'pointer';
+  }
+  if(input)input.disabled=!!isLoading;
+}
+
+async function submitEmailAndDownload(){
+  var submitBtn=document.getElementById('emailSubmitBtn');
+  if(submitBtn&&submitBtn.disabled)return;
   var emailInput=document.getElementById('emailInput');
   var email=emailInput.value.trim();
   if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
@@ -4845,7 +4860,7 @@ function submitEmailAndDownload(){
   window._welmeProtocolEmail=email;
   welmePdfBlob=null;
   welmePdfPromise=null;
-  document.getElementById('emailGate').style.display='none';
+  setProtocolSubmitLoading(true);
 
   // Send email + protocol to Google Sheets (fire-and-forget)
 if (WELME_SHEET_URL) {
@@ -4865,9 +4880,14 @@ if (WELME_SHEET_URL) {
   } catch (e) {}
 }
 
-  var previewWindow=window.open('', '_blank');
-  if(previewWindow)previewWindow.opener=null;
-  previewPreparedProtocolPdf(previewWindow);
+  try{
+    var opened=await previewPreparedProtocolPdf(null);
+    if(opened){
+      document.getElementById('emailGate').style.display='none';
+    }
+  }finally{
+    setProtocolSubmitLoading(false);
+  }
 }
 
 </script>
@@ -4920,7 +4940,7 @@ if (WELME_SHEET_URL) {
     <input id="emailInput" type="email" placeholder="your@email.com"
       style="width:100%;padding:13px 16px;border:2px solid #94A3B8;border-radius:8px;font-size:15px;margin-bottom:12px;outline:none;color:var(--ink);background:#fff;font-family:inherit;transition:border-color .15s;box-sizing:border-box"
       onfocus="this.style.borderColor='var(--teal-deep)'" onblur="this.style.borderColor='#94A3B8'">
-    <button onclick="submitEmailAndDownload()"
+    <button id="emailSubmitBtn" onclick="submitEmailAndDownload()"
       style="width:100%;padding:14px;background:#EAF7F2;color:#0B1513;border:1.5px solid rgba(10,63,61,.22);border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:12px;font-family:inherit;transition:opacity .15s"
       onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">
       Save My Protocol
