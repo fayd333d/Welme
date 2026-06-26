@@ -3280,32 +3280,39 @@ function buildResults(){
 
   // ── Direct product links from affiliate spreadsheet
   var LINKS={
-    d3k2:{amz:'https://amzn.to/4es8bBC',price:'$24'},
-    mag:{amz:'https://amzn.to/4xil7la',price:'$13'},
-    omega:{amz:'https://amzn.to/4g4Smly',price:'$76'},
-    ashwa:{amz:'https://amzn.to/3RIFQ1f',price:'$18'},
-    rhodiola:{amz:'https://amzn.to/4dSoJm6',price:'$31'},
-    theanine:{amz:'https://amzn.to/4fqLlLG',price:'$29'},
-    bcomplex:{amz:'https://amzn.to/4ujQqcs',price:'$34'},
-    coq10:{amz:'https://amzn.to/3SpF8WF',price:'$50'},
-    vitC:{amz:'https://amzn.to/4vq5Ahk',price:'$13'},
-    zinc:{amz:'https://amzn.to/3QtLML3',price:'$12'},
-    nad:{amz:'https://amzn.to/4vppnNG',price:'$19'},
-    lion:{amz:'https://amzn.to/3Q81FGW',price:'$38'},
-    melatonin:{amz:'https://amzn.to/3RU5NuH',price:'$9'},
-    berb:{amz:'https://amzn.to/3Sqxj2Y',price:'$51'},
-    creatine:{amz:'https://amzn.to/4xeLzMa',price:'$29'},
-    collagen:{amz:'https://amzn.to/4e6ip9j',price:'$43'},
-    probio:{amz:'https://amzn.to/4ockZiR',price:'$20'},
-    curcumin:{amz:'https://amzn.to/4dRFKwO',price:'$28'},
-    maca:{amz:'https://amzn.to/4xcjOEf',price:'$19'},
-    saffron:{amz:'https://www.amazon.com/s?k=saffron+extract+supplement&tag=welme-affiliate-20'},
-    resveratrol:{amz:'https://amzn.to/4uv1CTS',price:'$21'},
-    iron:{amz:'https://amzn.to/4uW36aI',price:'$42'},
-    biotin:{amz:'https://www.amazon.com/s?k=biotin+supplement&tag=welme-affiliate-20'},
-    astaxanthin:{amz:'https://amzn.to/4uWwYDV',price:'$54'},
     ala:{amz:'https://amzn.to/4epTM90',price:'$28'},
-    ps:{amz:'https://amzn.to/3Qm23BL',price:'$36'}
+    ashwa:{amz:'https://amzn.to/3RIFQ1f',price:'$18'},
+    astaxanthin:{amz:'https://amzn.to/4uWwYDV',price:'$54'},
+    bcomplex:{amz:'https://amzn.to/4ujQqcs',price:'$34'},
+    berb:{amz:'https://amzn.to/3Sqxj2Y',price:'$51'},
+    biotin:{amz:'https://amzn.to/3SOy1r7',price:'$22'},
+    chromium:{amz:'https://amzn.to/4xMdl3b',price:'$12'},
+    collagen:{amz:'https://amzn.to/4e6ip9j',price:'$43'},
+    coq10:{amz:'https://amzn.to/3SpF8WF',price:'$50'},
+    creatine:{amz:'https://amzn.to/4xeLzMa',price:'$29'},
+    curcumin:{amz:'https://amzn.to/4dRFKwO',price:'$28'},
+    d3k2:{amz:'https://amzn.to/4es8bBC',price:'$24'},
+    enzymes:{amz:'https://amzn.to/4g8gu74',price:'$16'},
+    ginger:{amz:'https://amzn.to/4vsxHN7',price:'$17'},
+    glycine:{amz:'https://amzn.to/4uWgWsM',price:'$21'},
+    greenTea:{amz:'https://amzn.to/4whyEbn',price:'$21'},
+    hyaluronic:{amz:'https://amzn.to/4eHG4NM',price:'$19'},
+    iron:{amz:'https://amzn.to/4uW36aI',price:'$42'},
+    lion:{amz:'https://amzn.to/3Q81FGW',price:'$38'},
+    maca:{amz:'https://amzn.to/4xcjOEf',price:'$19'},
+    mag:{amz:'https://amzn.to/4xil7la',price:'$13'},
+    melatonin:{amz:'https://amzn.to/3RU5NuH',price:'$9'},
+    nad:{amz:'https://amzn.to/4vppnNG',price:'$19'},
+    omega:{amz:'https://amzn.to/4g4Smly',price:'$76'},
+    probio:{amz:'https://amzn.to/4ockZiR',price:'$20'},
+    ps:{amz:'https://amzn.to/3Qm23BL',price:'$36'},
+    psyllium:{amz:'https://amzn.to/4v4qJgp',price:'$8'},
+    resveratrol:{amz:'https://amzn.to/4uv1CTS',price:'$21'},
+    rhodiola:{amz:'https://amzn.to/4dSoJm6',price:'$31'},
+    saffron:{amz:'https://amzn.to/43WW4qo',price:'$20'},
+    theanine:{amz:'https://amzn.to/4fqLlLG',price:'$29'},
+    vitC:{amz:'https://amzn.to/4vq5Ahk',price:'$13'},
+    zinc:{amz:'https://amzn.to/3QtLML3',price:'$12'}
   };
 
   // Unified course info: {type, on, off, bottles, note}
@@ -3700,6 +3707,32 @@ function buildResults(){
       '</div>';
     }).join('')+'</div>';
   }
+  function buildAmazonLinksSection(keys){
+    var rows=(keys||[]).map(function(k){
+      var sup=S[k];
+      var link=LINKS[k]||{};
+      if(!sup)return'';
+      if(!link.amz){
+        console.warn('Missing Amazon URL for recommended supplement', {key:k,name:sup.name});
+        return'';
+      }
+      var price=link.price||'See Amazon';
+      return'<tr>'+
+        '<td>'+sup.name+'</td>'+
+        '<td><span class="purchase-price">'+(price.indexOf('$')===0?'<span>$</span>'+price.slice(1):price)+'</span></td>'+
+        '<td><a class="amazon-btn" href="'+link.amz+'" target="_blank" rel="noopener" data-product="'+encodeURIComponent(sup.name)+
+          '" onclick="trackPurchaseClick(\'Amazon\',decodeURIComponent(this.dataset.product||\'\'),this);welmeTrackAffiliateClick(decodeURIComponent(this.dataset.product||\'\'))">'+
+          '<span class="amazon-icon">🛒</span><span>Amazon</span></a></td>'+
+      '</tr>';
+    }).filter(Boolean);
+    if(!rows.length)return'';
+    return'<div class="amazon-links-block">'+
+      '<div class="amazon-links-title">Amazon Links</div>'+
+      '<table class="purchase-table"><thead><tr><th>Supplement</th><th>Price</th><th>Link</th></tr></thead><tbody>'+
+        rows.join('')+
+      '</tbody></table>'+
+    '</div>';
+  }
   function buildProtocolSchedule(keys){
     var SLOT_META={
       'morning-empty':{label:'Morning',hour:'Empty stomach'},
@@ -3915,7 +3948,7 @@ function buildResults(){
   document.getElementById('suppsContent').innerHTML=suppsHTML;
   document.getElementById('protocolScheduleContent').innerHTML=buildProtocolSchedule(scheduleKeys);
   var purchaseContent=document.getElementById('purchaseContent');
-  if(purchaseContent)purchaseContent.innerHTML='';
+  if(purchaseContent)purchaseContent.innerHTML=buildAmazonLinksSection(shownSuggested);
   // Show footer CTA below supplement cards
   var ctaWrap=document.getElementById('suppStackCta');
   var hasCards=suppsHTML&&suppsHTML.indexOf('protocol-supp-card')>-1;
@@ -4236,48 +4269,28 @@ function showPdfLoading(show){
 function pdfDispositionName(filename){
   return filename.replace(/["\\]/g,'');
 }
-function canUseNamedPdfPreview(){
-  return location.protocol==='https:'&&'serviceWorker' in navigator&&'caches' in window;
-}
-async function getNamedPdfPreviewUrl(file){
-  if(!canUseNamedPdfPreview())return null;
-  var filename=file.name||getPdfExportFileName();
-  var pdfUrl=new URL('/__welme_pdf/'+encodeURIComponent(filename),location.origin).href;
-  await navigator.serviceWorker.register('/pdf-sw.js',{scope:'/'});
-  await navigator.serviceWorker.ready;
-  var cache=await caches.open('welme-pdf-cache-v1');
-  await cache.put(pdfUrl,new Response(file,{
-    headers:{
-      'Content-Type':'application/pdf',
-      'Content-Disposition':'inline; filename="'+pdfDispositionName(filename)+'"; filename*=UTF-8\'\''+encodeURIComponent(filename),
-      'Cache-Control':'no-store'
-    }
-  }));
-  return pdfUrl;
-}
-async function openProtocolPdfPreview(pdfBlob,previewWindow){
-  if(!pdfBlob)return;
-  var file=new File([pdfBlob],getPdfExportFileName(),{type:'application/pdf'});
-  var namedUrl=null;
-  try{
-    namedUrl=await getNamedPdfPreviewUrl(file);
-  }catch(e){
-    console.warn('Named PDF preview unavailable; using Blob URL fallback',e);
+function downloadProtocolPdfBlob(pdfBlob){
+  if(!pdfBlob||!pdfBlob.size){
+    throw new Error('Generated PDF is empty');
   }
-  var pdfUrl=namedUrl||URL.createObjectURL(file);
-  var opened=previewWindow&&!previewWindow.closed?previewWindow:window.open(pdfUrl,'_blank');
-  if(opened&&opened!==previewWindow){
-    try{opened.opener=null;}catch(e){}
+  var file=pdfBlob.type==='application/pdf'
+    ? pdfBlob
+    : new Blob([pdfBlob],{type:'application/pdf'});
+  if(file.size<1000){
+    throw new Error('Generated PDF is too small to be valid');
   }
-  if(previewWindow&&!previewWindow.closed){
-    previewWindow.location.href=pdfUrl;
-  }
-  if(!opened){
-    alert('Please allow pop-ups to preview your PDF.');
-    if(!namedUrl)URL.revokeObjectURL(pdfUrl);
-    return;
-  }
-  if(!namedUrl)setTimeout(function(){URL.revokeObjectURL(pdfUrl);},60000);
+  var pdfUrl=URL.createObjectURL(file);
+  var a=document.createElement('a');
+  a.href=pdfUrl;
+  a.download=getPdfExportFileName();
+  a.rel='noopener';
+  a.style.display='none';
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(function(){
+    URL.revokeObjectURL(pdfUrl);
+    if(a.parentNode)a.parentNode.removeChild(a);
+  },4000);
 }
 function createPdfRenderTarget(source){
   var host=document.createElement('div');
@@ -4346,7 +4359,8 @@ function getPdfRenderUnits(target){
   var orderedSections=['personalInfoSection','kbjuSection','scoresSection','protocolSection','analysisSection','lifestyleSection']
     .map(function(id){return target.querySelector('#'+id);})
     .filter(Boolean);
-  Array.prototype.slice.call(target.querySelectorAll('.pdf-health-only.section')).forEach(function(section){
+  Array.prototype.slice.call(target.children).forEach(function(section){
+    if(!section.classList||!section.classList.contains('pdf-health-only')||!section.classList.contains('section'))return;
     if(orderedSections.indexOf(section)===-1)orderedSections.push(section);
   });
   orderedSections.forEach(function(section){
@@ -4498,18 +4512,17 @@ function scheduleProtocolPdfGeneration(){
     });
   },350);
 }
-async function downloadPreparedProtocolPdf(previewWindow){
+async function downloadPreparedProtocolPdf(){
   try{
     if(welmePdfBlob){
-      await openProtocolPdfPreview(welmePdfBlob,previewWindow);
+      downloadProtocolPdfBlob(welmePdfBlob);
       return;
     }
     showPdfLoading(true);
     var blob=await startProtocolPdfGeneration();
-    await openProtocolPdfPreview(blob,previewWindow);
+    downloadProtocolPdfBlob(blob);
   }catch(e){
     console.error('PDF export failed',e);
-    if(previewWindow&&!previewWindow.closed)previewWindow.close();
     alert('PDF export could not finish. Please try again.');
   }finally{
     showPdfLoading(false);
@@ -4559,6 +4572,12 @@ function trackWelmeEvent(eventData) {
       checkout_click:checkoutClick
     };
     if(Array.isArray(payload.stack))payload.stack=payload.stack.join(', ');
+    if(eventType==='checkout_click'){
+      payload.checkout_click=true;
+      payload.checkout_clicked=true;
+      payload.selected_supplements=payload.stack;
+      payload.checkout_items=payload.stack;
+    }
     console.log("WELME TRACKING WEBHOOK PAYLOAD", JSON.stringify(payload));
     if(location.hostname==='127.0.0.1'||location.hostname==='localhost')return;
     var body=JSON.stringify(payload);
@@ -4614,8 +4633,7 @@ if (WELME_SHEET_URL) {
   } catch (e) {}
 }
 
-  var previewWindow=window.open('', '_blank');
-  downloadPreparedProtocolPdf(previewWindow);
+  downloadPreparedProtocolPdf();
 }
 
 </script>
