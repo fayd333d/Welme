@@ -699,8 +699,8 @@ body{background:radial-gradient(120% 70% at 50% 0%,#EEF1EB 0%,var(--page) 100%);
 .pdf-export-root{display:block!important;padding:0!important;background:#F6F8F4!important;width:780px!important;
   font-family:'Hanken Grotesk',Arial,sans-serif!important;color:#102B22!important}
 .pdf-export-root .pdf-health-only{display:block!important}
-.pdf-export-root .section{box-shadow:0 12px 28px rgba(20,39,31,.055)!important;border:1px solid #E3EAE3!important;
-  margin-bottom:18px;padding:18px 20px;border-radius:20px!important;background:#fff!important}
+.pdf-export-root .section{box-shadow:none!important;border:0!important;
+  margin-bottom:22px;padding:0!important;border-radius:0!important;background:transparent!important}
 .pdf-export-root .section,
 .pdf-export-root .sch-slot,
 .pdf-export-root .pdf-rec-item,
@@ -712,79 +712,95 @@ body{background:radial-gradient(120% 70% at 50% 0%,#EEF1EB 0%,var(--page) 100%);
 .pdf-export-root .pdf-block,
 .pdf-export-root .proto-box,
 .pdf-export-root .score-overall-card{break-inside:avoid;page-break-inside:avoid}
-.pdf-export-root .sec-title{font-family:'Bricolage Grotesque',Arial,sans-serif!important;font-size:1.32rem!important;
-  font-weight:800;margin-bottom:18px;color:#102B22;padding:0;border:0;letter-spacing:-.02em}
+.pdf-export-root .sec-title{font-family:'Bricolage Grotesque',Arial,sans-serif!important;font-size:1.48rem!important;
+  font-weight:900;margin-bottom:18px;color:#102B22;padding:0;border:0;letter-spacing:-.025em}
 .pdf-export-root .sec-title::before,.pdf-export-root .proto-name::before{content:'';display:inline-block;
   width:8px;height:8px;border-radius:50%;background:#10A66A;margin-right:10px;vertical-align:middle}
 .pdf-export-root .score-overall-card{box-shadow:none!important;border:1px solid #E3EAE3!important;
-  border-radius:18px!important;background:#fff!important;padding:22px!important}
+  border-radius:20px!important;background:#fff!important;padding:22px 24px!important}
 .pdf-export-root .proto-box{box-shadow:none!important;border:0!important;background:transparent!important;padding:0!important}
-.pdf-export-root .proto-name{font-family:'Bricolage Grotesque',Arial,sans-serif!important;font-size:1.3rem!important;
-  color:#102B22!important;margin:0 0 12px!important}
+.pdf-export-root .proto-name{font-family:'Bricolage Grotesque',Arial,sans-serif!important;font-size:1.42rem!important;
+  color:#102B22!important;margin:0 0 12px!important;font-weight:900!important;letter-spacing:-.02em!important}
 .pdf-export-root .proto-why{font-size:.78rem!important;line-height:1.55!important;color:#6C7B72!important;margin:0!important}
 .pdf-export-root .pdf-rec-list{grid-template-columns:1fr 1fr!important;gap:10px!important}
 .pdf-export-root .pdf-rec-item{background:#fff!important;border:1px solid #E3EAE3!important;border-radius:16px!important;
   padding:12px 14px!important;box-shadow:0 8px 20px rgba(20,39,31,.045)!important}
-.pdf-export-root .schedule-intro{font-size:.78rem!important;margin-bottom:16px!important;color:#78857C!important;line-height:1.55!important}
+.pdf-export-root .pdf-course-list{display:flex!important;flex-direction:column!important;gap:14px!important}
+.pdf-export-root .pdf-course-card{background:#fff!important;border:1px solid #E3EAE3!important;border-radius:20px!important;
+  padding:18px 20px!important;box-shadow:0 10px 24px rgba(20,39,31,.045)!important;break-inside:avoid;page-break-inside:avoid}
+.pdf-export-root .pdf-course-head{display:grid!important;grid-template-columns:52px 1fr!important;gap:14px!important;
+  align-items:center!important;border-bottom:1px solid #ECF0EC!important;padding-bottom:14px!important;margin-bottom:14px!important}
+.pdf-export-root .pdf-course-icon{width:46px;height:46px;border-radius:14px;background:#10A66A;color:#fff;
+  display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.9rem}
+.pdf-export-root .pdf-course-name{font-size:.98rem;font-weight:900;color:#102B22;margin-bottom:5px}
+.pdf-export-root .pdf-course-cycle{display:inline-flex;align-items:center;background:#EAF7F1;color:#087D52;
+  border-radius:999px;padding:5px 10px;font-size:.7rem;font-weight:900}
+.pdf-export-root .pdf-course-grid{display:grid!important;grid-template-columns:1fr 1fr 1fr!important;gap:18px!important}
+.pdf-export-root .pdf-course-label{font-size:.62rem!important;letter-spacing:.1em!important;text-transform:uppercase!important;
+  color:#0B8B5B!important;font-weight:900!important;margin-bottom:5px!important}
+.pdf-export-root .pdf-course-copy{font-size:.76rem!important;line-height:1.45!important;color:#5F6E65!important}
+.pdf-export-root .schedule-intro{font-size:.86rem!important;margin:0 0 22px 22px!important;color:#78857C!important;line-height:1.55!important;max-width:620px!important}
 .pdf-export-root .schedule-wrap{display:flex!important;flex-direction:column!important;gap:14px!important}
-.pdf-export-root .sch-slot{display:block!important;border:1px solid #E3EAE3!important;border-radius:18px!important;
-  overflow:hidden!important;background:#fff!important;box-shadow:0 8px 20px rgba(20,39,31,.045)!important}
-.pdf-export-root .sch-time{display:flex!important;align-items:center!important;gap:12px!important;padding:15px 18px 12px!important;
+.pdf-export-root .sch-slot{display:block!important;border:1px solid #E3EAE3!important;border-radius:20px!important;
+  overflow:hidden!important;background:#fff!important;box-shadow:0 10px 24px rgba(20,39,31,.045)!important}
+.pdf-export-root .sch-time{display:flex!important;align-items:center!important;gap:12px!important;padding:18px 22px 14px!important;
   border-bottom:1px solid #ECF0EC!important;background:#fff!important}
 .pdf-export-root .sch-time-label{font-size:.9rem!important;letter-spacing:.04em!important;margin:0!important;color:#102B22!important;
   font-weight:900!important;text-transform:uppercase!important}
 .pdf-export-root .sch-time-hour{font-size:.68rem!important;line-height:1.25!important;color:#8B978F!important;margin-top:2px!important}
-.pdf-export-root .sch-body{padding:8px 18px 14px!important;background:#fff!important}
+.pdf-export-root .sch-body{padding:8px 22px 16px!important;background:#fff!important}
 .pdf-export-root .sch-pills{display:flex!important;flex-direction:column!important;gap:0!important}
-.pdf-export-root .sch-pill{display:block!important;background:transparent!important;border-radius:0!important;border-top:1px solid #ECF0EC!important;
-  padding:9px 0!important;font-size:.76rem!important;color:#102B22!important;font-weight:800!important}
+.pdf-export-root .sch-pill{display:block!important;background:transparent!important;border-radius:0!important;border:0!important;border-top:1px solid #ECF0EC!important;
+  padding:11px 0!important;font-size:.82rem!important;color:#102B22!important;font-weight:900!important}
 .pdf-export-root .sch-pill::before{content:'';display:inline-block;width:7px;height:7px;border-radius:50%;background:#F5B941;margin-right:9px}
 .pdf-export-root .sch-pill-dose{float:right;color:#5C675F;font-weight:900}
+.pdf-export-root .sch-pill-status{display:inline-flex!important;align-items:center!important;background:#EAF7F1!important;color:#087D52!important;
+  border-radius:999px!important;padding:3px 8px!important;font-size:.58rem!important;font-weight:900!important;margin-left:8px!important;text-transform:uppercase!important}
 .pdf-export-root .sch-guidance{display:none!important}
 .pdf-export-root .pdf-section{break-inside:avoid;page-break-inside:avoid}
-.pdf-export-root .analysis-block{border:1px solid #E3EAE3;border-radius:18px;padding:16px 18px;
-  background:#fff;margin-bottom:12px;box-shadow:0 8px 20px rgba(20,39,31,.045);break-inside:avoid;page-break-inside:avoid}
+.pdf-export-root .analysis-block{border:1px solid #E3EAE3;border-radius:20px;padding:20px 22px;
+  background:#fff;margin-bottom:16px;box-shadow:0 10px 24px rgba(20,39,31,.045);break-inside:avoid;page-break-inside:avoid}
 .pdf-export-root .analysis-summary{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .pdf-export-root .analysis-mini{background:#F5F8F4;border:0;border-radius:16px;padding:13px}
 .pdf-export-root .analysis-label{font-size:.66rem;font-weight:900;color:#0B8B5B;
   letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
-.pdf-export-root .analysis-text{font-size:.76rem;line-height:1.5;color:#5F6E65}
+.pdf-export-root .analysis-text{font-size:.82rem;line-height:1.55;color:#5F6E65}
 .pdf-export-root .analysis-table{display:grid;gap:10px}
-.pdf-export-root .analysis-focus-row{display:grid;grid-template-columns:130px 1fr;gap:14px;
-  background:#F8FAF7;border:1px solid #E3EAE3;border-radius:16px;padding:13px;break-inside:avoid;page-break-inside:avoid}
-.pdf-export-root .analysis-focus-name{font-size:.82rem;font-weight:900;color:#102B22}
+.pdf-export-root .analysis-focus-row{display:grid;grid-template-columns:150px 1fr;gap:18px;
+  background:#fff;border:1px solid #E3EAE3;border-radius:18px;padding:16px 18px;break-inside:avoid;page-break-inside:avoid}
+.pdf-export-root .analysis-focus-name{font-size:.9rem;font-weight:900;color:#102B22}
 .pdf-export-root .analysis-focus-score{font-size:.68rem;color:#0B8B5B;margin-top:3px;font-weight:800}
-.pdf-export-root .analysis-focus-body{font-size:.72rem;line-height:1.48;color:#5F6E65}
-.pdf-export-root .pdf-cover{padding:8px 0 14px!important;background:transparent!important;border:0!important;
-  box-shadow:none!important;border-radius:0!important;margin-bottom:12px!important}
-.pdf-export-root .pdf-cover-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.pdf-export-root .analysis-focus-body{font-size:.78rem;line-height:1.52;color:#5F6E65}
+.pdf-export-root .pdf-cover{padding:4px 0 20px!important;background:transparent!important;border:0!important;
+  box-shadow:none!important;border-radius:0!important;margin-bottom:16px!important}
+.pdf-export-root .pdf-cover-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
 .pdf-export-root .pdf-cover-brand{font-family:'Bricolage Grotesque',Arial,sans-serif;font-size:1.2rem;
   color:#0B8B5B;font-weight:900}
 .pdf-export-root .pdf-cover-focus{display:inline-flex;align-items:center;gap:10px;background:#EAF7F1;color:#087D52;
   border-radius:999px;padding:10px 18px;font-size:.86rem;font-weight:900}
 .pdf-export-root .pdf-cover-focus img{width:24px;height:24px;border-radius:8px;object-fit:cover}
-.pdf-export-root .pdf-cover-title{font-family:'Bricolage Grotesque',Arial,sans-serif;font-size:2.28rem;
+.pdf-export-root .pdf-cover-title{font-family:'Bricolage Grotesque',Arial,sans-serif;font-size:2.64rem;
   line-height:.98;letter-spacing:-.045em;color:#102B22;margin:0 0 10px}
-.pdf-export-root .pdf-cover-sub{max-width:430px;color:#6C7B72;font-size:.86rem;line-height:1.55;margin:0 0 18px}
-.pdf-export-root .pdf-cover-rule{height:1px;background:#DDE5DE;margin-top:14px}
+.pdf-export-root .pdf-cover-sub{max-width:500px;color:#6C7B72;font-size:.96rem;line-height:1.55;margin:0 0 22px}
+.pdf-export-root .pdf-cover-rule{height:1px;background:#DDE5DE;margin-top:20px}
 .pdf-export-root .res-meta-strip{display:grid!important;grid-template-columns:repeat(5,1fr)!important;gap:12px!important;justify-content:stretch!important;margin:0!important}
 .pdf-export-root .res-meta-chip{min-width:0!important;background:#fff!important;border:1px solid #E3EAE3!important;border-radius:14px!important;
-  padding:15px 12px!important;box-shadow:0 8px 20px rgba(20,39,31,.045)!important;border-top:3px solid #10A66A!important}
+  padding:18px 12px!important;box-shadow:0 10px 24px rgba(20,39,31,.045)!important;border-top:3px solid #10A66A!important}
 .pdf-export-root .res-meta-k{font-size:.55rem!important;color:#9AA69F!important;letter-spacing:.12em!important}
 .pdf-export-root .res-meta-v{font-size:1rem!important;color:#102B22!important}
 .pdf-export-root .kbju-grid{grid-template-columns:repeat(4,1fr)!important;gap:12px!important;margin-bottom:0!important}
 .pdf-export-root .kbju-card{background:#fff!important;border:1px solid #E3EAE3!important;border-radius:16px!important;
-  padding:16px 12px!important;box-shadow:0 8px 20px rgba(20,39,31,.045)!important}
+  padding:18px 12px!important;box-shadow:0 10px 24px rgba(20,39,31,.045)!important}
 .pdf-export-root .kbju-val{font-size:1.65rem!important;color:#102B22!important}
 .pdf-export-root .kbju-lbl{font-size:.7rem!important;font-weight:900!important;color:#102B22!important}
 .pdf-export-root .kbju-sub{font-size:.62rem!important;color:#99A59D!important}
 .pdf-export-root .kbju-tips{background:transparent!important;padding:0!important}
 .pdf-export-root .kbju-tip{background:#fff!important;border:1px solid #E3EAE3!important;border-left:0!important;border-radius:16px!important;
-  padding:13px 15px!important;font-size:.74rem!important;color:#5F6E65!important;box-shadow:0 8px 20px rgba(20,39,31,.045)!important}
+  padding:16px 18px!important;font-size:.8rem!important;color:#5F6E65!important;box-shadow:0 10px 24px rgba(20,39,31,.045)!important}
 .pdf-export-root .routine-card{background:#fff!important;border:1px solid #E3EAE3!important;border-radius:18px!important;
-  padding:16px 18px!important;box-shadow:0 8px 20px rgba(20,39,31,.045)!important}
-.pdf-export-root .routine-title{font-size:.78rem!important;color:#0B8B5B!important;letter-spacing:.1em!important}
-.pdf-export-root .routine-item{font-size:.76rem!important;color:#5F6E65!important;line-height:1.5!important}
+  padding:18px 22px!important;box-shadow:0 10px 24px rgba(20,39,31,.045)!important}
+.pdf-export-root .routine-title{font-size:.86rem!important;color:#0B8B5B!important;letter-spacing:.1em!important}
+.pdf-export-root .routine-item{font-size:.82rem!important;color:#5F6E65!important;line-height:1.55!important}
 .pdf-loading-note{display:none;position:fixed;left:50%;bottom:24px;transform:translateX(-50%);
   background:#0F172A;color:#fff;border-radius:999px;padding:10px 16px;font-size:.82rem;
   font-weight:800;z-index:1000;box-shadow:0 10px 30px rgba(15,23,42,.22)}
@@ -3707,6 +3723,30 @@ function buildResults(){
       '</div>';
     }).join('')+'</div>';
   }
+  function buildPdfCourseGuide(keys){
+    var list=(keys||[]).filter(function(k){return S[k];}).slice(0,8);
+    if(!list.length)return'';
+    return'<div class="pdf-course-list">'+list.map(function(k){
+      var sup=S[k];
+      var visual=(typeof SUPP_VISUAL!=='undefined'&&SUPP_VISUAL[k])||{abbr:sup.name.slice(0,3),color:'#10A66A'};
+      var c=COURSE[k]||{type:'cycle',on:'8-12 weeks',off:'2-4 weeks'};
+      var cycle=durationLabel(k,c);
+      var start=timingGuidance(sup).replace(/<br>/g,' ').replace(/\s{2,}/g,' ').trim();
+      var watch=(BENEFITS[k]&&BENEFITS[k][0])?BENEFITS[k][0]:'Changes in energy, comfort, sleep, digestion, or recovery over several weeks.';
+      var tip=compatibilityText(k).split('.')[0]+'.';
+      return'<div class="pdf-course-card pdf-block">'+
+        '<div class="pdf-course-head">'+
+          '<div class="pdf-course-icon" style="background:'+visual.color+'">'+visual.abbr+'</div>'+
+          '<div><div class="pdf-course-name">'+sup.name+'</div><div class="pdf-course-cycle">↻ '+cycle+'</div></div>'+
+        '</div>'+
+        '<div class="pdf-course-grid">'+
+          '<div><div class="pdf-course-label">How to start</div><div class="pdf-course-copy">'+start+'</div></div>'+
+          '<div><div class="pdf-course-label">What to watch</div><div class="pdf-course-copy">'+watch+'</div></div>'+
+          '<div><div class="pdf-course-label">Key tip</div><div class="pdf-course-copy">'+tip+'</div></div>'+
+        '</div>'+
+      '</div>';
+    }).join('')+'</div>';
+  }
   function buildAmazonLinksSection(keys){
     var rows=(keys||[]).map(function(k){
       var sup=S[k];
@@ -3769,7 +3809,8 @@ function buildResults(){
           '<div class="sch-body">'+
             '<div class="sch-pills">'+groups[slot].map(function(k){
               var sup=S[k];
-              return'<span class="sch-pill">'+sup.name+' <span class="sch-pill-dose">· '+sup_getDose(sup,profile)+'</span></span>';
+              var status=(alreadyTakingKeys&&alreadyTakingKeys.indexOf(k)>-1)?'Current':'Recommended';
+              return'<span class="sch-pill">'+sup.name+' <span class="sch-pill-status">'+status+'</span><span class="sch-pill-dose">'+sup_getDose(sup,profile)+'</span></span>';
             }).join('')+'</div>'+
             '<div class="sch-guidance">'+scheduleGuidanceForSlot(slot)+'</div>'+
           '</div>'+
@@ -3906,6 +3947,7 @@ function buildResults(){
     return arr.indexOf(k)===idx;
   });
   var pdfRecListHTML=buildPdfRecommendedList(pdfRecommendedKeys);
+  var pdfCourseGuideHTML=buildPdfCourseGuide(scheduleKeys);
   document.getElementById('protocolContent').innerHTML=
     '<div class="pdf-section">'+protoHTML+'</div>'+
     (pdfRecListHTML?'<div class="pdf-section"><div class="proto-name" style="margin-top:12px">Recommended Supplements</div>'+pdfRecListHTML+'</div>':'');
@@ -3946,9 +3988,11 @@ function buildResults(){
   }
   suppsHTML+=buildScreenSchedule(scheduleKeys);
   document.getElementById('suppsContent').innerHTML=suppsHTML;
-  document.getElementById('protocolScheduleContent').innerHTML=buildProtocolSchedule(scheduleKeys);
+  document.getElementById('protocolScheduleContent').innerHTML=
+    buildProtocolSchedule(scheduleKeys)+
+    (pdfCourseGuideHTML?'<div class="pdf-section"><div class="proto-name" style="margin-top:12px">Course &amp; Cycling Guide</div>'+pdfCourseGuideHTML+'</div>':'');
   var purchaseContent=document.getElementById('purchaseContent');
-  if(purchaseContent)purchaseContent.innerHTML=buildAmazonLinksSection(shownSuggested);
+  if(purchaseContent)purchaseContent.innerHTML='';
   // Show footer CTA below supplement cards
   var ctaWrap=document.getElementById('suppStackCta');
   var hasCards=suppsHTML&&suppsHTML.indexOf('protocol-supp-card')>-1;
@@ -4269,28 +4313,45 @@ function showPdfLoading(show){
 function pdfDispositionName(filename){
   return filename.replace(/["\\]/g,'');
 }
-function downloadProtocolPdfBlob(pdfBlob){
+function openProtocolPdfPreviewBlob(pdfBlob,previewWindow){
   if(!pdfBlob||!pdfBlob.size){
     throw new Error('Generated PDF is empty');
   }
-  var file=pdfBlob.type==='application/pdf'
+  var blob=pdfBlob.type==='application/pdf'
     ? pdfBlob
     : new Blob([pdfBlob],{type:'application/pdf'});
+  var file;
+  try{
+    file=new File([blob],getPdfExportFileName(),{type:'application/pdf'});
+  }catch(e){
+    file=blob;
+  }
   if(file.size<1000){
     throw new Error('Generated PDF is too small to be valid');
   }
   var pdfUrl=URL.createObjectURL(file);
-  var a=document.createElement('a');
-  a.href=pdfUrl;
-  a.download=getPdfExportFileName();
-  a.rel='noopener';
-  a.style.display='none';
-  document.body.appendChild(a);
-  a.click();
+  var previewUrl=pdfUrl+'#'+encodeURIComponent(getPdfExportFileName());
+  var opened=false;
+  if(previewWindow&&!previewWindow.closed){
+    previewWindow.location.href=previewUrl;
+    opened=true;
+  }else{
+    var win=window.open(previewUrl,'_blank','noopener');
+    opened=!!win;
+  }
+  if(!opened){
+    var a=document.createElement('a');
+    a.href=previewUrl;
+    a.target='_blank';
+    a.rel='noopener';
+    a.style.display='none';
+    document.body.appendChild(a);
+    a.click();
+    if(a.parentNode)a.parentNode.removeChild(a);
+  }
   setTimeout(function(){
     URL.revokeObjectURL(pdfUrl);
-    if(a.parentNode)a.parentNode.removeChild(a);
-  },4000);
+  },60000);
 }
 function createPdfRenderTarget(source){
   var host=document.createElement('div');
@@ -4512,17 +4573,18 @@ function scheduleProtocolPdfGeneration(){
     });
   },350);
 }
-async function downloadPreparedProtocolPdf(){
+async function previewPreparedProtocolPdf(previewWindow){
   try{
     if(welmePdfBlob){
-      downloadProtocolPdfBlob(welmePdfBlob);
+      openProtocolPdfPreviewBlob(welmePdfBlob,previewWindow);
       return;
     }
     showPdfLoading(true);
     var blob=await startProtocolPdfGeneration();
-    downloadProtocolPdfBlob(blob);
+    openProtocolPdfPreviewBlob(blob,previewWindow);
   }catch(e){
     console.error('PDF export failed',e);
+    if(previewWindow&&!previewWindow.closed)previewWindow.close();
     alert('PDF export could not finish. Please try again.');
   }finally{
     showPdfLoading(false);
@@ -4633,7 +4695,9 @@ if (WELME_SHEET_URL) {
   } catch (e) {}
 }
 
-  downloadPreparedProtocolPdf();
+  var previewWindow=window.open('', '_blank');
+  if(previewWindow)previewWindow.opener=null;
+  previewPreparedProtocolPdf(previewWindow);
 }
 
 </script>
