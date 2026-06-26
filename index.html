@@ -61,8 +61,8 @@ src="https://www.facebook.com/tr?id=1028962489819655&ev=PageView&noscript=1"
   --ok:#0DA66B;--warn:#B7791F;--risk:#C0453B;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html{background:var(--page)}
-body{background:var(--page);color:var(--text);
+html{background:var(--bg)}
+body{background:var(--bg);color:var(--text);
   font-family:'Hanken Grotesk',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
   min-height:100vh;overflow-x:hidden;font-size:16px}
 .wrap{max-width:448px;min-height:100vh;margin:0 auto;padding:0 18px 100px;background:var(--bg);
@@ -4484,15 +4484,7 @@ async function openProtocolPdfPreviewBlob(pdfBlob,previewWindow){
     opened=!!win;
   }
   if(!opened){
-    var a=document.createElement('a');
-    a.href=pdfUrl;
-    a.target='_blank';
-    a.download=getPdfExportFileName();
-    a.rel='noopener';
-    a.style.display='none';
-    document.body.appendChild(a);
-    a.click();
-    if(a.parentNode)a.parentNode.removeChild(a);
+    alert('Your PDF is ready. Please allow pop-ups for Welme to open the protocol preview.');
   }
   if(revokeDelay){
     setTimeout(function(){
