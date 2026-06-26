@@ -61,12 +61,12 @@ src="https://www.facebook.com/tr?id=1028962489819655&ev=PageView&noscript=1"
   --ok:#0DA66B;--warn:#B7791F;--risk:#C0453B;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html{background:var(--bg)}
-body{background:var(--bg);color:var(--text);
+html,#root,#appRoot{background:#F6F7F3}
+body{background:#F6F7F3;color:var(--text);
   font-family:'Hanken Grotesk',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
   min-height:100vh;overflow-x:hidden;font-size:16px}
 .wrap{max-width:448px;min-height:100vh;margin:0 auto;padding:0 18px 100px;background:var(--bg);
-  box-shadow:0 0 90px rgba(17,35,27,.07)}
+  box-shadow:none}
 .wrap:has(#introScreen.on){padding-bottom:32px}
 
 /* ── LOGO ── */
@@ -4407,46 +4407,10 @@ function getPdfExportFileName(){
 }
 var welmePdfBlob=null;
 var welmePdfPromise=null;
-var welmePdfServiceWorkerPromise=null;
+var welmePdfObjectUrl=null;
 function showPdfLoading(show){
   var el=document.getElementById('pdfLoadingNote');
   if(el)el.classList.toggle('show',!!show);
-}
-function pdfDispositionName(filename){
-  return filename.replace(/["\\]/g,'');
-}
-function registerWelmePdfServiceWorker(){
-  if(welmePdfServiceWorkerPromise)return welmePdfServiceWorkerPromise;
-  if(!('serviceWorker' in navigator)||!window.isSecureContext||!/^https?:$/.test(location.protocol)){
-    return Promise.resolve(null);
-  }
-  welmePdfServiceWorkerPromise=navigator.serviceWorker.register('pdf-sw.js')
-    .then(function(){return navigator.serviceWorker.ready;})
-    .then(function(reg){return reg;})
-    .catch(function(err){
-      console.warn('PDF filename service worker unavailable',err);
-      return null;
-    });
-  return welmePdfServiceWorkerPromise;
-}
-async function createNamedPdfPreviewUrl(file){
-  var filename=getPdfExportFileName();
-  var reg=await registerWelmePdfServiceWorker();
-  if(!reg||!window.caches)return null;
-  var safeName=encodeURIComponent(filename);
-  var pdfUrl=new URL('/__welme_pdf/'+safeName,location.origin);
-  var cache=await caches.open('welme-pdf-cache-v1');
-  var pdfResponse=new Response(file,{
-    status:200,
-    headers:{
-      'Content-Type':'application/pdf',
-      'Content-Disposition':'inline; filename="'+pdfDispositionName(filename)+'"; filename*=UTF-8\'\''+encodeURIComponent(filename),
-      'Cache-Control':'public, max-age=3600'
-    }
-  });
-  await cache.put(pdfUrl.toString(),pdfResponse.clone());
-  await cache.put(new URL(pdfUrl.pathname,location.origin).toString(),pdfResponse.clone());
-  return pdfUrl.toString();
 }
 async function openProtocolPdfPreviewBlob(pdfBlob,previewWindow){
   if(!pdfBlob||!pdfBlob.size){
@@ -4464,17 +4428,18 @@ async function openProtocolPdfPreviewBlob(pdfBlob,previewWindow){
   if(file.size<1000){
     throw new Error('Generated PDF is too small to be valid');
   }
-  var pdfUrl=null;
-  var revokeDelay=0;
-  try{
-    pdfUrl=await createNamedPdfPreviewUrl(file);
-  }catch(e){
-    console.warn('Named PDF preview URL unavailable',e);
+  if(welmePdfObjectUrl){
+    URL.revokeObjectURL(welmePdfObjectUrl);
+    welmePdfObjectUrl=null;
   }
-  if(!pdfUrl){
-    pdfUrl=URL.createObjectURL(file);
-    revokeDelay=0;
-  }
+  var pdfUrl=URL.createObjectURL(file);
+  welmePdfObjectUrl=pdfUrl;
+  console.log('WELME PDF PREVIEW', {
+    filename:getPdfExportFileName(),
+    type:file.type||blob.type,
+    size:file.size,
+    urlType:pdfUrl.indexOf('blob:')===0?'blob':'other'
+  });
   var opened=false;
   if(previewWindow&&!previewWindow.closed){
     previewWindow.location.href=pdfUrl;
@@ -4485,11 +4450,6 @@ async function openProtocolPdfPreviewBlob(pdfBlob,previewWindow){
   }
   if(!opened){
     alert('Your PDF is ready. Please allow pop-ups for Welme to open the protocol preview.');
-  }
-  if(revokeDelay){
-    setTimeout(function(){
-      URL.revokeObjectURL(pdfUrl);
-    },revokeDelay);
   }
 }
 function createPdfRenderTarget(source){
@@ -4757,7 +4717,6 @@ function startProtocolPdfGeneration(){
 function scheduleProtocolPdfGeneration(){
   welmePdfBlob=null;
   welmePdfPromise=null;
-  registerWelmePdfServiceWorker();
   setTimeout(function(){
     startProtocolPdfGeneration().catch(function(err){
       console.warn('Background PDF generation failed',err);
