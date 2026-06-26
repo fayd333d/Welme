@@ -4418,6 +4418,7 @@ function setProtocolPdfMetadata(pdf){
 var welmePdfBlob=null;
 var welmePdfPromise=null;
 var welmePdfObjectUrl=null;
+var welmePdfBuiltForEmail=null;
 function showPdfLoading(show){
   var el=document.getElementById('pdfLoadingNote');
   if(el)el.classList.toggle('show',!!show);
@@ -4639,6 +4640,7 @@ async function buildProtocolPdfBlob(){
     var jsPDF=window.jspdf.jsPDF;
     var pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a4',compress:true});
     setProtocolPdfMetadata(pdf);
+    welmePdfBuiltForEmail=(window._welmeProtocolEmail||localStorage.getItem('welmeUserEmail')||'').trim();
     var pageW=pdf.internal.pageSize.getWidth();
     var pageH=pdf.internal.pageSize.getHeight();
     var marginX=10;
@@ -4736,11 +4738,17 @@ function startProtocolPdfGeneration(){
 function scheduleProtocolPdfGeneration(){
   welmePdfBlob=null;
   welmePdfPromise=null;
-  setTimeout(function(){
+  welmePdfBuiltForEmail=null;
+  var start=function(){
     startProtocolPdfGeneration().catch(function(err){
       console.warn('Background PDF generation failed',err);
     });
-  },350);
+  };
+  if('requestIdleCallback' in window){
+    requestIdleCallback(start,{timeout:250});
+  }else{
+    setTimeout(start,80);
+  }
 }
 async function previewPreparedProtocolPdf(previewWindow){
   try{
@@ -4858,8 +4866,6 @@ async function submitEmailAndDownload(){
   }
   localStorage.setItem('welmeUserEmail',email);
   window._welmeProtocolEmail=email;
-  welmePdfBlob=null;
-  welmePdfPromise=null;
   setProtocolSubmitLoading(true);
 
   // Send email + protocol to Google Sheets (fire-and-forget)
