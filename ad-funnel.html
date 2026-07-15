@@ -32,8 +32,8 @@ src="https://www.facebook.com/tr?id=1028962489819655&ev=PageView&noscript=1"
 
 <link rel="icon" href="/favicon.ico" type="image/x-icon">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>welme — Build your personalised supplement protocol</title>
-<meta name="description" content="Answer a short quiz and get a personalised supplement protocol — morning and night sachets built around your goals, body and routine.">
+<title>welme – Build your personalised supplement protocol</title>
+<meta name="description" content="Answer a short quiz and get a personalised supplement protocol – morning and night sachets built around your goals, body and routine.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Domine:wght@400;500;600;700&family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -224,7 +224,7 @@ var PROTOCOL = {
 };
 
 var CATALOG = {
-  'Vitamin D3':{time:'m',reason:'Immune, bone and mood support — the most common deficiency.'},
+  'Vitamin D3':{time:'m',reason:'Immune, bone and mood support – the most common deficiency.'},
   'Omega-3':{time:'m',reason:'EPA/DHA for heart, brain and joint support.'},
   'Magnesium':{time:'n',reason:'Sleep, muscle relaxation and 300+ body processes.'},
   'CoQ10':{time:'m',reason:'Cellular energy and heart support; declines with age.'},
@@ -271,19 +271,19 @@ var CLAR_SUPPS = {
 };
 
 var SUGG = {
-  sleep:{text:'Magnesium and glycine before bed are shown to shorten time-to-sleep and deepen sleep in clinical studies.',hack:'Keep the bedroom cool (18–19°C / 65°F) and stop screens 45 minutes before bed — light and temperature are the two biggest sleep levers.'},
-  energy:{text:'CoQ10 and B-vitamins are linked to reduced fatigue, especially past 40 when natural CoQ10 production declines.',hack:'Get 10 minutes of daylight within an hour of waking and keep caffeine before noon — both measurably improve daytime energy.'},
+  sleep:{text:'Magnesium and glycine before bed are shown to shorten time-to-sleep and deepen sleep in clinical studies.',hack:'Keep the bedroom cool (18–19°C / 65°F) and stop screens 45 minutes before bed – light and temperature are the two biggest sleep levers.'},
+  energy:{text:'CoQ10 and B-vitamins are linked to reduced fatigue, especially past 40 when natural CoQ10 production declines.',hack:'Get 10 minutes of daylight within an hour of waking and keep caffeine before noon – both measurably improve daytime energy.'},
   heart:{text:'Omega-3 (EPA/DHA) has some of the strongest evidence in nutrition for triglyceride and blood-pressure support.',hack:'A brisk 30-minute walk five days a week lowers blood pressure about as much as some first-line medications.'},
   brain:{text:'DHA and B12 status track with cognitive performance; supplementation helps most when dietary intake is low.',hack:'Two servings of oily fish weekly plus regular aerobic exercise is the best-evidenced combo for long-term brain health.'},
-  joints:{text:'Curcumin and collagen peptides show measurable reductions in joint discomfort in trials over 8–12 weeks.',hack:'Strength training twice a week protects joints better than rest — stronger muscles absorb load your joints would take.'},
-  longevity:{text:'Omega-3, vitamin D and magnesium are the best-evidenced everyday nutrients tied to healthy-aging markers.',hack:'Aim for 7,000–8,000 steps a day and protein at every meal — both are strongly linked to healthspan in large studies.'},
-  digestion:{text:'Probiotics and fiber support a balanced gut microbiome and more regular, comfortable digestion.',hack:'Eat 30+ different plants a week and a fermented food most days — fibre diversity is the biggest lever for gut health.'},
-  stress:{text:'Ashwagandha and magnesium are studied for a calmer stress response and better recovery under load.',hack:'Try five minutes of slow breathing (4s in, 6s out) daily — it shifts your nervous system out of fight-or-flight.'}
+  joints:{text:'Curcumin and collagen peptides show measurable reductions in joint discomfort in trials over 8–12 weeks.',hack:'Strength training twice a week protects joints better than rest – stronger muscles absorb load your joints would take.'},
+  longevity:{text:'Omega-3, vitamin D and magnesium are the best-evidenced everyday nutrients tied to healthy-aging markers.',hack:'Aim for 7,000–8,000 steps a day and protein at every meal – both are strongly linked to healthspan in large studies.'},
+  digestion:{text:'Probiotics and fiber support a balanced gut microbiome and more regular, comfortable digestion.',hack:'Eat 30+ different plants a week and a fermented food most days – fibre diversity is the biggest lever for gut health.'},
+  stress:{text:'Ashwagandha and magnesium are studied for a calmer stress response and better recovery under load.',hack:'Try five minutes of slow breathing (4s in, 6s out) daily – it shifts your nervous system out of fight-or-flight.'}
 };
 
 var NOTE = {
   'No gallbladder':'We favour emulsified or food-based fat-soluble nutrients (D3, omega-3) that absorb well without a gallbladder.',
-  'On blood thinners':'Omega-3 and vitamin E are kept at conservative doses — confirm with your doctor.',
+  'On blood thinners':'Omega-3 and vitamin E are kept at conservative doses – confirm with your doctor.',
   'Pregnant or breastfeeding':'Folate is prioritised and some herbs excluded; your doctor should confirm the final plan.',
   'Kidney disease':'Mineral doses such as magnesium are kept conservative.',
   'Acid reflux / GERD':'Gentler forms taken with food to reduce irritation.',
@@ -371,7 +371,7 @@ function addChip(listKey, draftKey){
   set(patch);
 }
 
-/* linked imperial/metric switch — toggling weight OR height switches BOTH systems and converts values */
+/* linked imperial/metric switch – toggling weight OR height switches BOTH systems and converts values */
 function toImperial(){
   var patch = { wUnit:'lb', hUnit:'ft' };
   if(S.wUnit === 'kg'){ var kg = parseFloat(S.weight); if(kg) patch.weight = String(Math.round(kg/0.4536)); }
@@ -390,11 +390,11 @@ function buildResults(){
   var age = parseInt(S.age)||0;
   var wv = parseFloat(S.weight)||0;
   var bmiV = bmi();
-  var bmiCat = bmiV == null ? '—' : bmiV < 18.5 ? 'underweight' : bmiV < 25 ? 'healthy' : bmiV < 30 ? 'elevated' : 'high';
+  var bmiCat = bmiV == null ? '–' : bmiV < 18.5 ? 'underweight' : bmiV < 25 ? 'healthy' : bmiV < 30 ? 'elevated' : 'high';
   var heightLabel = S.hUnit === 'cm'
-    ? ((parseFloat(S.hCm)||0) ? Math.round(parseFloat(S.hCm)) + ' cm' : '—')
-    : ((parseFloat(S.hFt)||0) ? (parseFloat(S.hFt)||0) + '′' + (parseFloat(S.hIn)||0) + '″' : '—');
-  var weightLabel = wv ? S.weight + ' ' + S.wUnit : '—';
+    ? ((parseFloat(S.hCm)||0) ? Math.round(parseFloat(S.hCm)) + ' cm' : '–')
+    : ((parseFloat(S.hFt)||0) ? (parseFloat(S.hFt)||0) + '′' + (parseFloat(S.hIn)||0) + '″' : '–');
+  var weightLabel = wv ? S.weight + ' ' + S.wUnit : '–';
 
   /* daily nutrition targets (Mifflin-St Jeor estimate) */
   var kgT = wv; if(S.wUnit === 'lb') kgT = kgT*0.4536;
@@ -415,14 +415,21 @@ function buildResults(){
   var primaryG = null;
   GOALS.forEach(function(g){ if(g.id === primaryGoal) primaryG = g; });
   var protoIcon = primaryG ? ic(primaryG.paths, 116, 1.5) : '';
+  /* hero title: selected goal names in the order they were picked, joined with + */
+  var heroTitle = S.goals.map(function(id){
+    var found = null;
+    GOALS.forEach(function(g){ if(g.id === id) found = g; });
+    return found ? found.title : null;
+  }).filter(Boolean).join(' + ');
+  if(!heroTitle) heroTitle = proto.title;
 
   /* review copy */
   var selGoals = GOALS.filter(function(g){ return S.goals.indexOf(g.id) !== -1; });
   var goalTitlesLower = selGoals.map(function(g){ return g.title.toLowerCase(); });
   var allConds = S.conditions.concat(S.customConditions);
-  var review = 'At ' + (age||'—') + ', with a BMI of ' + (bmiV ? bmiV.toFixed(1) : '—') + ' (' + bmiCat + '), your profile is a solid starting point. ';
+  var review = 'At ' + (age||'–') + ', with a BMI of ' + (bmiV ? bmiV.toFixed(1) : '–') + ' (' + bmiCat + '), your profile is a solid starting point. ';
   if(bmiCat === 'healthy') review += 'Your body metrics sit in the healthy range, so the focus is maintaining them. ';
-  else if(bmiCat === 'elevated' || bmiCat === 'high') review += 'Your BMI is above the healthy range, which adds cardiovascular and joint load — steady daily habits matter most. ';
+  else if(bmiCat === 'elevated' || bmiCat === 'high') review += 'Your BMI is above the healthy range, which adds cardiovascular and joint load – steady daily habits matter most. ';
   else if(bmiCat === 'underweight') review += 'Your BMI is below the healthy range, so adequate nutrient intake is a priority. ';
   review += goalTitlesLower.length ? 'Your protocol targets ' + goalTitlesLower.slice(0,3).join(', ') + (goalTitlesLower.length > 3 ? ' and more' : '') + '.' : 'Your protocol focuses on prevention and daily balance.';
 
@@ -488,12 +495,12 @@ function buildResults(){
   var notes = allConds.map(function(c){ return NOTE[c]; }).filter(Boolean);
 
   return {
-    proto: proto, protoIcon: protoIcon,
+    proto: proto, heroTitle: heroTitle, protoIcon: protoIcon,
     summaryChips: summaryChips, review: review,
-    age: age || '—', bmi: bmiV ? bmiV.toFixed(1) : '—', bmiCat: bmiCat,
+    age: age || '–', bmi: bmiV ? bmiV.toFixed(1) : '–', bmiCat: bmiCat,
     heightLabel: heightLabel, weightLabel: weightLabel,
     hasNutrition: kcal > 0,
-    kcal: kcal || '—', protein: protein ? protein + 'g' : '—', fat: fat ? fat + 'g' : '—', carbs: carbs ? carbs + 'g' : '—',
+    kcal: kcal || '–', protein: protein ? protein + 'g' : '–', fat: fat ? fat + 'g' : '–', carbs: carbs ? carbs + 'g' : '–',
     fullProtocol: fullProtocol,
     recNew: protocol.filter(function(p){ return p.isNew; }),
     recTake: fullProtocol.filter(function(p){ return !p.isNew; }),
@@ -538,7 +545,7 @@ function goalsScreen(){
     + '<div style="background:linear-gradient(180deg,#F7F2E9,#FFFFFF);padding:32px 22px 6px;text-align:center">'
     +   '<div class="eyebrow">YOUR PERSONALISED PROTOCOL</div>'
     +   '<h1 style="font-family:\'Domine\',serif;font-weight:700;font-size:30px;line-height:1.12;margin:12px 0 0;color:#1E3B34;text-wrap:balance">What would you like to improve?</h1>'
-    +   '<p style="margin:12px auto 0;max-width:330px;font-size:15.5px;line-height:1.55;color:#4A574F">Pick the areas that matter to you — your supplement protocol is built around them.&nbsp;</p>'
+    +   '<p style="margin:12px auto 0;max-width:330px;font-size:15.5px;line-height:1.55;color:#4A574F">Pick the areas that matter to you – your supplement protocol is built around them.&nbsp;</p>'
     +   '<div style="display:inline-flex;align-items:center;gap:9px;margin-top:18px;background:#EAF3EE;border-radius:999px;padding:8px 16px">'
     +     '<span style="display:inline-flex;align-items:center;gap:1px;font-size:13px;line-height:1;color:#C9A542">★★★★<span style="position:relative;display:inline-block;color:#D9CBA6">★<span style="position:absolute;left:0;top:0;width:50%;overflow:hidden;color:#C9A542">★</span></span></span>'
     +     '<span style="font-size:13px;font-weight:700;color:#14655B">10,000+ protocols built</span>'
@@ -563,7 +570,7 @@ function clarifyScreen(){
   return '<div style="padding:28px 22px 0">'
     + '<div class="eyebrow">YOUR GOALS, IN DETAIL</div>'
     + '<h2 class="q-title">What’s going on specifically?</h2>'
-    + '<p class="q-sub" style="margin-bottom:4px">Tap anything that sounds like you. This sharpens your protocol — skip anything that doesn’t apply.</p>'
+    + '<p class="q-sub" style="margin-bottom:4px">Tap anything that sounds like you. This sharpens your protocol – skip anything that doesn’t apply.</p>'
     + '<div style="display:flex;flex-direction:column;gap:22px;margin-top:20px">' + sections + '</div>'
     + '</div>';
 }
@@ -586,7 +593,7 @@ function aboutScreen(){
   return '<div style="padding:28px 22px 0">'
     + '<div class="eyebrow">ABOUT YOU</div>'
     + '<h2 class="q-title">A couple of basics</h2>'
-    + '<p class="q-sub" style="margin-bottom:24px">Age, sex and body size change which nutrients and doses are right for you — for example iron, calcium, B12 and omega-3 needs.</p>'
+    + '<p class="q-sub" style="margin-bottom:24px">Age, sex and body size change which nutrients and doses are right for you – for example iron, calcium, B12 and omega-3 needs.</p>'
     + '<div style="display:flex;flex-direction:column;gap:20px">'
     +   '<div><div class="field-label">AGE</div>' + numInput('inAge', S.age, 3, '––', 'YEARS') + '</div>'
     +   '<div><div class="field-label">BIOLOGICAL SEX</div><div style="display:flex;gap:8px">' + sexBtns + '</div></div>'
@@ -615,10 +622,10 @@ function suppsScreen(){
   return '<div style="padding:28px 22px 0">'
     + '<div class="eyebrow">YOUR ROUTINE</div>'
     + '<h2 class="q-title">What do you already take?</h2>'
-    + '<p class="q-sub" style="margin-bottom:18px">Vitamins, minerals, oils, herbal extracts — anything. We fold what works into one pack and flag any overlaps.</p>'
+    + '<p class="q-sub" style="margin-bottom:18px">Vitamins, minerals, oils, herbal extracts – anything. We fold what works into one pack and flag any overlaps.</p>'
     + '<div style="display:flex;flex-wrap:wrap;gap:9px">' + chips + '</div>'
     + '<div class="add-row"><input type="text" id="inSuppDraft" value="' + esc(S.suppDraft) + '" placeholder="Add another…"><button data-act="add-supp">Add</button></div>'
-    + '<p style="margin:14px 0 0;font-size:13px;color:#7A867E">Take nothing yet? Just continue — we’ll start from scratch.</p>'
+    + '<p style="margin:14px 0 0;font-size:13px;color:#7A867E">Take nothing yet? Just continue – we’ll start from scratch.</p>'
     + '</div>';
 }
 
@@ -629,10 +636,10 @@ function condScreen(){
   return '<div style="padding:28px 22px 0">'
     + '<div class="eyebrow">YOUR HEALTH</div>'
     + '<h2 class="q-title">Anything we should know?</h2>'
-    + '<p class="q-sub" style="margin-bottom:18px">This lets us avoid interactions and pick forms that suit your body — for example gentle formats if you have no gallbladder.</p>'
+    + '<p class="q-sub" style="margin-bottom:18px">This lets us avoid interactions and pick forms that suit your body – for example gentle formats if you have no gallbladder.</p>'
     + '<div style="display:flex;flex-wrap:wrap;gap:9px">' + chips + '</div>'
     + '<div class="add-row"><input type="text" id="inCondDraft" value="' + esc(S.condDraft) + '" placeholder="Add another…"><button data-act="add-cond">Add</button></div>'
-    + '<p style="margin:14px 0 0;font-size:12.5px;line-height:1.5;color:#7A867E">Nothing applies? Just continue. This is an informational protocol, not medical advice — always check with your doctor.</p>'
+    + '<p style="margin:14px 0 0;font-size:12.5px;line-height:1.5;color:#7A867E">Nothing applies? Just continue. This is an informational protocol, not medical advice – always check with your doctor.</p>'
     + '</div>';
 }
 
@@ -678,15 +685,13 @@ function finishScreen(){
 
   /* protocol lead */
   h += '<div style="padding:22px 22px 34px;background:#F7F2E9">'
-    + '<div style="position:relative;overflow:hidden;border-radius:24px;padding:26px 22px 24px;min-height:200px;display:flex;flex-direction:column;justify-content:flex-end;background:linear-gradient(152deg,#2E9A72 0%,#17705F 46%,#123F39 100%);box-shadow:0 26px 50px -26px rgba(15,74,66,.7);animation:heroIn .55s cubic-bezier(.2,.8,.2,1) both">'
+    + '<div style="position:relative;overflow:hidden;border-radius:24px;padding:24px 22px 26px;min-height:200px;display:flex;flex-direction:column;justify-content:space-between;background:linear-gradient(152deg,#2E9A72 0%,#17705F 46%,#123F39 100%);box-shadow:0 26px 50px -26px rgba(15,74,66,.7);animation:heroIn .55s cubic-bezier(.2,.8,.2,1) both">'
     + '<div style="position:absolute;inset:0;background:radial-gradient(130% 90% at 82% -10%,rgba(255,255,255,.20),transparent 58%);pointer-events:none"></div>'
     + '<div style="position:absolute;top:0;bottom:0;width:36%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.14),transparent);animation:heroSheen 5.5s ease-in-out infinite;pointer-events:none"></div>'
     + '<div style="position:absolute;top:16px;right:14px;color:rgba(255,255,255,.4);pointer-events:none">' + R.protoIcon + '</div>'
-    + '<div style="position:relative">'
-    + '<div style="font-size:11.5px;font-weight:800;letter-spacing:.18em;color:rgba(255,255,255,.72)">YOUR PERSONALISED PROTOCOL</div>'
-    + '<h2 style="font-family:\'Domine\',serif;font-weight:700;font-size:32px;line-height:1.06;margin:9px 0 0;color:#FFFFFF;text-wrap:balance">' + esc(R.proto.title) + '</h2>'
-    + '<p style="margin:9px 0 0;font-size:15px;line-height:1.45;color:rgba(240,247,243,.9);max-width:290px">' + esc(R.proto.sub) + '</p>'
-    + '</div></div>';
+    + '<div style="position:relative;font-size:11.5px;font-weight:800;letter-spacing:.18em;color:rgba(255,255,255,.72)">YOUR PERSONALISED PROTOCOL</div>'
+    + '<h2 style="position:relative;font-family:\'Domine\',serif;font-weight:700;font-size:32px;line-height:1.06;margin:18px 0 0;color:#FFFFFF;text-wrap:balance;max-width:80%">' + esc(R.heroTitle) + '</h2>'
+    + '</div>';
 
   /* what you told us */
   h += secHead('What you told us')
@@ -711,7 +716,7 @@ function finishScreen(){
   /* daily nutrition targets */
   if(R.hasNutrition){
     h += secHead('Daily nutrition targets')
-      + '<p style="margin:10px 0 0;padding-left:17px;font-size:14px;line-height:1.5;color:#4A574F">An estimate from your age, sex and body size — a baseline to eat and dose around.</p>'
+      + '<p style="margin:10px 0 0;padding-left:17px;font-size:14px;line-height:1.5;color:#4A574F">An estimate from your age, sex and body size – a baseline to eat and dose around.</p>'
       + '<div style="margin-top:14px;background:#1E3B34;border-radius:18px;padding:20px 18px">'
       + '<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;text-align:left">'
       + '<div><div style="font-family:\'Domine\',serif;font-weight:700;font-size:23px;color:#F7F2E9">' + R.kcal + '</div><div style="font-size:11px;letter-spacing:.06em;color:#BFD8CF;margin-top:2px">KCAL</div></div>'
@@ -762,7 +767,7 @@ function finishScreen(){
       + '</div>';
   }
 
-  h += '<p style="margin:16px 0 0;font-size:12.5px;line-height:1.5;color:#7A867E">Informational only — not a medical prescription. Our team reviews every plan and you can adjust it any time.</p>'
+  h += '<p style="margin:16px 0 0;font-size:12.5px;line-height:1.5;color:#7A867E">Informational only – not a medical prescription. Our team reviews every plan and you can adjust it any time.</p>'
     + '</div>';
 
   /* a smarter solution */
@@ -770,7 +775,7 @@ function finishScreen(){
     + '<div style="text-align:center">'
     + '<div style="font-size:12px;font-weight:800;letter-spacing:.16em;color:#C9A542">A SMARTER SOLUTION</div>'
     + '<h3 style="font-family:\'Domine\',serif;font-weight:700;font-size:27px;line-height:1.15;margin:10px 0 6px;color:#F7F2E9;text-wrap:balance">Your personalised supplement plan delivered to your home</h3>'
-    + '<p style="margin:0 auto;max-width:320px;font-size:15px;line-height:1.55;color:#C4D2CA">Everything you take now, plus what your goals call for — in one daily pack.</p>'
+    + '<p style="margin:0 auto;max-width:320px;font-size:15px;line-height:1.55;color:#C4D2CA">Everything you take now, plus what your goals call for – in one daily pack.</p>'
     + '</div>'
 
     /* your daily plan */
@@ -792,7 +797,7 @@ function finishScreen(){
     + '<div style="margin-top:30px">'
     + '<div style="text-align:center"><div style="font-size:11px;font-weight:800;letter-spacing:.14em;color:#C9A542">WHAT’S INSIDE</div></div>'
     + '<img src="assets/opt/m-box-dispensing.png" alt="welme box with 28 daily packs" style="display:block;width:56%;max-width:210px;height:auto;margin:14px auto 0">'
-    + '<p style="margin:12px auto 0;max-width:260px;text-align:center;font-size:13.5px;line-height:1.5;color:#C4D2CA">28 daily cards — one for each day of the month</p>'
+    + '<p style="margin:12px auto 0;max-width:260px;text-align:center;font-size:13.5px;line-height:1.5;color:#C4D2CA">28 daily cards – one for each day of the month</p>'
     + '<div style="height:1px;background:rgba(196,210,202,.16);margin:24px 4px"></div>'
     + '<div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px">'
     + '<div style="text-align:center"><img src="assets/opt/m-sachet-morning-crop.png" alt="Morning sachet with supplements" style="width:100%;max-width:130px;height:auto;margin:0 auto;border-radius:10px"><div style="font-size:12.5px;font-weight:700;color:#F7F2E9;margin-top:6px">Morning</div></div>'
@@ -803,15 +808,15 @@ function finishScreen(){
     + '</div>'
     + '<div style="text-align:center"><img src="assets/opt/m-sachet-night-crop.png" alt="Night sachet with supplements" style="width:100%;max-width:130px;height:auto;margin:0 auto;border-radius:10px"><div style="font-size:12.5px;font-weight:700;color:#F7F2E9;margin-top:6px">Night</div></div>'
     + '</div>'
-    + '<p style="margin:20px auto 0;max-width:280px;text-align:center;font-size:13.5px;line-height:1.5;color:#C4D2CA">Each card holds two sachets — a light one for the morning, a dark one for the night.</p>'
+    + '<p style="margin:20px auto 0;max-width:280px;text-align:center;font-size:13.5px;line-height:1.5;color:#C4D2CA">Each card holds two sachets – a light one for the morning, a dark one for the night.</p>'
     + '</div>'
 
     /* how it works */
     + '<div style="display:flex;flex-direction:column;gap:12px;margin-top:26px">'
-    + '<div class="how-step"><span class="how-num">1</span><p>Your box arrives with 28 daily packs — four weeks of your plan.</p></div>'
+    + '<div class="how-step"><span class="how-num">1</span><p>Your box arrives with 28 daily packs – four weeks of your plan.</p></div>'
     + '<div class="how-step"><span class="how-num">2</span><p>Tear off one card a day: morning sachet with breakfast, night sachet before bed.</p></div>'
-    + '<div class="how-step"><span class="how-num">3</span><p>A fresh box arrives every month — free delivery, adjust any time.</p></div>'
-    + '<div class="how-step"><span class="how-num">4</span><p>The price is set by the supplements in your plan — starting from $1 a day.</p></div>'
+    + '<div class="how-step"><span class="how-num">3</span><p>A fresh box arrives every month – free delivery, adjust any time.</p></div>'
+    + '<div class="how-step"><span class="how-num">4</span><p>The price is set by the supplements in your plan – starting from $1 a day.</p></div>'
     + '</div>';
 
   /* email capture */
@@ -819,10 +824,10 @@ function finishScreen(){
     var validEmail = /.+@.+\..+/.test(S.email);
     h += '<div style="margin-top:30px;background:#F7F2E9;border-radius:20px;padding:24px 20px">'
       + '<div style="font-family:\'Domine\',serif;font-weight:700;font-size:22px;color:#1E3B34">Get your box</div>'
-      + '<p style="margin:6px 0 16px;font-size:14px;line-height:1.5;color:#4A574F">Enter your email — we’ll finalise doses, check interactions and arrange your first box.</p>'
+      + '<p style="margin:6px 0 16px;font-size:14px;line-height:1.5;color:#4A574F">Enter your email – we’ll finalise doses, check interactions and arrange your first box.</p>'
       + '<input type="email" id="inEmail" value="' + esc(S.email) + '" placeholder="you@example.com" style="width:100%;border:1.5px solid rgba(20,101,91,.25);border-radius:14px;padding:16px 18px;font-size:16px;background:#fff;color:#1E3B34">'
       + '<button id="btnEmail" data-act="submit-email"' + (validEmail ? '' : ' disabled') + ' style="width:100%;margin-top:12px;border:none;background:' + (validEmail ? '#14655B' : '#A9BAB3') + ';color:#fff;border-radius:14px;padding:17px;font-size:17px;font-weight:800;cursor:pointer">Get My Box →</button>'
-      + '<p style="margin:12px 0 0;text-align:center;font-size:12px;color:#7A867E">No spam — one email from our team, that’s it.</p>'
+      + '<p style="margin:12px 0 0;text-align:center;font-size:12px;color:#7A867E">No spam – one email from our team, that’s it.</p>'
       + '</div>';
   } else {
     h += '<div style="margin-top:30px;background:#F7F2E9;border-radius:20px;padding:26px 20px;text-align:center">'
