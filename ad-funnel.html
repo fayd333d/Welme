@@ -415,13 +415,14 @@ function buildResults(){
   var primaryG = null;
   GOALS.forEach(function(g){ if(g.id === primaryGoal) primaryG = g; });
   var protoIcon = primaryG ? ic(primaryG.paths, 116, 1.5) : '';
-  /* hero title: selected goal names in the order they were picked, joined with + */
-  var heroTitle = S.goals.map(function(id){
+  /* hero title: selected goal names in the order they were picked, one per line */
+  var heroLines = S.goals.map(function(id){
     var found = null;
     GOALS.forEach(function(g){ if(g.id === id) found = g; });
     return found ? found.title : null;
-  }).filter(Boolean).join(' + ');
-  if(!heroTitle) heroTitle = proto.title;
+  }).filter(Boolean);
+  if(!heroLines.length) heroLines = [proto.title];
+  var heroTitleHtml = heroLines.map(function(t){ return esc(t); }).join('<br>');
 
   /* review copy */
   var selGoals = GOALS.filter(function(g){ return S.goals.indexOf(g.id) !== -1; });
@@ -495,7 +496,7 @@ function buildResults(){
   var notes = allConds.map(function(c){ return NOTE[c]; }).filter(Boolean);
 
   return {
-    proto: proto, heroTitle: heroTitle, protoIcon: protoIcon,
+    proto: proto, heroTitleHtml: heroTitleHtml, protoIcon: protoIcon,
     summaryChips: summaryChips, review: review,
     age: age || '–', bmi: bmiV ? bmiV.toFixed(1) : '–', bmiCat: bmiCat,
     heightLabel: heightLabel, weightLabel: weightLabel,
@@ -690,7 +691,7 @@ function finishScreen(){
     + '<div style="position:absolute;top:0;bottom:0;width:36%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.14),transparent);animation:heroSheen 5.5s ease-in-out infinite;pointer-events:none"></div>'
     + '<div style="position:absolute;top:16px;right:14px;color:rgba(255,255,255,.4);pointer-events:none">' + R.protoIcon + '</div>'
     + '<div style="position:relative;font-size:11.5px;font-weight:800;letter-spacing:.18em;color:rgba(255,255,255,.72)">YOUR PERSONALISED PROTOCOL</div>'
-    + '<h2 style="position:relative;font-family:\'Domine\',serif;font-weight:700;font-size:32px;line-height:1.06;margin:18px 0 0;color:#FFFFFF;text-wrap:balance;max-width:80%">' + esc(R.heroTitle) + '</h2>'
+    + '<h2 style="position:relative;font-family:\'Domine\',serif;font-weight:700;font-size:25px;line-height:1.14;margin:14px 0 0;color:#FFFFFF;max-width:88%">' + R.heroTitleHtml + '</h2>'
     + '</div>';
 
   /* what you told us */
