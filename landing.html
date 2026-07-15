@@ -14,9 +14,9 @@
   img{display:block}
   details summary::-webkit-details-marker{display:none}
   @keyframes m-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-  @keyframes pillFloatA{0%,100%{transform:translate(0,0) rotate(0deg)}50%{transform:translate(3px,-6px) rotate(4deg)}}
-  @keyframes pillFloatB{0%,100%{transform:translate(0,0) rotate(0deg)}50%{transform:translate(-4px,-5px) rotate(-5deg)}}
-  @keyframes pillFloatC{0%,100%{transform:translate(0,0) rotate(0deg)}50%{transform:translate(2px,5px) rotate(3deg)}}
+  @keyframes pillFloatA{0%,100%{transform:translate(0,0) rotate(0deg)}25%{transform:translate(11px,-14px) rotate(9deg)}50%{transform:translate(5px,-22px) rotate(-5deg)}75%{transform:translate(-9px,-10px) rotate(7deg)}}
+  @keyframes pillFloatB{0%,100%{transform:translate(0,0) rotate(0deg)}25%{transform:translate(-14px,-9px) rotate(-10deg)}50%{transform:translate(-7px,-19px) rotate(6deg)}75%{transform:translate(9px,-12px) rotate(-7deg)}}
+  @keyframes pillFloatC{0%,100%{transform:translate(0,0) rotate(0deg)}25%{transform:translate(10px,12px) rotate(8deg)}50%{transform:translate(17px,-3px) rotate(-6deg)}75%{transform:translate(7px,-11px) rotate(10deg)}}
   .btn-primary{background:#14655B;color:#fff;text-decoration:none;font-weight:700}
   .btn-primary:hover{background:#0F544B}
   .btn-cream{background:#F7F2E9;color:#14655B;text-decoration:none;font-weight:800}
@@ -294,11 +294,14 @@
   </div>
 
   <!-- FOOTER -->
-  <div style="border-top:1px solid rgba(20,101,91,.14);background:#F7F2E9;padding:28px 24px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap">
-    <span style="font-family:'Domine',serif;font-weight:700;font-size:20px;color:#14655B">welme</span>
-    <div style="display:flex;gap:20px;font-size:14.5px;font-weight:600;color:#4A574F">
-      <span style="cursor:pointer">Privacy</span><span style="cursor:pointer">Contact</span><span style="cursor:pointer">Disclaimer</span>
+  <div style="border-top:1px solid rgba(20,101,91,.14);background:#F7F2E9;padding:28px 24px">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap">
+      <span style="font-family:'Domine',serif;font-weight:700;font-size:20px;color:#14655B">welme</span>
+      <div style="display:flex;gap:20px;font-size:14.5px;font-weight:600;color:#4A574F">
+        <a href="privacy.html" style="color:#4A574F;text-decoration:none">Privacy</a><a href="contact.html" style="color:#4A574F;text-decoration:none">Contact</a><a href="disclaimer.html" style="color:#4A574F;text-decoration:none">Disclaimer</a><a href="manufacturing.html" style="color:#4A574F;text-decoration:none">Manufacturing</a>
+      </div>
     </div>
+    <p style="margin:18px 0 0;font-size:12px;line-height:1.55;color:#8A968E">Welme provides informational wellness guidance only, not medical diagnoses or treatment. Consult a healthcare professional before starting any treatments.</p>
   </div>
 
 </div>
