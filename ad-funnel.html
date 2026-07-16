@@ -127,53 +127,11 @@ src="https://www.facebook.com/tr?id=1028962489819655&ev=PageView&noscript=1"
   <div id="screen" class="screen"></div>
 </div>
 
+<script src="welme-tracking.js"></script>
 <script>
 'use strict';
 
-/* ---------- lead + tracking endpoints (same as index.html quiz) ---------- */
-var WELME_SHEET_URL = 'https://script.google.com/macros/s/AKfycbxPBvnPylbFWc4StA5PkMAxskagtgZzTljWV72qNMvGAkAWcM6kriRkiUxmzKWAOJXW/exec';
-var WELME_TRACKING_URL = 'https://script.google.com/macros/s/AKfycbwtmkpCjsC3VnJ_970C-cnPB3nqL1Lhe4HtNeDENSFHfQ0P6ivfvY33GSc4-HdJaImc/exec';
-
-function getUserId(){
-  var userId = localStorage.getItem('welme_user_id');
-  if(!userId){
-    userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substring(2);
-    localStorage.setItem('welme_user_id', userId);
-  }
-  return userId;
-}
-
-function trackEvent(eventType, extra){
-  extra = extra || {};
-  try{ if(window.fbq) fbq('trackCustom', eventType); }catch(e){}
-  try{ if(window.gtag) gtag('event', eventType); }catch(e){}
-  if(!WELME_TRACKING_URL) return;
-  try{
-    var payload = {
-      timestamp: new Date().toISOString(),
-      user_id: getUserId(),
-      event_type: eventType,
-      age: S.age || '',
-      gender: S.sex || '',
-      protocol: extra.protocol != null ? extra.protocol : (S.goals[0] || ''),
-      stack: extra.stack != null ? extra.stack : S.goals.join(', '),
-      checkout_click: false
-    };
-    if(Array.isArray(payload.stack)) payload.stack = payload.stack.join(', ');
-    console.log('WELME TRACKING WEBHOOK PAYLOAD', JSON.stringify(payload));
-    if(location.hostname === '127.0.0.1' || location.hostname === 'localhost') return;
-    var body = JSON.stringify(payload);
-    var sent = false;
-    if(navigator.sendBeacon){
-      try{ sent = navigator.sendBeacon(WELME_TRACKING_URL, new Blob([body], {type:'text/plain;charset=UTF-8'})); }
-      catch(e){ sent = false; }
-    }
-    if(!sent){
-      fetch(WELME_TRACKING_URL, {method:'POST', mode:'no-cors', keepalive:true,
-        headers:{'Content-Type':'text/plain;charset=UTF-8'}, body:body});
-    }
-  }catch(e){}
-}
+/* ---------- Google Sheets event capture lives in welme-tracking.js ---------- */
 
 /* ---------- content ---------- */
 var GOALS = [
@@ -253,6 +211,36 @@ var CATALOG = {
   'Multivitamin':{time:'m',reason:'Broad daily nutrient safety net.'}
 };
 
+var DOSAGES = {
+  'Vitamin D3':'1,000–2,000 IU',
+  'Omega-3':'1,000 mg EPA/DHA',
+  'Magnesium':'200–400 mg',
+  'CoQ10':'100–200 mg',
+  'Vitamin B12':'500–1,000 mcg',
+  'B-Complex':'1 serving',
+  'Vitamin C':'500 mg',
+  'Zinc':'10–15 mg',
+  'Curcumin':'500–1,000 mg',
+  'Collagen':'5–10 g',
+  'Glucosamine':'1,500 mg',
+  'Glycine':'3 g',
+  'L-theanine':'100–200 mg',
+  'Ashwagandha':'300–600 mg',
+  'Melatonin':'0.5–3 mg',
+  'Probiotic':'10–20 billion CFU',
+  'Fiber / prebiotic':'3–5 g',
+  'Ginkgo':'120 mg',
+  'Lion’s mane':'500–1,000 mg',
+  'Rhodiola':'200–400 mg',
+  'Resveratrol':'100–250 mg',
+  'Iron':'18 mg',
+  'Calcium':'500 mg',
+  'Vitamin K2':'90–120 mcg',
+  'Berberine':'500 mg',
+  'Folate':'400–800 mcg',
+  'Multivitamin':'1 serving'
+};
+
 var GOAL_SUPPS = {
   sleep:['Magnesium','Glycine'], energy:['CoQ10','Vitamin B12'], heart:['Omega-3','CoQ10'],
   brain:['Omega-3','Vitamin B12'], joints:['Curcumin','Collagen'], longevity:['Omega-3','Resveratrol'],
@@ -302,7 +290,8 @@ var DEFAULT_STATE = {
   weight: '', wUnit: 'lb', hUnit: 'ft', hFt: '', hIn: '', hCm: '',
   supps: [], customSupps: [], suppDraft: '',
   conditions: [], customConditions: [], condDraft: '',
-  email: '', sent: false
+  email: '', sent: false,
+  quizAttemptId: '', quizStartTracked: false, quizFinishTracked: false
 };
 
 var S = (function(){
@@ -316,7 +305,9 @@ function persist(){
     step:S.step, goals:S.goals, clarify:S.clarify, age:S.age, sex:S.sex,
     weight:S.weight, wUnit:S.wUnit, hUnit:S.hUnit, hFt:S.hFt, hIn:S.hIn, hCm:S.hCm,
     supps:S.supps, customSupps:S.customSupps, conditions:S.conditions,
-    customConditions:S.customConditions, email:S.email, sent:S.sent
+    customConditions:S.customConditions, email:S.email, sent:S.sent,
+    quizAttemptId:S.quizAttemptId, quizStartTracked:S.quizStartTracked,
+    quizFinishTracked:S.quizFinishTracked
   })); }catch(e){}
 }
 
@@ -369,6 +360,131 @@ function addChip(listKey, draftKey){
   patch[listKey] = S[listKey].concat(v);
   patch[draftKey] = '';
   set(patch);
+}
+
+function createAttemptId(){
+  return 'attempt_' + Date.now() + '_' + Math.random().toString(36).slice(2, 10);
+}
+
+function goalTitle(id){
+  var found = null;
+  GOALS.forEach(function(g){ if(g.id === id) found = g; });
+  return found ? found.title : id;
+}
+
+function goalColumnValue(){
+  return S.goals.map(goalTitle).join(', ');
+}
+
+function trackingAvailable(){
+  return !!(window.WelmeTracking && window.WelmeTracking.trackEvent);
+}
+
+function ensureQuizStarted(){
+  if(S.step >= 5) return;
+  if(!S.quizAttemptId){
+    S.quizAttemptId = createAttemptId();
+    S.quizStartTracked = false;
+    S.quizFinishTracked = false;
+    persist();
+  }
+  if(!S.quizStartTracked && trackingAvailable()){
+    window.WelmeTracking.trackEvent({ page:'quiz', event:'quiz_start' });
+    S.quizStartTracked = true;
+    persist();
+  }
+}
+
+function compactSupplement(item){
+  return {
+    name: item.name,
+    dosage: item.dosage || DOSAGES[item.name] || 'To be confirmed during plan review',
+    timing: item.time === 'm' ? 'morning' : 'night',
+    timingLabel: item.timeLabel,
+    priorityLabel: item.priorityLabel || '',
+    personalisedExplanation: item.reason,
+    isNew: !!item.isNew
+  };
+}
+
+function structuredResults(R){
+  return {
+    selectedPlan: {
+      id: S.goals[0] || '',
+      title: R.proto.title,
+      subtitle: R.proto.sub
+    },
+    selectedGoals: S.goals.map(function(id){ return { id:id, title:goalTitle(id) }; }),
+    answers: {
+      age: S.age,
+      gender: S.sex,
+      height: { unit:S.hUnit, feet:S.hFt, inches:S.hIn, centimeters:S.hCm, label:R.heightLabel },
+      weight: { unit:S.wUnit, value:S.weight, label:R.weightLabel },
+      clarifications: S.clarify.map(function(value){
+        var parts = value.split('::');
+        return { goalId:parts[0] || '', goalTitle:goalTitle(parts[0] || ''), answer:parts[1] || value };
+      }),
+      currentSupplements: S.supps.concat(S.customSupps),
+      healthConsiderations: S.conditions.concat(S.customConditions)
+    },
+    resultsSummary: {
+      heroTitleLines: R.heroTitleLines,
+      summaryChips: R.summaryChips,
+      review: R.review,
+      bodyMetrics: {
+        age: R.age,
+        bmi: R.bmi,
+        bmiCategory: R.bmiCat,
+        height: R.heightLabel,
+        weight: R.weightLabel
+      },
+      nutritionTargets: {
+        hasNutrition: R.hasNutrition,
+        calories: R.kcal,
+        protein: R.protein,
+        fat: R.fat,
+        carbs: R.carbs
+      }
+    },
+    recommendedSupplements: R.recNew.map(compactSupplement),
+    existingRoutineSupplements: R.recTake.map(compactSupplement),
+    dailyPlan: {
+      morning: R.planMorning.map(compactSupplement),
+      night: R.planNight.map(compactSupplement)
+    },
+    protocolDirection: R.directions.map(function(item){
+      return {
+        goalTitle: item.goalTitle,
+        personalisedExplanation: item.text,
+        additionalRecommendation: item.hack,
+        supportingSupplements: item.tags
+      };
+    }),
+    safetyNotes: R.notes,
+    additionalRecommendations: R.directions.map(function(item){ return item.hack; })
+  };
+}
+
+function trackQuizFinish(){
+  if(S.quizFinishTracked) return;
+  if(trackingAvailable()){
+    window.WelmeTracking.trackEvent({
+      page:'quiz',
+      event:'quiz_finish',
+      age:S.age,
+      gender:S.sex,
+      goal:goalColumnValue()
+    });
+  }
+  S.quizFinishTracked = true;
+  persist();
+}
+
+function trackLandingClickAndGo(){
+  if(trackingAvailable()){
+    window.WelmeTracking.trackEvent({ page:'results', event:'landing_click' }, { keepalive:true });
+  }
+  window.setTimeout(function(){ window.location.href = 'landing.html'; }, 0);
 }
 
 /* linked imperial/metric switch – toggling weight OR height switches BOTH systems and converts values */
@@ -462,9 +578,16 @@ function buildResults(){
     timeBg: time === 'm' ? '#F0E7CF' : '#E4EEF0',
     timeColor: time === 'm' ? '#8A6D1F' : '#3C5A66'
   }; };
-  var protocol = ordered.map(function(n){
+  var protocol = ordered.map(function(n, index){
     var info = CATALOG[n];
-    return Object.assign({ name:n, reason:info.reason, time:info.time, isNew:!userHas(n) }, timeMeta(info.time));
+    return Object.assign({
+      name:n,
+      dosage:DOSAGES[n] || 'To be confirmed during plan review',
+      reason:info.reason,
+      time:info.time,
+      priorityLabel:index < 2 ? 'High priority' : 'Core support',
+      isNew:!userHas(n)
+    }, timeMeta(info.time));
   });
 
   /* integrate the user's current supplements that aren't already in the recommended set */
@@ -481,8 +604,9 @@ function buildResults(){
     var time = info ? info.time : 'm';
     return Object.assign({
       name: canon || n,
+      dosage: canon && DOSAGES[canon] ? DOSAGES[canon] : 'To be confirmed during plan review',
       reason: info ? info.reason : 'Kept from your current routine and slotted into your daily schedule.',
-      time: time, isNew: false
+      time: time, priorityLabel:'Current routine', isNew: false
     }, timeMeta(time));
   });
   var fullProtocol = protocol.concat(takeExtra);
@@ -497,6 +621,7 @@ function buildResults(){
 
   return {
     proto: proto, heroTitleHtml: heroTitleHtml, protoIcon: protoIcon,
+    heroTitleLines: heroLines,
     summaryChips: summaryChips, review: review,
     age: age || '–', bmi: bmiV ? bmiV.toFixed(1) : '–', bmiCat: bmiCat,
     heightLabel: heightLabel, weightLabel: weightLabel,
@@ -833,7 +958,7 @@ function finishScreen(){
   }
 
   h += '<div style="text-align:center;margin-top:26px">'
-    + '<a href="landing.html" style="font-size:15px;font-weight:700;color:#C4D2CA;text-decoration:underline;text-underline-offset:3px">Learn more about welme</a>'
+    + '<a href="landing.html" data-act="landing-click" style="font-size:15px;font-weight:700;color:#C4D2CA;text-decoration:underline;text-underline-offset:3px">Learn more about welme</a>'
     + '</div></div>';
 
   /* footer */
@@ -859,20 +984,16 @@ function submitEmail(){
   if(!validEmail) return;
   try{ localStorage.setItem('welmeUserEmail', S.email); }catch(e){}
   var R = buildResults();
-  var stack = R.fullProtocol.map(function(p){ return p.name; });
-  if(WELME_SHEET_URL){
-    try{
-      var payload = { user_id: getUserId(), email: S.email, protocol: R.proto.title, stack: stack.join(', ') };
-      console.log('WELME EMAIL WEBHOOK PAYLOAD', payload);
-      if(location.hostname !== '127.0.0.1' && location.hostname !== 'localhost'){
-        fetch(WELME_SHEET_URL, {method:'POST', mode:'no-cors',
-          headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)});
-      }
-    }catch(e){}
-  }
   try{ if(window.fbq) fbq('track', 'Lead'); }catch(e){}
   try{ if(window.gtag) gtag('event', 'generate_lead'); }catch(e){}
-  trackEvent('email_submitted', { protocol: R.proto.title, stack: stack });
+  if(trackingAvailable()){
+    window.WelmeTracking.trackEvent({
+      page:'results',
+      event:'email_submit',
+      email:S.email,
+      results:structuredResults(R)
+    }, { keepalive:true });
+  }
   set({ sent: true });
 }
 
@@ -891,6 +1012,7 @@ function bindInput(id, key, filter, after){
 var lastRenderedStep = null;
 function render(){
   renderHeader();
+  ensureQuizStarted();
   var screen = document.getElementById('screen');
   var html = '';
   if(S.step === 0) html = goalsScreen();
@@ -955,16 +1077,21 @@ document.addEventListener('click', function(e){
     case 'next':
       if(stepValid()){
         var next = S.step + 1;
+        if(next === 5) trackQuizFinish();
         set({step: next});
         window.scrollTo(0,0);
-        trackEvent(next === 5 ? 'protocol_viewed' : 'funnel_step_' + next);
       }
       break;
     case 'submit-email': submitEmail(); break;
+    case 'landing-click':
+      e.preventDefault();
+      trackLandingClickAndGo();
+      break;
     case 'restart':
       set({ step:0, goals:[], clarify:[], age:'', sex:'',
         weight:'', wUnit:'lb', hUnit:'ft', hFt:'', hIn:'', hCm:'', supps:[], customSupps:[],
-        suppDraft:'', conditions:[], customConditions:[], condDraft:'', email:'', sent:false });
+        suppDraft:'', conditions:[], customConditions:[], condDraft:'', email:'', sent:false,
+        quizAttemptId:'', quizStartTracked:false, quizFinishTracked:false });
       window.scrollTo(0,0);
       break;
   }
