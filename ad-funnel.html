@@ -146,14 +146,14 @@ var GOALS = [
 ];
 
 var CLAR = {
-  sleep:['Trouble falling asleep','Waking during the night','Waking up unrefreshed','Racing thoughts at night','Irregular / shift schedule'],
-  heart:['High blood pressure','High cholesterol','Family history','Occasional palpitations','Prevention only'],
-  brain:['Brain fog','Forgetfulness','Trouble focusing','Low mood','Afternoon mental fatigue'],
-  energy:['Afternoon crash','Tired on waking','Low stamina','Reliant on caffeine','Fatigue despite sleep'],
-  joints:['Morning stiffness','Knee or hip discomfort','Slow recovery','Aches with weather','Protect joints early'],
-  longevity:['Reduce inflammation','Cellular & DNA health','Stay active as I age','Family longevity focus','General prevention'],
-  digestion:['Bloating','Irregularity','Reflux / heartburn','Discomfort after meals','Recently on antibiotics'],
-  stress:['Feeling overwhelmed','Low mood','Poor stress recovery','Tension / restlessness','Hard to wind down']
+  sleep:['Trouble falling asleep','Wake up during the night','Wake up feeling unrefreshed','Hard to get out of bed'],
+  energy:['Tired throughout the day','Energy drops by afternoon','Low physical endurance','Rely on caffeine to stay alert'],
+  heart:['Get tired more easily','Short of breath during activity','Want to stay heart healthy','Focus on prevention'],
+  brain:['Brain fog','Forgetfulness','Trouble concentrating','Mental fatigue by afternoon'],
+  joints:['Stiff after sitting','Joint discomfort during movement','Slow recovery after activity','Want to stay active'],
+  longevity:['Want to age well','Stay active as I get older','Maintain strength with age','Focus on prevention'],
+  digestion:['Bloating','Discomfort after meals','Irregular digestion','Sensitive stomach'],
+  stress:['Feeling overwhelmed','Hard to relax','Feeling more irritable','Poor stress recovery']
 };
 
 var SUPPS = ['Vitamin D3','Vitamin K2','Magnesium','Calcium','Zinc','Iron','Selenium',
@@ -181,81 +181,56 @@ var PROTOCOL = {
   stress:{title:'Calm & Resilience',sub:'Steadier mood and better stress recovery'}
 };
 
-var CATALOG = {
-  'Vitamin D3':{time:'m',reason:'Immune, bone and mood support – the most common deficiency.'},
-  'Omega-3':{time:'m',reason:'EPA/DHA for heart, brain and joint support.'},
-  'Magnesium':{time:'n',reason:'Sleep, muscle relaxation and 300+ body processes.'},
+var SUPP_INFO = {
+  'Magnesium glycinate':{time:'n',reason:'Sleep, muscle relaxation and 300+ body processes.'},
+  'Omega-3 (EPA/DHA)':{time:'m',reason:'EPA/DHA for heart, brain and joint support.'},
+  'Vitamin D3 + K2':{time:'m',reason:'Immune, bone and mood support; K2 guides calcium into your bones.'},
+  'B-Complex':{time:'m',reason:'Full B-range for energy metabolism and stress resilience.'},
+  'Vitamin C':{time:'m',reason:'Antioxidant for immunity; supports collagen and iron uptake.'},
   'CoQ10':{time:'m',reason:'Cellular energy and heart support; declines with age.'},
-  'Vitamin B12':{time:'m',reason:'Energy metabolism and nerve function; absorption drops with age.'},
-  'B-Complex':{time:'m',reason:'Full B-range for energy and stress resilience.'},
-  'Vitamin C':{time:'m',reason:'Antioxidant for immunity; also aids iron absorption.'},
-  'Zinc':{time:'n',reason:'Immune response and tissue repair.'},
-  'Curcumin':{time:'m',reason:'Turmeric extract for joint comfort and inflammation.'},
+  'Creatine':{time:'m',reason:'Supports muscle strength, recovery and mental energy.'},
+  'Glycine':{time:'n',reason:'Calming amino acid that deepens sleep taken before bed.'},
+  'Ashwagandha':{time:'n',reason:'Adaptogen studied for stress, mood and recovery.'},
+  'Zinc picolinate':{time:'n',reason:'Immune response, skin and tissue repair.'},
   'Collagen':{time:'m',reason:'Peptides for joints, skin and connective tissue.'},
-  'Glucosamine':{time:'m',reason:'Cartilage support for active joints.'},
-  'Glycine':{time:'n',reason:'Improves sleep quality taken before bed.'},
-  'L-theanine':{time:'n',reason:'Calm focus; eases racing thoughts at night.'},
-  'Ashwagandha':{time:'n',reason:'Adaptogen studied for stress and sleep.'},
-  'Melatonin':{time:'n',reason:'Helps reset sleep timing for irregular schedules.'},
-  'Probiotic':{time:'m',reason:'Supports gut flora balance and digestion.'},
-  'Fiber / prebiotic':{time:'m',reason:'Feeds healthy gut bacteria; eases irregularity.'},
-  'Ginkgo':{time:'m',reason:'Circulation support for focus and memory.'},
-  'Lion’s mane':{time:'m',reason:'Studied for memory and nerve health.'},
-  'Rhodiola':{time:'m',reason:'Adaptogen for fatigue and mental stamina.'},
-  'Resveratrol':{time:'m',reason:'Antioxidant linked to healthy-aging markers.'},
-  'Iron':{time:'m',reason:'Supports energy and oxygen transport where levels run low.'},
-  'Calcium':{time:'n',reason:'Core bone mineral; best paired with D3 and K2.'},
-  'Vitamin K2':{time:'m',reason:'Directs calcium into bones; pairs with D3.'},
-  'Berberine':{time:'m',reason:'Supports healthy blood sugar and metabolism.'},
-  'Folate':{time:'m',reason:'Supports healthy cell growth; key in pregnancy.'},
-  'Multivitamin':{time:'m',reason:'Broad daily nutrient safety net.'}
+  'Probiotic':{time:'m',reason:'Supports gut flora balance and comfortable digestion.'}
 };
 
 var DOSAGES = {
-  'Vitamin D3':'1,000–2,000 IU',
-  'Omega-3':'1,000 mg EPA/DHA',
-  'Magnesium':'200–400 mg',
-  'CoQ10':'100–200 mg',
-  'Vitamin B12':'500–1,000 mcg',
+  'Magnesium glycinate':'200–400 mg',
+  'Omega-3 (EPA/DHA)':'1,000 mg EPA/DHA',
+  'Vitamin D3 + K2':'2,000 IU D3 / 90 mcg K2',
   'B-Complex':'1 serving',
   'Vitamin C':'500 mg',
-  'Zinc':'10–15 mg',
-  'Curcumin':'500–1,000 mg',
-  'Collagen':'5–10 g',
-  'Glucosamine':'1,500 mg',
+  'CoQ10':'100–200 mg',
+  'Creatine':'3–5 g',
   'Glycine':'3 g',
-  'L-theanine':'100–200 mg',
   'Ashwagandha':'300–600 mg',
-  'Melatonin':'0.5–3 mg',
-  'Probiotic':'10–20 billion CFU',
-  'Fiber / prebiotic':'3–5 g',
-  'Ginkgo':'120 mg',
-  'Lion’s mane':'500–1,000 mg',
-  'Rhodiola':'200–400 mg',
-  'Resveratrol':'100–250 mg',
-  'Iron':'18 mg',
-  'Calcium':'500 mg',
-  'Vitamin K2':'90–120 mcg',
-  'Berberine':'500 mg',
-  'Folate':'400–800 mcg',
-  'Multivitamin':'1 serving'
+  'Zinc picolinate':'15 mg',
+  'Collagen':'5–10 g',
+  'Probiotic':'10–20 billion CFU'
 };
 
-var GOAL_SUPPS = {
-  sleep:['Magnesium','Glycine'], energy:['CoQ10','Vitamin B12'], heart:['Omega-3','CoQ10'],
-  brain:['Omega-3','Vitamin B12'], joints:['Curcumin','Collagen'], longevity:['Omega-3','Resveratrol'],
-  digestion:['Probiotic','Fiber / prebiotic'], stress:['Ashwagandha','Magnesium']
+// Goal → supplement matrix. Each entry is [name, time] where time 'm'=morning, 'n'=night.
+var GOAL_MATRIX = {
+  sleep:     [['Magnesium glycinate','n'],['Omega-3 (EPA/DHA)','m'],['Vitamin D3 + K2','m'],['B-Complex','m'],['CoQ10','m'],['Glycine','n'],['Ashwagandha','n']],
+  energy:    [['Magnesium glycinate','n'],['Vitamin D3 + K2','m'],['B-Complex','m'],['Vitamin C','m'],['CoQ10','m'],['Creatine','m'],['Ashwagandha','n'],['Zinc picolinate','n']],
+  heart:     [['Magnesium glycinate','n'],['Omega-3 (EPA/DHA)','n'],['Vitamin D3 + K2','m'],['B-Complex','m'],['Vitamin C','m'],['CoQ10','m'],['Creatine','m'],['Ashwagandha','n']],
+  brain:     [['Magnesium glycinate','n'],['Omega-3 (EPA/DHA)','n'],['Vitamin D3 + K2','m'],['B-Complex','m'],['Vitamin C','m'],['CoQ10','m'],['Creatine','m'],['Ashwagandha','n']],
+  joints:    [['Magnesium glycinate','n'],['Omega-3 (EPA/DHA)','m'],['Vitamin D3 + K2','m'],['B-Complex','m'],['Vitamin C','m'],['Glycine','n'],['Zinc picolinate','n'],['Collagen','m']],
+  longevity: [['Magnesium glycinate','n'],['Omega-3 (EPA/DHA)','m'],['Vitamin D3 + K2','m'],['Vitamin C','m'],['CoQ10','m'],['Creatine','m'],['Glycine','n'],['Ashwagandha','n']],
+  digestion: [['Magnesium glycinate','n'],['Omega-3 (EPA/DHA)','m'],['Vitamin D3 + K2','m'],['B-Complex','m'],['Glycine','n'],['Zinc picolinate','n'],['Probiotic','m']],
+  stress:    [['Magnesium glycinate','n'],['Omega-3 (EPA/DHA)','m'],['Vitamin D3 + K2','m'],['B-Complex','m'],['Vitamin C','m'],['CoQ10','m'],['Glycine','n'],['Ashwagandha','n']]
 };
 
-var CLAR_SUPPS = {
-  'sleep::Trouble falling asleep':'Glycine','sleep::Racing thoughts at night':'L-theanine','sleep::Irregular / shift schedule':'Melatonin',
-  'energy::Reliant on caffeine':'Rhodiola','energy::Tired on waking':'Vitamin D3','energy::Afternoon crash':'B-Complex',
-  'heart::High cholesterol':'Omega-3','heart::High blood pressure':'Magnesium',
-  'brain::Brain fog':'Ginkgo','brain::Forgetfulness':'Lion’s mane','brain::Trouble focusing':'L-theanine',
-  'joints::Morning stiffness':'Curcumin','joints::Knee or hip discomfort':'Glucosamine',
-  'longevity::Reduce inflammation':'Curcumin','longevity::Cellular & DNA health':'CoQ10',
-  'digestion::Bloating':'Probiotic','digestion::Irregularity':'Fiber / prebiotic','digestion::Reflux / heartburn':'Fiber / prebiotic',
-  'stress::Hard to wind down':'L-theanine','stress::Low mood':'Vitamin D3','stress::Feeling overwhelmed':'Ashwagandha'
+// Canonical display order for the recommended supplement list.
+var CANON_ORDER = ['Magnesium glycinate','Omega-3 (EPA/DHA)','Vitamin D3 + K2','B-Complex','Vitamin C','CoQ10','Creatine','Glycine','Ashwagandha','Zinc picolinate','Collagen','Probiotic'];
+
+// Distinctive supplements used as chips on each Protocol direction card.
+var GOAL_TAGS = {
+  sleep:['Magnesium glycinate','Glycine'], energy:['CoQ10','Creatine'], heart:['Omega-3 (EPA/DHA)','CoQ10'],
+  brain:['Omega-3 (EPA/DHA)','B-Complex'], joints:['Collagen','Glycine'], longevity:['CoQ10','Ashwagandha'],
+  digestion:['Probiotic','Zinc picolinate'], stress:['Ashwagandha','Magnesium glycinate']
 };
 
 var SUGG = {
@@ -556,22 +531,19 @@ function buildResults(){
   if(age) summaryChips.push(age + ' yrs');
   if(bmiV) summaryChips.push('BMI ' + bmiV.toFixed(1));
 
-  /* recommendation set (5–8 supplements) */
-  var ordered = [];
-  var pushRec = function(n){ if(CATALOG[n] && ordered.indexOf(n) === -1) ordered.push(n); };
-  S.goals.forEach(function(g){ (GOAL_SUPPS[g]||[]).forEach(pushRec); });
-  S.clarify.forEach(function(v){ if(CLAR_SUPPS[v]) pushRec(CLAR_SUPPS[v]); });
-  if(age >= 50){ pushRec('Vitamin B12'); pushRec('Vitamin D3'); }
-  if(age >= 60){ pushRec('CoQ10'); }
-  if(S.sex === 'female' && age > 0 && age < 50) pushRec('Iron');
-  if(S.sex === 'female' && age >= 45) pushRec('Calcium');
-  if(bmiV && bmiV >= 27){ pushRec('Omega-3'); pushRec('Berberine'); }
-  if(allConds.indexOf('Iron-deficiency anemia') !== -1){ pushRec('Iron'); pushRec('Vitamin C'); }
-  if(allConds.indexOf('Pregnant or breastfeeding') !== -1) pushRec('Folate');
-  ['Vitamin D3','Omega-3','Magnesium','Multivitamin'].forEach(function(n){ if(ordered.length < 5) pushRec(n); });
-  ordered = ordered.slice(0,8);
+  /* recommendation set — union of the selected goals' matrix rows */
+  var timeOf = {};
+  S.goals.forEach(function(g){
+    (GOAL_MATRIX[g] || []).forEach(function(pair){
+      if(!(pair[0] in timeOf)) timeOf[pair[0]] = pair[1]; // first selected goal sets the timing
+    });
+  });
+  var ordered = CANON_ORDER.filter(function(n){ return n in timeOf; });
 
-  var norm = function(str){ return String(str).toLowerCase().replace(/\s*\/.*/,'').replace(/[^a-z0-9]/g,''); };
+  var norm = function(str){ return String(str).toLowerCase()
+    .replace(/\s*[\/(+].*/, '')
+    .replace(/\b(glycinate|picolinate|bisglycinate|citrate|monohydrate|malate|oxide|peptides)\b/g, '')
+    .replace(/[^a-z0-9]/g, ''); };
   var userSupps = S.supps.concat(S.customSupps);
   var userNorm = userSupps.map(norm);
   var userHas = function(n){ return userNorm.indexOf(norm(n)) !== -1; };
@@ -581,19 +553,20 @@ function buildResults(){
     timeColor: time === 'm' ? '#8A6D1F' : '#3C5A66'
   }; };
   var protocol = ordered.map(function(n, index){
-    var info = CATALOG[n];
+    var time = timeOf[n];
+    var info = SUPP_INFO[n] || { reason: '' };
     return Object.assign({
       name:n,
       dosage:DOSAGES[n] || 'To be confirmed during plan review',
       reason:info.reason,
-      time:info.time,
+      time:time,
       priorityLabel:index < 2 ? 'High priority' : 'Core support',
       isNew:!userHas(n)
-    }, timeMeta(info.time));
+    }, timeMeta(time));
   });
 
   /* integrate the user's current supplements that aren't already in the recommended set */
-  var CANON = {}; Object.keys(CATALOG).forEach(function(k){ CANON[norm(k)] = k; });
+  var CANON = {}; Object.keys(SUPP_INFO).forEach(function(k){ CANON[norm(k)] = k; });
   var orderedNorm = ordered.map(norm);
   var seenExtra = {};
   var takeExtra = userSupps.filter(function(n){
@@ -602,7 +575,7 @@ function buildResults(){
     seenExtra[k] = 1; return true;
   }).map(function(n){
     var canon = CANON[norm(n)];
-    var info = canon ? CATALOG[canon] : null;
+    var info = canon ? SUPP_INFO[canon] : null;
     var time = info ? info.time : 'm';
     return Object.assign({
       name: canon || n,
@@ -616,7 +589,7 @@ function buildResults(){
   /* protocol direction (lifestyle "try this" tips per goal) */
   var directions = selGoals.map(function(g){
     var d = SUGG[g.id]; if(!d) return null;
-    return { goalTitle:g.title, text:d.text, hack:d.hack, tags:(GOAL_SUPPS[g.id]||[]), icon:ic(g.paths, 23) };
+    return { goalTitle:g.title, text:d.text, hack:d.hack, tags:(GOAL_TAGS[g.id]||[]), icon:ic(g.paths, 23) };
   }).filter(Boolean);
 
   var notes = allConds.map(function(c){ return NOTE[c]; }).filter(Boolean);
