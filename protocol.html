@@ -119,7 +119,7 @@ src="https://www.facebook.com/tr?id=1028962489819655&ev=PageView&noscript=1"
 <div class="page">
   <div class="hdr">
     <div class="hdr-row">
-      <a class="brand" href="landing.html">welme</a>
+      <a class="brand" href="home.html">welme</a>
       <span id="hdrRight"></span>
     </div>
     <div id="hdrProg"></div>
@@ -461,7 +461,7 @@ function trackLandingClickAndGo(){
   if(trackingAvailable()){
     window.WelmeTracking.trackEvent({ page:'results', event:'landing_click' }, { keepalive:true });
   }
-  window.setTimeout(function(){ window.location.href = 'landing.html'; }, 0);
+  window.setTimeout(function(){ window.location.href = 'home.html'; }, 0);
 }
 
 /* linked imperial/metric switch – toggling weight OR height switches BOTH systems and converts values */
@@ -933,7 +933,7 @@ function finishScreen(){
   }
 
   h += '<div style="text-align:center;margin-top:26px">'
-    + '<a href="landing.html" data-act="landing-click" style="font-size:15px;font-weight:700;color:#C4D2CA;text-decoration:underline;text-underline-offset:3px">Learn more about welme</a>'
+    + '<a href="home.html" data-act="landing-click" style="font-size:15px;font-weight:700;color:#C4D2CA;text-decoration:underline;text-underline-offset:3px">Learn more about welme</a>'
     + '</div></div>';
 
   /* footer */
