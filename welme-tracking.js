@@ -54,11 +54,19 @@
     var age = '';
     var gender = '';
     var goal = '';
+    var details = '';
+    var weight = '';
+    var height = '';
+    var problems = '';
 
     if(page === 'quiz' && event === 'quiz_finish'){
       age = safeCell(input.age || '');
       gender = safeCell(input.gender || '');
       goal = safeCell(input.goal || '');
+      details = safeCell(input.details || '');
+      weight = safeCell(input.weight || '');
+      height = safeCell(input.height || '');
+      problems = safeCell(input.problems || '');
     }
 
     return {
@@ -69,6 +77,10 @@
       age: age,
       gender: gender,
       goal: goal,
+      details: details,
+      weight: weight,
+      height: height,
+      problems: problems,
       email: event === 'email_submit' ? safeCell(input.email || '') : '',
       results: event === 'email_submit' ? safeCell(input.results || '') : ''
     };

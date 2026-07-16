@@ -291,7 +291,8 @@ var DEFAULT_STATE = {
   supps: [], customSupps: [], suppDraft: '',
   conditions: [], customConditions: [], condDraft: '',
   email: '', sent: false,
-  quizAttemptId: '', quizStartTracked: false, quizFinishTracked: false
+  quizAttemptId: '', quizStartTracked: false, quizFinishTracked: false,
+  emailSubmitTracked: false
 };
 
 var S = (function(){
@@ -307,7 +308,7 @@ function persist(){
     supps:S.supps, customSupps:S.customSupps, conditions:S.conditions,
     customConditions:S.customConditions, email:S.email, sent:S.sent,
     quizAttemptId:S.quizAttemptId, quizStartTracked:S.quizStartTracked,
-    quizFinishTracked:S.quizFinishTracked
+    quizFinishTracked:S.quizFinishTracked, emailSubmitTracked:S.emailSubmitTracked
   })); }catch(e){}
 }
 
@@ -376,6 +377,37 @@ function goalColumnValue(){
   return S.goals.map(goalTitle).join(', ');
 }
 
+function clarifyLabel(value){
+  var parts = String(value).split('::');
+  return parts.length > 1 ? parts.slice(1).join('::') : String(value);
+}
+
+function detailsColumnValue(){
+  return S.clarify.filter(function(value){
+    var parts = String(value).split('::');
+    return parts.length < 2 || S.goals.indexOf(parts[0]) !== -1;
+  }).map(clarifyLabel).filter(Boolean).join(', ');
+}
+
+function weightColumnValue(){
+  return S.weight ? S.weight + ' ' + S.wUnit : '';
+}
+
+function heightColumnValue(){
+  if(S.hUnit === 'cm') return S.hCm ? S.hCm + ' cm' : '';
+  var parts = [];
+  if(S.hFt) parts.push(S.hFt + ' ft');
+  if(S.hIn !== '') parts.push(S.hIn + ' in');
+  return parts.join(' ');
+}
+
+function problemsColumnValue(){
+  var problems = S.conditions.concat(S.customConditions);
+  var draft = (S.condDraft || '').trim();
+  if(draft && problems.indexOf(draft) === -1) problems = problems.concat(draft);
+  return problems.filter(Boolean).join(', ');
+}
+
 function trackingAvailable(){
   return !!(window.WelmeTracking && window.WelmeTracking.trackEvent);
 }
@@ -439,7 +471,11 @@ function trackQuizFinish(){
       event:'quiz_finish',
       age:S.age,
       gender:S.sex,
-      goal:goalColumnValue()
+      goal:goalColumnValue(),
+      details:detailsColumnValue(),
+      weight:weightColumnValue(),
+      height:heightColumnValue(),
+      problems:problemsColumnValue()
     });
   }
   S.quizFinishTracked = true;
@@ -946,12 +982,15 @@ function finishScreen(){
 
 /* ---------- email submit ---------- */
 function submitEmail(){
+  if(S.emailSubmitTracked) return;
   var validEmail = /.+@.+\..+/.test(S.email);
   if(!validEmail) return;
   try{ localStorage.setItem('welmeUserEmail', S.email); }catch(e){}
   var R = buildResults();
   try{ if(window.fbq) fbq('track', 'Lead'); }catch(e){}
   try{ if(window.gtag) gtag('event', 'generate_lead'); }catch(e){}
+  S.emailSubmitTracked = true;
+  persist();
   if(trackingAvailable()){
     window.WelmeTracking.trackEvent({
       page:'results',
@@ -1057,7 +1096,7 @@ document.addEventListener('click', function(e){
       set({ step:0, goals:[], clarify:[], age:'', sex:'',
         weight:'', wUnit:'lb', hUnit:'ft', hFt:'', hIn:'', hCm:'', supps:[], customSupps:[],
         suppDraft:'', conditions:[], customConditions:[], condDraft:'', email:'', sent:false,
-        quizAttemptId:'', quizStartTracked:false, quizFinishTracked:false });
+        quizAttemptId:'', quizStartTracked:false, quizFinishTracked:false, emailSubmitTracked:false });
       window.scrollTo(0,0);
       break;
   }
