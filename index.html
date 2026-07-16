@@ -151,6 +151,47 @@ body{background:#F6F7F3;color:var(--text);
 .home-disclaimer{margin-top:28px;background:#fff;border:1px solid #EAEEE8;
   border-radius:20px;padding:17px 20px;color:#7E8980;font-size:.77rem;line-height:1.62;text-align:left}
 .home-disclaimer strong{color:var(--text)}
+.landing-hero{background:#fff;border-radius:0 0 28px 28px;padding:18px 6px 24px;text-align:center}
+.landing-hero h1{font-family:'Bricolage Grotesque',sans-serif;font-size:2.28rem;line-height:1.02;
+  letter-spacing:-.035em;color:var(--text);max-width:360px;margin:0 auto}
+.landing-hero p{font-size:.96rem;line-height:1.6;color:#566159;margin:14px auto 0;max-width:360px}
+.landing-primary-cta{display:inline-flex;align-items:center;justify-content:center;margin-top:22px;
+  background:#14655B;color:#fff;border:0;border-radius:16px;padding:17px 30px;font:800 1rem/1 'Hanken Grotesk',sans-serif;
+  cursor:pointer;text-decoration:none;box-shadow:0 16px 28px -16px rgba(20,101,91,.55)}
+.landing-primary-cta:hover{background:#0F544B}
+.landing-pack-card{margin:28px auto 0;max-width:330px;background:#F7F2E9;border:1px solid rgba(20,101,91,.12);
+  border-radius:26px;padding:18px;box-shadow:0 18px 42px -34px rgba(45,55,45,.48)}
+.landing-pack-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.landing-pack{background:#fff;border-radius:20px;padding:18px 12px;border:1px solid rgba(20,101,91,.10)}
+.landing-pack strong{display:block;font-family:'Bricolage Grotesque',sans-serif;font-size:1.05rem;color:#1E3B34}
+.landing-pack span{display:block;font-size:.72rem;color:#7E8980;margin-top:4px}
+.landing-stats{display:grid;grid-template-columns:1fr 1fr;gap:18px 14px;background:#14655B;color:#fff;
+  margin:0 -18px;padding:28px 24px;text-align:center}
+.landing-stat-number{font-family:'Bricolage Grotesque',sans-serif;font-size:1.55rem;font-weight:800;line-height:1}
+.landing-stat-label{font-size:.76rem;color:#BFD8CF;margin-top:5px;line-height:1.35}
+.landing-section{padding:42px 0}
+.landing-kicker{font-size:.66rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#A98E4E;text-align:center}
+.landing-section h2{font-family:'Bricolage Grotesque',sans-serif;font-size:1.75rem;line-height:1.08;letter-spacing:-.025em;
+  text-align:center;margin:10px 0 0;color:#1E3B34}
+.why-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:24px}
+.why-card{background:#FFFDF8;border:1px solid rgba(20,101,91,.12);border-radius:18px;padding:18px 16px}
+.why-icon{width:38px;height:38px;border-radius:50%;background:#EDE4D2;display:flex;align-items:center;justify-content:center;color:#14655B;font-weight:800}
+.why-title{font-family:'Bricolage Grotesque',sans-serif;font-size:1rem;font-weight:800;color:#1E3B34;margin-top:10px}
+.why-copy{font-size:.78rem;line-height:1.45;color:#566159;margin-top:5px}
+.how-list{display:flex;flex-direction:column;gap:14px;margin-top:24px}
+.how-card{background:#fff;border:1px solid rgba(20,101,91,.12);border-radius:22px;padding:20px;
+  box-shadow:0 18px 34px -30px rgba(45,55,45,.4)}
+.how-step{font-size:.66rem;font-weight:800;letter-spacing:.14em;color:#A98E4E;text-transform:uppercase}
+.how-card h3{font-family:'Bricolage Grotesque',sans-serif;font-size:1.2rem;color:#1E3B34;margin:6px 0 0}
+.how-card p{font-size:.84rem;line-height:1.55;color:#566159;margin:6px 0 0}
+.protocol-chooser{padding-top:40px;scroll-margin-top:18px}
+.protocol-chooser .intro-eyebrow{text-align:center}
+.protocol-chooser .intro-h1{text-align:center;font-size:1.85rem;max-width:330px;margin-left:auto;margin-right:auto}
+.protocol-chooser .intro-sub{text-align:center;max-width:360px;margin-left:auto;margin-right:auto}
+.landing-final-cta{background:#14655B;border-radius:26px;padding:36px 24px;text-align:center;margin:18px 0 0}
+.landing-final-cta h2{color:#fff;margin:0;font-family:'Bricolage Grotesque',sans-serif;font-size:1.65rem;line-height:1.1}
+.landing-final-cta p{color:#C6DED5;font-size:.88rem;line-height:1.55;margin:12px auto 0;max-width:300px}
+.landing-final-cta button{background:#F7F2E9;color:#14655B;margin-top:18px}
 
 /* ══════════════════════════════
    QUESTION SCREEN - Change 2
@@ -950,6 +991,8 @@ body{background:#F6F7F3;color:var(--text);
   .protocol-card-icon{grid-area:icon;width:50px;height:50px;border-radius:16px}
   .protocol-card-copy{grid-area:copy}
   .protocol-card-cta{grid-area:cta;margin-top:2px}
+  .why-grid{grid-template-columns:1fr}
+  .landing-stats{grid-template-columns:1fr}
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -1307,7 +1350,7 @@ body{background:#F6F7F3;color:var(--text);
 
 <div class="wrap">
   <div class="logo">
-    <a class="logo-mark" href="index.html" aria-label="Welme homepage"><span class="logo-w">Wel</span><span class="logo-me">me</span></a>
+    <a class="logo-mark" href="landing.html" aria-label="Welme landing page"><span class="logo-w">Wel</span><span class="logo-me">me</span></a>
     <div class="logo-sub">Precise · Science-backed · Personalised</div>
   </div>
 
@@ -1315,51 +1358,99 @@ body{background:#F6F7F3;color:var(--text);
        INTRO SCREEN
        ═══════════════════════════════════════════════════════════ -->
   <div id="introScreen" class="screen on">
-    <div class="intro-eyebrow">Start With a Goal</div>
-    <h1 class="intro-h1">Your personalized supplement plan.</h1>
-    <p class="intro-sub">Choose the health outcome that matters most to you. A short questionnaire will personalize the ingredients, timing, dosage guidance, and supplement forms inside that protocol.</p>
-    <div class="protocol-grid">
-      <button class="protocol-card" onclick="selectProtocol('longevity')">
-        <span class="protocol-card-icon longevity" aria-hidden="true"><img src="assets/protocol-longevity.png" alt=""></span>
-        <span class="protocol-card-copy">
-          <span class="protocol-card-title">Longevity</span>
-          <span class="protocol-card-desc">Healthy aging, energy &amp; wellbeing</span>
-        </span>
-        <span class="protocol-card-cta">Start →</span>
-      </button>
-      <button class="protocol-card" onclick="selectProtocol('metabolic')">
-        <span class="protocol-card-icon metabolic" aria-hidden="true"><img src="assets/protocol-metabolic.png" alt=""></span>
-        <span class="protocol-card-copy">
-          <span class="protocol-card-title">Metabolic Balance</span>
-          <span class="protocol-card-desc">Balanced appetite &amp; healthy weight</span>
-        </span>
-        <span class="protocol-card-cta">Start →</span>
-      </button>
-      <button class="protocol-card" onclick="selectProtocol('sleep')">
-        <span class="protocol-card-icon sleep" aria-hidden="true"><img src="assets/protocol-sleep.png" alt=""></span>
-        <span class="protocol-card-copy">
-          <span class="protocol-card-title">Deep Sleep</span>
-          <span class="protocol-card-desc">Fall asleep faster &amp; wake refreshed</span>
-        </span>
-        <span class="protocol-card-cta">Start →</span>
-      </button>
-      <button class="protocol-card" onclick="selectProtocol('stress')">
-        <span class="protocol-card-icon stress" aria-hidden="true"><img src="assets/protocol-stress.png" alt=""></span>
-        <span class="protocol-card-copy">
-          <span class="protocol-card-title">Stress &amp; Resilience</span>
-          <span class="protocol-card-desc">Calm mind &amp; emotional balance</span>
-        </span>
-        <span class="protocol-card-cta">Start →</span>
-      </button>
-      <button class="protocol-card" onclick="selectProtocol('skin')">
-        <span class="protocol-card-icon skin" aria-hidden="true"><img src="assets/protocol-skin.png" alt=""></span>
-        <span class="protocol-card-copy">
-          <span class="protocol-card-title">Skin · Hair &amp; Nails</span>
-          <span class="protocol-card-desc">Collagen, strength &amp; natural glow</span>
-        </span>
-        <span class="protocol-card-cta">Start →</span>
-      </button>
+    <div class="landing-hero">
+      <h1>All your daily supplements in one clear protocol.</h1>
+      <p>Your morning and evening supplement plan, tailored to your body, goals, current routine, and dosage needs.</p>
+      <button class="landing-primary-cta" onclick="trackLandingAction('hero_build_plan');document.getElementById('protocolChooser').scrollIntoView({behavior:'smooth',block:'start'})">Build My Plan →</button>
+      <div class="landing-pack-card" aria-label="Welme daily protocol overview">
+        <div class="landing-pack-row">
+          <div class="landing-pack"><strong>Morning</strong><span>Energy, focus, metabolic support</span></div>
+          <div class="landing-pack"><strong>Evening</strong><span>Recovery, calm, sleep support</span></div>
+        </div>
+      </div>
     </div>
+
+    <div class="landing-stats">
+      <div><div class="landing-stat-number">2 min</div><div class="landing-stat-label">short assessment</div></div>
+      <div><div class="landing-stat-number">1 plan</div><div class="landing-stat-label">personalized protocol</div></div>
+      <div><div class="landing-stat-number">Clear</div><div class="landing-stat-label">dosage and timing guidance</div></div>
+      <div><div class="landing-stat-number">Free</div><div class="landing-stat-label">saveable Health Protocol</div></div>
+    </div>
+
+    <section class="landing-section">
+      <div class="landing-kicker">Why Welme</div>
+      <h2>A smarter supplement system</h2>
+      <div class="why-grid">
+        <div class="why-card"><div class="why-icon">✓</div><div class="why-title">Personalized</div><div class="why-copy">Built from your chosen protocol, age, sex, body metrics, and current supplements.</div></div>
+        <div class="why-card"><div class="why-icon">⚗</div><div class="why-title">Evidence-aware</div><div class="why-copy">Focused on credible ingredients, practical forms, and conservative dosage guidance.</div></div>
+        <div class="why-card"><div class="why-icon">⏱</div><div class="why-title">Easy to follow</div><div class="why-copy">Each plan explains what to take, when to take it, and what to keep separate.</div></div>
+        <div class="why-card"><div class="why-icon">📋</div><div class="why-title">Saveable</div><div class="why-copy">Your full protocol includes supplement timing, nutrition targets, and daily habits.</div></div>
+      </div>
+    </section>
+
+    <section class="landing-section">
+      <div class="landing-kicker">How it works</div>
+      <div class="how-list">
+        <div class="how-card"><div class="how-step">Step 1</div><h3>Choose your goal</h3><p>Start with the outcome you care about most: sleep, metabolism, stress, longevity, or skin support.</p></div>
+        <div class="how-card"><div class="how-step">Step 2</div><h3>Answer a few questions</h3><p>The quiz collects only the details needed to personalize supplement selection, dosage, timing, and exclusions.</p></div>
+        <div class="how-card"><div class="how-step">Step 3</div><h3>Get your protocol</h3><p>Review your supplement guide on the page, then save the full Health Protocol as a PDF.</p></div>
+      </div>
+    </section>
+
+    <div id="protocolChooser" class="protocol-chooser">
+      <div class="intro-eyebrow">Start With a Goal</div>
+      <h1 class="intro-h1">Choose your protocol.</h1>
+      <p class="intro-sub">Each path keeps the supplement catalog focused while adapting the stack, dose, timing, and explanation to your answers.</p>
+      <div class="protocol-grid">
+        <button class="protocol-card" onclick="selectProtocol('longevity')">
+          <span class="protocol-card-icon longevity" aria-hidden="true"><img src="assets/protocol-longevity.png" alt=""></span>
+          <span class="protocol-card-copy">
+            <span class="protocol-card-title">Longevity</span>
+            <span class="protocol-card-desc">Healthy aging, energy &amp; wellbeing</span>
+          </span>
+          <span class="protocol-card-cta">Start →</span>
+        </button>
+        <button class="protocol-card" onclick="selectProtocol('metabolic')">
+          <span class="protocol-card-icon metabolic" aria-hidden="true"><img src="assets/protocol-metabolic.png" alt=""></span>
+          <span class="protocol-card-copy">
+            <span class="protocol-card-title">Metabolic Balance</span>
+            <span class="protocol-card-desc">Balanced appetite &amp; healthy weight</span>
+          </span>
+          <span class="protocol-card-cta">Start →</span>
+        </button>
+        <button class="protocol-card" onclick="selectProtocol('sleep')">
+          <span class="protocol-card-icon sleep" aria-hidden="true"><img src="assets/protocol-sleep.png" alt=""></span>
+          <span class="protocol-card-copy">
+            <span class="protocol-card-title">Deep Sleep</span>
+            <span class="protocol-card-desc">Fall asleep faster &amp; wake refreshed</span>
+          </span>
+          <span class="protocol-card-cta">Start →</span>
+        </button>
+        <button class="protocol-card" onclick="selectProtocol('stress')">
+          <span class="protocol-card-icon stress" aria-hidden="true"><img src="assets/protocol-stress.png" alt=""></span>
+          <span class="protocol-card-copy">
+            <span class="protocol-card-title">Stress &amp; Resilience</span>
+            <span class="protocol-card-desc">Calm mind &amp; emotional balance</span>
+          </span>
+          <span class="protocol-card-cta">Start →</span>
+        </button>
+        <button class="protocol-card" onclick="selectProtocol('skin')">
+          <span class="protocol-card-icon skin" aria-hidden="true"><img src="assets/protocol-skin.png" alt=""></span>
+          <span class="protocol-card-copy">
+            <span class="protocol-card-title">Skin · Hair &amp; Nails</span>
+            <span class="protocol-card-desc">Collagen, strength &amp; natural glow</span>
+          </span>
+          <span class="protocol-card-cta">Start →</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="landing-final-cta">
+      <h2>Ready for your supplement protocol?</h2>
+      <p>Pick a goal above and Welme will build the plan around your body and current routine.</p>
+      <button class="landing-primary-cta" onclick="trackLandingAction('final_choose_protocol');document.getElementById('protocolChooser').scrollIntoView({behavior:'smooth',block:'start'})">Choose a Protocol →</button>
+    </div>
+
     <div class="intro-trust">
       <div class="trust-item">Evidence-based</div>
       <div class="trust-item">Reviewed by nutritionists</div>
@@ -1575,8 +1666,9 @@ Separate with comma or newline"></textarea>
     <a href="privacy.html">Privacy Policy</a>
     <a href="contact.html">Contact</a>
     <a href="disclaimer.html">Disclaimer</a>
+    <a href="manufacturing.html">Manufacturing</a>
   </div>
-  <div>Welme offers educational wellness information only and does not provide medical advice, diagnosis, or treatment.</div>
+  <div>Welme provides informational wellness guidance only, not medical diagnoses or treatment. Consult a healthcare professional before starting any treatments.</div>
 </footer>
 <div class="pdf-print-footer" aria-hidden="true">
   <span>welme.io</span>
@@ -2115,9 +2207,21 @@ var AD_EXCLUDE=['theanine','ashwa','saffron','rhodiola'];
 // ═══════════════════════════════════════════════════════════
 // QUIZ FLOW
 // ═══════════════════════════════════════════════════════════
+function trackLandingAction(action,protocolKey){
+  try{
+    trackWelmeEvent({
+      event_name:'landing_click',
+      event_type:'landing_click',
+      protocol: protocolKey||window._welmeSelectedProtocol||'',
+      stack: action||'',
+      checkout_click:false
+    });
+  }catch(e){}
+}
 function selectProtocol(protocolKey){
   selectedProtocolKey=protocolKey;
   window._welmeSelectedProtocol=protocolKey;
+  trackLandingAction('protocol_selected',protocolKey);
   if(typeof trackCTA==='function'){trackCTA();}
   startQuiz(protocolKey);
 }
@@ -2670,9 +2774,38 @@ function getSelectedMatrixRows(planKey){
   if(!selected.length)selected=[0];
   return selected.map(function(i){return rows[i];});
 }
+var CORE_SUPPLEMENT_POOL={
+  longevity:['coq10','creatine','d3k2','bcomplex','mag','omega','vitC','resveratrol','curcumin'],
+  metabolic:['psyllium','chromium','mag','berb','probio','enzymes','ginger','greenTea','omega'],
+  sleep:['mag','theanine','glycine','melatonin','ashwa','coq10','bcomplex'],
+  stress:['theanine','mag','ashwa','glycine','rhodiola','bcomplex','omega'],
+  skin:['collagen','hyaluronic','vitC','omega','biotin','zinc','probio']
+};
+function personalizeSupplementStack(planKey,keys){
+  var pool=CORE_SUPPLEMENT_POOL[planKey]||CORE_SUPPLEMENT_POOL.longevity;
+  var out=[];
+  keys.forEach(function(k){
+    if(S[k]&&pool.indexOf(k)>-1&&out.indexOf(k)===-1)out.push(k);
+  });
+  pool.forEach(function(k){
+    if(out.length<4&&S[k]&&out.indexOf(k)===-1&&adExcludedKeys.indexOf(k)<0)out.push(k);
+  });
+  function boost(k){
+    var score=100-out.indexOf(k);
+    var age=profile&&profile.age?profile.age:0;
+    var sex=profile&&profile.sex?String(profile.sex).toLowerCase():'';
+    if(age>=50&&['coq10','d3k2','omega','mag'].indexOf(k)>-1)score+=8;
+    if(age<35&&['creatine','bcomplex','theanine','glycine'].indexOf(k)>-1)score+=4;
+    if(sex==='female'&&planKey==='skin'&&['collagen','vitC','hyaluronic','zinc'].indexOf(k)>-1)score+=6;
+    if(sex==='male'&&['creatine','coq10','omega','mag'].indexOf(k)>-1)score+=3;
+    if(alreadyTakingKeys.indexOf(k)>-1)score-=18;
+    return score;
+  }
+  return out.sort(function(a,b){return boost(b)-boost(a);}).slice(0,4);
+}
 function getMatrixStack(planKey){
   var rows=getSelectedMatrixRows(planKey);
-  if(rows.length===1)return rows[0].supps.slice();
+  if(rows.length===1)return personalizeSupplementStack(planKey,rows[0].supps.slice());
   var result=[];
   for(var position=0;position<4;position++){
     rows.forEach(function(row){
@@ -2680,7 +2813,7 @@ function getMatrixStack(planKey){
       if(key&&S[key]&&result.indexOf(key)===-1&&result.length<4)result.push(key);
     });
   }
-  return result.slice(0,4);
+  return personalizeSupplementStack(planKey,result.slice(0,4));
 }
 function getMatrixContextForSupplement(planKey,key){
   var matches=getSelectedMatrixRows(planKey).filter(function(row){
@@ -4057,7 +4190,8 @@ function buildResults(){
     // User already covers the full core protocol — find advanced complementary options
     var advPool=(ADVANCED_SUPP[bestProto]||['coq10','lion','astaxanthin','curcumin','ps'])
       .filter(function(k){
-        return alreadyTakingKeys.indexOf(k)<0 && adExcludedKeys.indexOf(k)<0 && S[k];
+        var core=CORE_SUPPLEMENT_POOL[bestProto]||CORE_SUPPLEMENT_POOL.longevity;
+        return core.indexOf(k)>-1 && alreadyTakingKeys.indexOf(k)<0 && adExcludedKeys.indexOf(k)<0 && S[k];
       });
     advRecs=advPool.slice(0,3);
     suppCardKeys=currentSelectedKeys.concat(advRecs.filter(function(k){
@@ -4999,6 +5133,21 @@ function trackCTA() {
     });
   }
 }
+window.addEventListener('DOMContentLoaded',function(){
+  try{
+    var params=new URLSearchParams(window.location.search);
+    var protocol=params.get('protocol');
+    var valid={longevity:1,metabolic:1,sleep:1,stress:1,skin:1};
+    if(protocol&&valid[protocol]){
+      trackLandingAction('ad_funnel_protocol_entry',protocol);
+      setTimeout(function(){selectProtocol(protocol);},120);
+    }else if(params.get('ad')){
+      trackLandingAction('ad_funnel_landing');
+      var chooser=document.getElementById('protocolChooser');
+      if(chooser)setTimeout(function(){chooser.scrollIntoView({behavior:'smooth',block:'start'});},250);
+    }
+  }catch(e){}
+});
 </script>
 
 <script>
