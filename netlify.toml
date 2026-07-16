@@ -1,14 +1,39 @@
-# Serve the marketing landing page at the root URL.
-# The forced 200 rewrite shows landing.html content while keeping the "/" URL,
-# taking precedence over the index.html file that Netlify would otherwise serve.
+# Serve the home page at the root URL. The forced 200 rewrite shows
+# home.html while keeping "/", taking precedence over index.html.
 [[redirects]]
   from = "/"
-  to = "/landing.html"
+  to = "/home.html"
   status = 200
   force = true
 
-# Clean URL for the ad funnel / quiz (also reachable at /ad-funnel.html).
+# Clean URLs
+[[redirects]]
+  from = "/home"
+  to = "/home.html"
+  status = 200
+
+[[redirects]]
+  from = "/protocol"
+  to = "/protocol.html"
+  status = 200
+
+# Legacy paths → new ones (301 permanent)
+[[redirects]]
+  from = "/landing"
+  to = "/home"
+  status = 301
+
+[[redirects]]
+  from = "/landing.html"
+  to = "/home"
+  status = 301
+
 [[redirects]]
   from = "/ad-funnel"
-  to = "/ad-funnel.html"
-  status = 200
+  to = "/protocol"
+  status = 301
+
+[[redirects]]
+  from = "/ad-funnel.html"
+  to = "/protocol"
+  status = 301
