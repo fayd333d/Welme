@@ -373,7 +373,7 @@ function goalTitle(id){
 }
 
 function goalColumnValue(){
-  return S.goals.length ? goalTitle(S.goals[0]) : '';
+  return S.goals.map(goalTitle).join(', ');
 }
 
 function trackingAvailable(){
@@ -404,25 +404,15 @@ function formatSupplementLine(item){
   return cleanParts([
     item.name,
     item.dosage,
-    timing,
-    item.priorityLabel
+    timing
   ]).join(' — ');
 }
 
 function buildReadableResultsSummary(resultData){
   var lines = [];
-  var selectedGoals = (resultData.heroTitleLines || []).filter(Boolean);
   var selectedSupplements = resultData.recTake || [];
   var suggestedSupplements = resultData.recNew || [];
 
-  lines.push('Plan: ' + resultData.proto.title);
-
-  lines.push('');
-  lines.push('Selected goals:');
-  if(selectedGoals.length) selectedGoals.forEach(function(goal){ lines.push(goal); });
-  else lines.push('None selected');
-
-  lines.push('');
   lines.push('Selected / included supplements:');
   if(selectedSupplements.length){
     selectedSupplements.forEach(function(item){ lines.push(formatSupplementLine(item)); });
