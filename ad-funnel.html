@@ -373,7 +373,7 @@ function goalTitle(id){
 }
 
 function goalColumnValue(){
-  return S.goals.map(goalTitle).join(', ');
+  return S.goals.length ? goalTitle(S.goals[0]) : '';
 }
 
 function trackingAvailable(){
@@ -395,74 +395,50 @@ function ensureQuizStarted(){
   }
 }
 
-function compactSupplement(item){
-  return {
-    name: item.name,
-    dosage: item.dosage || DOSAGES[item.name] || 'To be confirmed during plan review',
-    timing: item.time === 'm' ? 'morning' : 'night',
-    timingLabel: item.timeLabel,
-    priorityLabel: item.priorityLabel || '',
-    personalisedExplanation: item.reason,
-    isNew: !!item.isNew
-  };
+function cleanParts(parts){
+  return parts.filter(function(part){ return part != null && String(part).trim() !== ''; });
 }
 
-function structuredResults(R){
-  return {
-    selectedPlan: {
-      id: S.goals[0] || '',
-      title: R.proto.title,
-      subtitle: R.proto.sub
-    },
-    selectedGoals: S.goals.map(function(id){ return { id:id, title:goalTitle(id) }; }),
-    answers: {
-      age: S.age,
-      gender: S.sex,
-      height: { unit:S.hUnit, feet:S.hFt, inches:S.hIn, centimeters:S.hCm, label:R.heightLabel },
-      weight: { unit:S.wUnit, value:S.weight, label:R.weightLabel },
-      clarifications: S.clarify.map(function(value){
-        var parts = value.split('::');
-        return { goalId:parts[0] || '', goalTitle:goalTitle(parts[0] || ''), answer:parts[1] || value };
-      }),
-      currentSupplements: S.supps.concat(S.customSupps),
-      healthConsiderations: S.conditions.concat(S.customConditions)
-    },
-    resultsSummary: {
-      heroTitleLines: R.heroTitleLines,
-      summaryChips: R.summaryChips,
-      review: R.review,
-      bodyMetrics: {
-        age: R.age,
-        bmi: R.bmi,
-        bmiCategory: R.bmiCat,
-        height: R.heightLabel,
-        weight: R.weightLabel
-      },
-      nutritionTargets: {
-        hasNutrition: R.hasNutrition,
-        calories: R.kcal,
-        protein: R.protein,
-        fat: R.fat,
-        carbs: R.carbs
-      }
-    },
-    recommendedSupplements: R.recNew.map(compactSupplement),
-    existingRoutineSupplements: R.recTake.map(compactSupplement),
-    dailyPlan: {
-      morning: R.planMorning.map(compactSupplement),
-      night: R.planNight.map(compactSupplement)
-    },
-    protocolDirection: R.directions.map(function(item){
-      return {
-        goalTitle: item.goalTitle,
-        personalisedExplanation: item.text,
-        additionalRecommendation: item.hack,
-        supportingSupplements: item.tags
-      };
-    }),
-    safetyNotes: R.notes,
-    additionalRecommendations: R.directions.map(function(item){ return item.hack; })
-  };
+function formatSupplementLine(item){
+  var timing = item.time === 'm' ? 'Morning' : (item.time === 'n' ? 'Night' : '');
+  return cleanParts([
+    item.name,
+    item.dosage,
+    timing,
+    item.priorityLabel
+  ]).join(' — ');
+}
+
+function buildReadableResultsSummary(resultData){
+  var lines = [];
+  var selectedGoals = (resultData.heroTitleLines || []).filter(Boolean);
+  var selectedSupplements = resultData.recTake || [];
+  var suggestedSupplements = resultData.recNew || [];
+
+  lines.push('Plan: ' + resultData.proto.title);
+
+  lines.push('');
+  lines.push('Selected goals:');
+  if(selectedGoals.length) selectedGoals.forEach(function(goal){ lines.push(goal); });
+  else lines.push('None selected');
+
+  lines.push('');
+  lines.push('Selected / included supplements:');
+  if(selectedSupplements.length){
+    selectedSupplements.forEach(function(item){ lines.push(formatSupplementLine(item)); });
+  } else {
+    lines.push('None selected');
+  }
+
+  lines.push('');
+  lines.push('Suggested supplements:');
+  if(suggestedSupplements.length){
+    suggestedSupplements.forEach(function(item){ lines.push(formatSupplementLine(item)); });
+  } else {
+    lines.push('None suggested');
+  }
+
+  return lines.join('\n');
 }
 
 function trackQuizFinish(){
@@ -991,7 +967,7 @@ function submitEmail(){
       page:'results',
       event:'email_submit',
       email:S.email,
-      results:structuredResults(R)
+      results:buildReadableResultsSummary(R)
     }, { keepalive:true });
   }
   set({ sent: true });

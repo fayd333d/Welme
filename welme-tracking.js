@@ -3,7 +3,6 @@
 
   var ENDPOINT = 'https://script.google.com/macros/s/AKfycbxg1FEwB5KIZwoEr6hOVpgH52wrLgVVxfKSoKveXtLYtiA2e6D4Q2XOXml_IOms_CjA/exec';
   var USER_ID_KEY = 'welme_user_id';
-  var PROFILE_CAPTURED_PREFIX = 'welme_profile_captured_';
   var LANDING_PAGE_VIEW_FLAG = '__welmeLandingPageViewTracked';
 
   var ALLOWED_EVENTS = {
@@ -42,38 +41,6 @@
     return startsLikeFormula(text) ? "'" + text : text;
   }
 
-  function safeJson(value){
-    if(value == null || value === '') return '';
-    var seen = [];
-    try{
-      return JSON.stringify(value, function(key, nestedValue){
-        if(typeof nestedValue === 'function' || typeof nestedValue === 'undefined') return null;
-        if(nestedValue && typeof nestedValue === 'object'){
-          if(seen.indexOf(nestedValue) !== -1) return '[Circular]';
-          seen.push(nestedValue);
-        }
-        return nestedValue;
-      });
-    }catch(error){
-      console.error('Welme tracking could not serialise results JSON.', error);
-      return '';
-    }
-  }
-
-  function profileCapturedKey(userId){
-    return PROFILE_CAPTURED_PREFIX + userId;
-  }
-
-  function hasCapturedProfile(userId){
-    try{ return window.localStorage.getItem(profileCapturedKey(userId)) === '1'; }
-    catch(error){ return false; }
-  }
-
-  function markProfileCaptured(userId){
-    try{ window.localStorage.setItem(profileCapturedKey(userId), '1'); }
-    catch(error){ console.error('Welme tracking could not persist profile capture state.', error); }
-  }
-
   function normalisePayload(input){
     input = input || {};
     var page = String(input.page || '');
@@ -87,13 +54,11 @@
     var age = '';
     var gender = '';
     var goal = '';
-    var hasProfile = input.age != null && input.age !== '' && input.gender && input.goal;
 
-    if(hasProfile && !hasCapturedProfile(userId)){
-      age = safeCell(input.age);
-      gender = safeCell(input.gender);
-      goal = safeCell(input.goal);
-      markProfileCaptured(userId);
+    if(page === 'quiz' && event === 'quiz_finish'){
+      age = safeCell(input.age || '');
+      gender = safeCell(input.gender || '');
+      goal = safeCell(input.goal || '');
     }
 
     return {
@@ -105,7 +70,7 @@
       gender: gender,
       goal: goal,
       email: event === 'email_submit' ? safeCell(input.email || '') : '',
-      results: event === 'email_submit' ? safeJson(input.results) : ''
+      results: event === 'email_submit' ? safeCell(input.results || '') : ''
     };
   }
 
