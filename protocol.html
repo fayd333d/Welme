@@ -32,7 +32,7 @@ src="https://www.facebook.com/tr?id=1028962489819655&ev=PageView&noscript=1"
 
 <link rel="icon" href="/favicon.ico" type="image/x-icon">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>welme – Build your personalised supplement protocol</title>
+<title>Welme – Build your personalised supplement protocol</title>
 <meta name="description" content="Answer a short quiz and get a personalised supplement protocol – morning and night sachets built around your goals, body and routine.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -119,7 +119,7 @@ src="https://www.facebook.com/tr?id=1028962489819655&ev=PageView&noscript=1"
 <div class="page">
   <div class="hdr">
     <div class="hdr-row">
-      <a class="brand" href="home.html">welme</a>
+      <a class="brand" href="home.html">Welme</a>
       <span id="hdrRight"></span>
     </div>
     <div id="hdrProg"></div>
@@ -593,50 +593,54 @@ function buildResults(){
 
   var notes = allConds.map(function(c){ return NOTE[c]; }).filter(Boolean);
 
-  /* ---- personalised, educational summary — leads with the user's concerns ---- */
+  /* ---- personalised, mechanism-led explanation (physician-style, no diagnoses) ---- */
   var joinList = function(a){ a = a.filter(Boolean); if(a.length <= 1) return a[0] || ''; if(a.length === 2) return a[0] + ' and ' + a[1]; return a.slice(0,-1).join(', ') + ' and ' + a[a.length-1]; };
   var B = function(t){ return '<b style="color:#14655B">' + esc(t) + '</b>'; }; // deep-green highlight (matches border colour)
-  var GOAL_EDU = { sleep:'deeper, more consistent sleep', energy:'steadier daytime energy', heart:'long-term heart and circulation health', brain:'focus, memory and long-term brain health', joints:'comfortable, mobile joints', longevity:'healthy ageing and resilience', digestion:'comfortable, regular digestion', stress:'a calmer stress response' };
-  var mCount = fullProtocol.filter(function(p){ return p.time === 'm'; }).length;
-  var nCount = fullProtocol.filter(function(p){ return p.time === 'n'; }).length;
-  var keepCount = fullProtocol.filter(function(p){ return !p.isNew; }).length;
-  var symLabels = S.clarify.map(function(v){ return v.split('::')[1]; }).filter(Boolean).map(function(s){ return s.toLowerCase(); });
-  var ageBand = age ? (age < 30 ? 'your 20s' : age < 40 ? 'your 30s' : age < 50 ? 'your 40s' : age < 60 ? 'your 50s' : age < 70 ? 'your 60s' : 'your later years') : '';
+  var GOAL_AREA = { sleep:'restful sleep', energy:'daytime energy', heart:'heart health', brain:'mental clarity', joints:'joint comfort', longevity:'healthy ageing', digestion:'comfortable digestion', stress:'a calmer stress response' };
+  // For each goal: two [ingredient, how it works in the body]
+  var GOAL_EXPL = {
+    sleep:[['Magnesium glycinate','calms the nervous system and relaxes tense muscles'],['glycine','gently lowers your core body temperature so sleep comes on faster and runs deeper']],
+    energy:[['CoQ10','helps your cells turn food into usable energy inside the mitochondria'],['B vitamins','keep that energy pathway running to steady you through the afternoon']],
+    heart:[['Omega-3','eases inflammation and supports healthy blood pressure and triglycerides'],['CoQ10','protects the heart muscle, one of the most energy-hungry tissues in the body']],
+    brain:[['Omega-3','supplies DHA, a core structural fat in your brain-cell membranes'],['B vitamins','fuel the neurotransmitters behind clear, focused thinking']],
+    joints:[['Collagen','provides the raw material your body uses to rebuild cartilage and connective tissue'],['omega-3','helps quiet the low-grade inflammation behind stiffness']],
+    longevity:[['CoQ10','defends the mitochondria that power every cell as the years add up'],['omega-3','counters the chronic, low-level inflammation associated with ageing']],
+    digestion:[['Probiotics','help rebalance the gut microbiome that drives comfortable digestion'],['zinc','supports the gut lining and normal digestive-enzyme activity']],
+    stress:[['Ashwagandha','helps regulate cortisol so your body recovers from stress more smoothly'],['magnesium','settles an over-active nervous system and eases physical tension']]
+  };
 
-  /* P1 — start with the concerns, then explain why they may be relevant given the profile */
-  var p1;
-  if(symLabels.length) p1 = 'You told us about ' + joinList(symLabels.map(B)) + '. ';
-  else if(selGoals.length) p1 = 'You want to focus on ' + joinList(selGoals.map(function(g){ return B(g.title.toLowerCase()); })) + '. ';
-  else p1 = 'You’re here to build a solid, everyday foundation. ';
-  if(bmiCat && (ageBand || bmiV)){
-    p1 += 'In ' + (ageBand || 'your stage of life') + ', with a ' + B('BMI of ' + (bmiV ? bmiV.toFixed(1) : '–')) + ' in the ' + B(bmiCat + ' range') + ', ';
-    if(bmiCat === 'healthy') p1 += 'signs like these usually trace back to ' + B('daily habits, stress and small nutrient gaps') + ' rather than your body composition – which is exactly where a focused plan helps.';
-    else if(bmiCat === 'elevated' || bmiCat === 'high') p1 += 'extra weight can amplify concerns like these by adding ' + B('metabolic, cardiovascular and joint load') + ', so the plan pairs the right nutrients with steadier daily habits.';
-    else if(bmiCat === 'underweight') p1 += 'making sure you ' + B('absorb enough of the key nutrients') + ' matters most, so the plan leans on well-absorbed, foundational supplements.';
-    else p1 += 'steady daily support is the priority.';
-  } else {
-    p1 += 'Add your age and body metrics for a sharper, more personal read.';
-  }
+  var areasBold = selGoals.map(function(g){ return B(GOAL_AREA[g.id]); });
 
-  /* P2 — how the goals shape the plan */
-  var p2 = selGoals.length
-    ? 'Your plan is built around ' + joinList(selGoals.map(function(g){ return B(GOAL_EDU[g.id]); })) + ', matching supplements to what you actually told us rather than a generic stack.'
-    : '';
+  /* P1 — natural, explanatory opener */
+  var p1 = selGoals.length
+    ? 'To help improve ' + joinList(areasBold) + ', your body may benefit from a focused set of active ingredients, each chosen for how it works rather than added to a generic list.'
+    : 'Your plan focuses on the everyday foundations that support overall health and prevention, chosen for how each nutrient works in the body.';
 
-  /* P3 — the plan itself */
+  /* P2 — mechanisms, tied to each selected area */
+  var p2 = selGoals.map(function(g){
+    var e = GOAL_EXPL[g.id]; if(!e) return '';
+    return 'For ' + B(GOAL_AREA[g.id]) + ', ' + B(e[0][0]) + ' ' + e[0][1] + ', while ' + B(e[1][0]) + ' ' + e[1][1] + '.';
+  }).filter(Boolean).join(' ');
+
+  /* P3 — profile nuance (age / body composition), phrased clinically */
   var p3 = '';
-  if(fullProtocol.length){
-    p3 = 'That comes to ' + B(fullProtocol.length + ' supplements') + ' at researched doses – ' + B(mCount + ' in the morning') + ' and ' + B(nCount + ' at night') + '. ';
-    if(keepCount > 0) p3 += 'We kept the ' + keepCount + ' you already take and balanced the doses so nothing overlaps. ';
-    p3 += 'Timing matters: ' + B('magnesium and glycine at night') + ' to help you wind down, and ' + B('fat-soluble vitamins with a morning meal') + ' so they actually absorb.';
-  }
+  if(bmiCat === 'healthy') p3 = 'With your body composition already in a ' + B('healthy range') + ', the aim is to maintain and fine-tune, so doses stay sensible and foundational.';
+  else if(bmiCat === 'elevated' || bmiCat === 'high') p3 = 'With a ' + B('higher body-mass index') + ', there is added emphasis on ' + B('omega-3') + ' and ' + B('magnesium') + ', which help support healthy metabolism, blood pressure and insulin sensitivity.';
+  else if(bmiCat === 'underweight') p3 = 'With a ' + B('lower body weight') + ', absorption becomes the priority, so fat-soluble nutrients are paired with food for better uptake.';
+  if(age >= 50 && p3) p3 += ' As the body ages it produces less ' + B('CoQ10') + ' and leans harder on its ' + B('antioxidant defences') + ', so these carry a little extra weight here.';
 
-  /* P4 — conditions */
-  var p4 = allConds.length
-    ? 'Because you mentioned ' + joinList(allConds.slice(0,3).map(function(c){ return B(c.toLowerCase()); })) + (allConds.length > 3 ? ' and more' : '') + ', we adjusted forms and doses and flag anything worth reviewing with your doctor.'
+  /* P4 — current supplements, no counts */
+  var takeItems = fullProtocol.filter(function(p){ return !p.isNew; });
+  var p4 = takeItems.length
+    ? 'Where an ingredient is already part of your routine, such as ' + B(takeItems[0].name) + ', it is kept and the surrounding doses are balanced so nothing doubles up.'
     : '';
 
-  var reviewParasHtml = [p1, p2, p3, p4].filter(Boolean);
+  /* P5 — conditions */
+  var p5 = allConds.length
+    ? 'With ' + joinList(allConds.slice(0,3).map(function(c){ return B(c.toLowerCase()); })) + (allConds.length > 3 ? ' and more' : '') + ' in mind, gentler forms and more conservative doses are chosen, and anything worth discussing with your doctor is flagged.'
+    : '';
+
+  var reviewParasHtml = [p1, p2, p3, p4, p5].filter(Boolean);
   var reviewHtml = reviewParasHtml.map(function(t){ return '<p style="margin:14px 12px 0 17px;font-size:15px;line-height:1.62;color:#33403A">' + t + '</p>'; }).join('');
   var review = reviewHtml.replace(/<[^>]+>/g, '');
 
@@ -940,7 +944,7 @@ function finishScreen(){
 
     /* what's inside */
     + '<div style="margin-top:30px">'
-    + '<img src="assets/opt/box-closed.png" alt="Sealed welme box with 28 daily packs" style="display:block;width:44%;max-width:172px;height:auto;margin:0 auto">'
+    + '<img src="assets/opt/box-closed.png" alt="Sealed Welme box with 28 daily packs" style="display:block;width:44%;max-width:172px;height:auto;margin:0 auto">'
     + '<p style="margin:12px auto 0;max-width:260px;text-align:center;font-size:13.5px;line-height:1.5;color:#C4D2CA">28 daily packs – one for each day of the month</p>'
     + '<div style="height:1px;background:rgba(196,210,202,.16);margin:24px 4px 26px"></div>'
     + '<div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px">'
@@ -986,12 +990,12 @@ function finishScreen(){
   }
 
   h += '<div style="text-align:center;margin-top:26px">'
-    + '<a href="home.html" data-act="landing-click" style="font-size:15px;font-weight:700;color:#C4D2CA;text-decoration:underline;text-underline-offset:3px">Learn more about welme</a>'
+    + '<a href="home.html" data-act="landing-click" style="font-size:15px;font-weight:700;color:#C4D2CA;text-decoration:underline;text-underline-offset:3px">Learn more about Welme</a>'
     + '</div></div>';
 
   /* footer */
   h += '<div style="background:#F7F2E9;padding:24px 22px;text-align:center">'
-    + '<span style="font-family:\'Domine\',serif;font-weight:700;font-size:16px;color:#14655B;display:block">welme</span>'
+    + '<span style="font-family:\'Domine\',serif;font-weight:700;font-size:16px;color:#14655B;display:block">Welme</span>'
     + '<div style="display:flex;justify-content:center;flex-wrap:wrap;gap:8px 12px;font-size:12px;font-weight:600;color:#4A574F;margin-top:12px">'
     + '<a href="privacy.html" style="color:#4A574F;text-decoration:none">Privacy</a>'
     + '<a href="contact.html" style="color:#4A574F;text-decoration:none">Contact</a>'

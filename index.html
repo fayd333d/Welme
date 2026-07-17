@@ -4566,10 +4566,10 @@ window.addEventListener('afterprint',restorePdfPrintTitle);
 
 function getPdfExportFileName(){
   var email=(window._welmeProtocolEmail||localStorage.getItem('welmeUserEmail')||'').trim();
-  var name=email?email.split('@')[0]:'welme';
+  var name=email?email.split('@')[0]:'Welme';
   name=name.toLowerCase()
     .replace(/[^a-z0-9]+/g,'-')
-    .replace(/^-+|-+$/g,'')||'welme';
+    .replace(/^-+|-+$/g,'')||'Welme';
   return name+'-health-protocol.pdf';
 }
 function setProtocolPdfMetadata(pdf){
