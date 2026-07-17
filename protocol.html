@@ -593,41 +593,52 @@ function buildResults(){
 
   var notes = allConds.map(function(c){ return NOTE[c]; }).filter(Boolean);
 
-  /* ---- personalised, educational summary (goals, concerns, plan, profile) ---- */
+  /* ---- personalised, educational summary — leads with the user's concerns ---- */
   var joinList = function(a){ a = a.filter(Boolean); if(a.length <= 1) return a[0] || ''; if(a.length === 2) return a[0] + ' and ' + a[1]; return a.slice(0,-1).join(', ') + ' and ' + a[a.length-1]; };
+  var B = function(t){ return '<b style="color:#14655B">' + esc(t) + '</b>'; }; // deep-green highlight (matches border colour)
   var GOAL_EDU = { sleep:'deeper, more consistent sleep', energy:'steadier daytime energy', heart:'long-term heart and circulation health', brain:'focus, memory and long-term brain health', joints:'comfortable, mobile joints', longevity:'healthy ageing and resilience', digestion:'comfortable, regular digestion', stress:'a calmer stress response' };
-  var sexWord = S.sex === 'female' ? 'woman' : S.sex === 'male' ? 'man' : '';
   var mCount = fullProtocol.filter(function(p){ return p.time === 'm'; }).length;
   var nCount = fullProtocol.filter(function(p){ return p.time === 'n'; }).length;
-  var newCount = fullProtocol.filter(function(p){ return p.isNew; }).length;
-  var keepCount = fullProtocol.length - newCount;
+  var keepCount = fullProtocol.filter(function(p){ return !p.isNew; }).length;
   var symLabels = S.clarify.map(function(v){ return v.split('::')[1]; }).filter(Boolean).map(function(s){ return s.toLowerCase(); });
+  var ageBand = age ? (age < 30 ? 'your 20s' : age < 40 ? 'your 30s' : age < 50 ? 'your 40s' : age < 60 ? 'your 50s' : age < 70 ? 'your 60s' : 'your later years') : '';
 
-  var pA = 'At ' + (age || 'your age') + (sexWord ? (' as a ' + sexWord) : '') + ', your BMI of ' + (bmiV ? bmiV.toFixed(1) : '–') + ' sits in the ' + bmiCat + ' range. ';
-  if(bmiCat === 'healthy') pA += 'That is a strong base, so your plan is built to maintain it – the foundational nutrients most people fall short on, at sensible everyday doses.';
-  else if(bmiCat === 'elevated' || bmiCat === 'high') pA += 'Carrying some extra weight adds cardiovascular and metabolic load, so your plan leans on nutrients such as omega-3, magnesium and vitamin D that support heart, blood-sugar and joint health, alongside steady daily habits.';
-  else if(bmiCat === 'underweight') pA += 'A lower BMI means getting enough of the key nutrients matters most, so your plan prioritises well-absorbed, foundational supplements taken with food.';
-  else pA += 'Add your height and weight for a sharper read on your doses and daily targets.';
-
-  var pB = selGoals.length
-    ? 'You chose to focus on ' + joinList(selGoals.map(function(g){ return g.title.toLowerCase(); })) + ', so the plan is built around ' + joinList(selGoals.map(function(g){ return GOAL_EDU[g.id]; }).filter(Boolean)) + '. '
-    : 'With no single goal selected, your plan focuses on everyday foundations and prevention. ';
-  if(symLabels.length) pB += 'You also flagged ' + joinList(symLabels.slice(0,3)) + (symLabels.length > 3 ? ' and more' : '') + ', which helped us prioritise the right ingredients and timing.';
-
-  var pC = '';
-  if(fullProtocol.length){
-    pC = 'The result is ' + fullProtocol.length + ' supplements at researched doses – ' + mCount + ' with your morning sachet and ' + nCount + ' at night. ';
-    if(keepCount > 0) pC += 'That includes ' + keepCount + ' you already take, balanced so nothing overlaps, plus ' + newCount + ' new to fill the gaps. ';
-    pC += 'Splitting them across the day means each nutrient lands when your body uses it best – magnesium and glycine at night to help you wind down, and fat-soluble vitamins like D3 and K2 with a morning meal so they actually absorb.';
+  /* P1 — start with the concerns, then explain why they may be relevant given the profile */
+  var p1;
+  if(symLabels.length) p1 = 'You told us about ' + joinList(symLabels.map(B)) + '. ';
+  else if(selGoals.length) p1 = 'You want to focus on ' + joinList(selGoals.map(function(g){ return B(g.title.toLowerCase()); })) + '. ';
+  else p1 = 'You’re here to build a solid, everyday foundation. ';
+  if(bmiCat && (ageBand || bmiV)){
+    p1 += 'In ' + (ageBand || 'your stage of life') + ', with a ' + B('BMI of ' + (bmiV ? bmiV.toFixed(1) : '–')) + ' in the ' + B(bmiCat + ' range') + ', ';
+    if(bmiCat === 'healthy') p1 += 'signs like these usually trace back to ' + B('daily habits, stress and small nutrient gaps') + ' rather than your body composition – which is exactly where a focused plan helps.';
+    else if(bmiCat === 'elevated' || bmiCat === 'high') p1 += 'extra weight can amplify concerns like these by adding ' + B('metabolic, cardiovascular and joint load') + ', so the plan pairs the right nutrients with steadier daily habits.';
+    else if(bmiCat === 'underweight') p1 += 'making sure you ' + B('absorb enough of the key nutrients') + ' matters most, so the plan leans on well-absorbed, foundational supplements.';
+    else p1 += 'steady daily support is the priority.';
+  } else {
+    p1 += 'Add your age and body metrics for a sharper, more personal read.';
   }
 
-  var pD = allConds.length
-    ? 'Because you mentioned ' + joinList(allConds.slice(0,3).map(function(c){ return c.toLowerCase(); })) + (allConds.length > 3 ? ' and more' : '') + ', we adjusted forms and doses and flag anything worth reviewing with your doctor.'
+  /* P2 — how the goals shape the plan */
+  var p2 = selGoals.length
+    ? 'Your plan is built around ' + joinList(selGoals.map(function(g){ return B(GOAL_EDU[g.id]); })) + ', matching supplements to what you actually told us rather than a generic stack.'
     : '';
 
-  var reviewParas = [pA, pB, pC, pD].filter(Boolean);
-  var review = reviewParas.join(' ');
-  var reviewHtml = reviewParas.map(function(t){ return '<p style="margin:14px 0 0;padding-left:17px;font-size:15px;line-height:1.62;color:#33403A">' + esc(t) + '</p>'; }).join('');
+  /* P3 — the plan itself */
+  var p3 = '';
+  if(fullProtocol.length){
+    p3 = 'That comes to ' + B(fullProtocol.length + ' supplements') + ' at researched doses – ' + B(mCount + ' in the morning') + ' and ' + B(nCount + ' at night') + '. ';
+    if(keepCount > 0) p3 += 'We kept the ' + keepCount + ' you already take and balanced the doses so nothing overlaps. ';
+    p3 += 'Timing matters: ' + B('magnesium and glycine at night') + ' to help you wind down, and ' + B('fat-soluble vitamins with a morning meal') + ' so they actually absorb.';
+  }
+
+  /* P4 — conditions */
+  var p4 = allConds.length
+    ? 'Because you mentioned ' + joinList(allConds.slice(0,3).map(function(c){ return B(c.toLowerCase()); })) + (allConds.length > 3 ? ' and more' : '') + ', we adjusted forms and doses and flag anything worth reviewing with your doctor.'
+    : '';
+
+  var reviewParasHtml = [p1, p2, p3, p4].filter(Boolean);
+  var reviewHtml = reviewParasHtml.map(function(t){ return '<p style="margin:14px 12px 0 17px;font-size:15px;line-height:1.62;color:#33403A">' + t + '</p>'; }).join('');
+  var review = reviewHtml.replace(/<[^>]+>/g, '');
 
   return {
     proto: proto, heroTitleHtml: heroTitleHtml, protoIcon: protoIcon,
@@ -638,8 +649,8 @@ function buildResults(){
     hasNutrition: kcal > 0,
     kcal: kcal || '–', protein: protein ? protein + 'g' : '–', fat: fat ? fat + 'g' : '–', carbs: carbs ? carbs + 'g' : '–',
     fullProtocol: fullProtocol,
-    recNew: protocol.filter(function(p){ return p.isNew; }),
-    recTake: fullProtocol.filter(function(p){ return !p.isNew; }),
+    recNew: protocol.filter(function(p){ return p.isNew; }).sort(function(a,b){ return (a.time === 'm' ? 0 : 1) - (b.time === 'm' ? 0 : 1); }),
+    recTake: fullProtocol.filter(function(p){ return !p.isNew; }).sort(function(a,b){ return (a.time === 'm' ? 0 : 1) - (b.time === 'm' ? 0 : 1); }),
     planMorning: fullProtocol.filter(function(p){ return p.time === 'm'; }),
     planNight: fullProtocol.filter(function(p){ return p.time === 'n'; }),
     directions: directions, notes: notes
@@ -899,8 +910,7 @@ function finishScreen(){
       + '</div>';
   }
 
-  h += '<p style="margin:16px 0 0;font-size:12.5px;line-height:1.5;color:#7A867E">Informational only – not a medical prescription. Our team reviews every plan and you can adjust it any time.</p>'
-    + '</div>';
+  h += '</div>';
 
   /* a smarter solution */
   h += '<div style="background:#1E3B34;padding:40px 22px 44px">'
@@ -932,8 +942,7 @@ function finishScreen(){
     + '<div style="margin-top:30px">'
     + '<img src="assets/opt/box-closed.png" alt="Sealed welme box with 28 daily packs" style="display:block;width:44%;max-width:172px;height:auto;margin:0 auto">'
     + '<p style="margin:12px auto 0;max-width:260px;text-align:center;font-size:13.5px;line-height:1.5;color:#C4D2CA">28 daily packs – one for each day of the month</p>'
-    + '<div style="height:1px;background:rgba(196,210,202,.16);margin:24px 4px"></div>'
-    + '<div style="text-align:center;margin-bottom:18px"><div style="font-size:11px;font-weight:800;letter-spacing:.14em;color:#C9A542">WHAT’S INSIDE</div></div>'
+    + '<div style="height:1px;background:rgba(196,210,202,.16);margin:24px 4px 26px"></div>'
     + '<div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px">'
     + '<div style="text-align:center"><img src="assets/opt/pill-morning.png" alt="Opened morning sachet with supplements" style="width:100%;max-width:132px;height:auto;margin:0 auto"><div style="font-size:12.5px;font-weight:700;color:#F7F2E9;margin-top:6px">Morning</div></div>'
     + '<div style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:0 2px">'
@@ -981,15 +990,15 @@ function finishScreen(){
     + '</div></div>';
 
   /* footer */
-  h += '<div style="background:#F7F2E9;padding:24px 22px">'
-    + '<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:nowrap">'
-    + '<span style="font-family:\'Domine\',serif;font-weight:700;font-size:16px;color:#14655B">welme</span>'
-    + '<div style="display:flex;gap:12px;font-size:12.5px;font-weight:600;color:#4A574F;white-space:nowrap">'
+  h += '<div style="background:#F7F2E9;padding:24px 22px;text-align:center">'
+    + '<span style="font-family:\'Domine\',serif;font-weight:700;font-size:16px;color:#14655B;display:block">welme</span>'
+    + '<div style="display:flex;justify-content:center;flex-wrap:wrap;gap:8px 12px;font-size:12px;font-weight:600;color:#4A574F;margin-top:12px">'
     + '<a href="privacy.html" style="color:#4A574F;text-decoration:none">Privacy</a>'
     + '<a href="contact.html" style="color:#4A574F;text-decoration:none">Contact</a>'
     + '<a href="disclaimer.html" style="color:#4A574F;text-decoration:none">Disclaimer</a>'
     + '<a href="manufacturing.html" style="color:#4A574F;text-decoration:none">Manufacturing</a>'
-    + '</div></div>'
+    + '<a href="science.html" style="color:#4A574F;text-decoration:none">Science</a>'
+    + '</div>'
     + '<p style="margin:16px 0 0;font-size:12px;line-height:1.55;color:#8A968E">Welme provides informational wellness guidance only, not medical diagnoses or treatment. Consult a healthcare professional before starting any treatments.</p>'
     + '</div>';
 
