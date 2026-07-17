@@ -441,6 +441,7 @@ function buildReadableResultsSummary(resultData){
 
 function trackQuizFinish(){
   if(S.quizFinishTracked) return;
+  try{ if(window.fbq) fbq('trackCustom', 'CompleteQuiz'); }catch(e){}
   if(trackingAvailable()){
     window.WelmeTracking.trackEvent({
       page:'quiz',
