@@ -32,7 +32,7 @@ src="https://www.facebook.com/tr?id=1028962489819655&ev=PageView&noscript=1"
 
 <link rel="icon" href="/favicon.ico" type="image/x-icon">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>welme – Build your personalised supplement protocol</title>
+<title>Welme – Build your personalised supplement protocol</title>
 <meta name="description" content="Answer a short quiz and get a personalised supplement protocol – morning and night sachets built around your goals, body and routine.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -119,7 +119,7 @@ src="https://www.facebook.com/tr?id=1028962489819655&ev=PageView&noscript=1"
 <div class="page">
   <div class="hdr">
     <div class="hdr-row">
-      <a class="brand" href="home.html">welme</a>
+      <a class="brand" href="home.html">Welme</a>
       <span id="hdrRight"></span>
     </div>
     <div id="hdrProg"></div>
@@ -265,6 +265,7 @@ var DEFAULT_STATE = {
   weight: '', wUnit: 'lb', hUnit: 'ft', hFt: '', hIn: '', hCm: '',
   supps: [], customSupps: [], suppDraft: '',
   conditions: [], customConditions: [], condDraft: '',
+  removed: [], editPlan: false,
   email: '', sent: false,
   quizAttemptId: '', quizStartTracked: false, quizFinishTracked: false,
   emailSubmitTracked: false
@@ -281,7 +282,7 @@ function persist(){
     step:S.step, goals:S.goals, clarify:S.clarify, age:S.age, sex:S.sex,
     weight:S.weight, wUnit:S.wUnit, hUnit:S.hUnit, hFt:S.hFt, hIn:S.hIn, hCm:S.hCm,
     supps:S.supps, customSupps:S.customSupps, conditions:S.conditions,
-    customConditions:S.customConditions, email:S.email, sent:S.sent,
+    customConditions:S.customConditions, removed:S.removed, email:S.email, sent:S.sent,
     quizAttemptId:S.quizAttemptId, quizStartTracked:S.quizStartTracked,
     quizFinishTracked:S.quizFinishTracked, emailSubmitTracked:S.emailSubmitTracked
   })); }catch(e){}
@@ -521,11 +522,6 @@ function buildResults(){
   var selGoals = GOALS.filter(function(g){ return S.goals.indexOf(g.id) !== -1; });
   var goalTitlesLower = selGoals.map(function(g){ return g.title.toLowerCase(); });
   var allConds = S.conditions.concat(S.customConditions);
-  var review = 'At ' + (age||'–') + ', with a BMI of ' + (bmiV ? bmiV.toFixed(1) : '–') + ' (' + bmiCat + '), your profile is a solid starting point. ';
-  if(bmiCat === 'healthy') review += 'Your body metrics sit in the healthy range, so the focus is maintaining them. ';
-  else if(bmiCat === 'elevated' || bmiCat === 'high') review += 'Your BMI is above the healthy range, which adds cardiovascular and joint load – steady daily habits matter most. ';
-  else if(bmiCat === 'underweight') review += 'Your BMI is below the healthy range, so adequate nutrient intake is a priority. ';
-  review += goalTitlesLower.length ? 'Your protocol targets ' + goalTitlesLower.slice(0,3).join(', ') + (goalTitlesLower.length > 3 ? ' and more' : '') + '.' : 'Your protocol focuses on prevention and daily balance.';
 
   var summaryChips = selGoals.map(function(g){ return g.title; });
   if(age) summaryChips.push(age + ' yrs');
@@ -584,7 +580,10 @@ function buildResults(){
       time: time, priorityLabel:'Current routine', isNew: false
     }, timeMeta(time));
   });
-  var fullProtocol = protocol.concat(takeExtra);
+  var removed = S.removed || [];
+  var notRemoved = function(p){ return removed.indexOf(p.name) === -1; };
+  protocol = protocol.filter(notRemoved);
+  var fullProtocol = protocol.concat(takeExtra).filter(notRemoved);
 
   /* protocol direction (lifestyle "try this" tips per goal) */
   var directions = selGoals.map(function(g){
@@ -594,17 +593,68 @@ function buildResults(){
 
   var notes = allConds.map(function(c){ return NOTE[c]; }).filter(Boolean);
 
+  /* ---- personalised, mechanism-led explanation (physician-style, no diagnoses) ---- */
+  var joinList = function(a){ a = a.filter(Boolean); if(a.length <= 1) return a[0] || ''; if(a.length === 2) return a[0] + ' and ' + a[1]; return a.slice(0,-1).join(', ') + ' and ' + a[a.length-1]; };
+  var B = function(t){ return '<b style="color:#14655B">' + esc(t) + '</b>'; }; // deep-green highlight (matches border colour)
+  var GOAL_AREA = { sleep:'restful sleep', energy:'daytime energy', heart:'heart health', brain:'mental clarity', joints:'joint comfort', longevity:'healthy ageing', digestion:'comfortable digestion', stress:'a calmer stress response' };
+  // For each goal: two [ingredient, how it works in the body]
+  var GOAL_EXPL = {
+    sleep:[['Magnesium glycinate','calms the nervous system and relaxes tense muscles'],['glycine','gently lowers your core body temperature so sleep comes on faster and runs deeper']],
+    energy:[['CoQ10','helps your cells turn food into usable energy inside the mitochondria'],['B vitamins','keep that energy pathway running to steady you through the afternoon']],
+    heart:[['Omega-3','eases inflammation and supports healthy blood pressure and triglycerides'],['CoQ10','protects the heart muscle, one of the most energy-hungry tissues in the body']],
+    brain:[['Omega-3','supplies DHA, a core structural fat in your brain-cell membranes'],['B vitamins','fuel the neurotransmitters behind clear, focused thinking']],
+    joints:[['Collagen','provides the raw material your body uses to rebuild cartilage and connective tissue'],['omega-3','helps quiet the low-grade inflammation behind stiffness']],
+    longevity:[['CoQ10','defends the mitochondria that power every cell as the years add up'],['omega-3','counters the chronic, low-level inflammation associated with ageing']],
+    digestion:[['Probiotics','help rebalance the gut microbiome that drives comfortable digestion'],['zinc','supports the gut lining and normal digestive-enzyme activity']],
+    stress:[['Ashwagandha','helps regulate cortisol so your body recovers from stress more smoothly'],['magnesium','settles an over-active nervous system and eases physical tension']]
+  };
+
+  var areasBold = selGoals.map(function(g){ return B(GOAL_AREA[g.id]); });
+
+  /* P1 — natural, explanatory opener */
+  var p1 = selGoals.length
+    ? 'To help improve ' + joinList(areasBold) + ', your body may benefit from a focused set of active ingredients, each chosen for how it works rather than added to a generic list.'
+    : 'Your plan focuses on the everyday foundations that support overall health and prevention, chosen for how each nutrient works in the body.';
+
+  /* P2 — mechanisms, tied to each selected area */
+  var p2 = selGoals.map(function(g){
+    var e = GOAL_EXPL[g.id]; if(!e) return '';
+    return 'For ' + B(GOAL_AREA[g.id]) + ', ' + B(e[0][0]) + ' ' + e[0][1] + ', while ' + B(e[1][0]) + ' ' + e[1][1] + '.';
+  }).filter(Boolean).join(' ');
+
+  /* P3 — profile nuance (age / body composition), phrased clinically */
+  var p3 = '';
+  if(bmiCat === 'healthy') p3 = 'With your body composition already in a ' + B('healthy range') + ', the aim is to maintain and fine-tune, so doses stay sensible and foundational.';
+  else if(bmiCat === 'elevated' || bmiCat === 'high') p3 = 'With a ' + B('higher body-mass index') + ', there is added emphasis on ' + B('omega-3') + ' and ' + B('magnesium') + ', which help support healthy metabolism, blood pressure and insulin sensitivity.';
+  else if(bmiCat === 'underweight') p3 = 'With a ' + B('lower body weight') + ', absorption becomes the priority, so fat-soluble nutrients are paired with food for better uptake.';
+  if(age >= 50 && p3) p3 += ' As the body ages it produces less ' + B('CoQ10') + ' and leans harder on its ' + B('antioxidant defences') + ', so these carry a little extra weight here.';
+
+  /* P4 — current supplements, no counts */
+  var takeItems = fullProtocol.filter(function(p){ return !p.isNew; });
+  var p4 = takeItems.length
+    ? 'Where an ingredient is already part of your routine, such as ' + B(takeItems[0].name) + ', it is kept and the surrounding doses are balanced so nothing doubles up.'
+    : '';
+
+  /* P5 — conditions */
+  var p5 = allConds.length
+    ? 'With ' + joinList(allConds.slice(0,3).map(function(c){ return B(c.toLowerCase()); })) + (allConds.length > 3 ? ' and more' : '') + ' in mind, gentler forms and more conservative doses are chosen, and anything worth discussing with your doctor is flagged.'
+    : '';
+
+  var reviewParasHtml = [p1, p2, p3, p4, p5].filter(Boolean);
+  var reviewHtml = reviewParasHtml.map(function(t){ return '<p style="margin:14px 12px 0 17px;font-size:15px;line-height:1.62;color:#33403A">' + t + '</p>'; }).join('');
+  var review = reviewHtml.replace(/<[^>]+>/g, '');
+
   return {
     proto: proto, heroTitleHtml: heroTitleHtml, protoIcon: protoIcon,
     heroTitleLines: heroLines,
-    summaryChips: summaryChips, review: review,
+    summaryChips: summaryChips, review: review, reviewHtml: reviewHtml,
     age: age || '–', bmi: bmiV ? bmiV.toFixed(1) : '–', bmiCat: bmiCat,
     heightLabel: heightLabel, weightLabel: weightLabel,
     hasNutrition: kcal > 0,
     kcal: kcal || '–', protein: protein ? protein + 'g' : '–', fat: fat ? fat + 'g' : '–', carbs: carbs ? carbs + 'g' : '–',
     fullProtocol: fullProtocol,
-    recNew: protocol.filter(function(p){ return p.isNew; }),
-    recTake: fullProtocol.filter(function(p){ return !p.isNew; }),
+    recNew: protocol.filter(function(p){ return p.isNew; }).sort(function(a,b){ return (a.time === 'm' ? 0 : 1) - (b.time === 'm' ? 0 : 1); }),
+    recTake: fullProtocol.filter(function(p){ return !p.isNew; }).sort(function(a,b){ return (a.time === 'm' ? 0 : 1) - (b.time === 'm' ? 0 : 1); }),
     planMorning: fullProtocol.filter(function(p){ return p.time === 'm'; }),
     planNight: fullProtocol.filter(function(p){ return p.time === 'n'; }),
     directions: directions, notes: notes
@@ -772,7 +822,9 @@ function recCard(r){
 function planCol(items){
   return items.map(function(p){
     return '<div class="plan-item"><span class="plan-dot"></span><span class="plan-name">' + esc(p.name) + '</span>'
-      + (p.isNew ? '<span class="plan-new">NEW</span>' : '') + '</div>';
+      + (p.isNew ? '<span class="plan-new">NEW</span>' : '')
+      + (S.editPlan ? '<button data-act="remove-supp" data-arg="' + esc(p.name) + '" aria-label="Remove ' + esc(p.name) + '" style="margin-left:auto;flex:none;width:20px;height:20px;border:none;border-radius:50%;background:#E7D9D2;color:#9A5B4A;font-size:14px;font-weight:800;line-height:18px;text-align:center;cursor:pointer">×</button>' : '')
+      + '</div>';
   }).join('');
 }
 
@@ -806,7 +858,7 @@ function finishScreen(){
     + '<div class="metric-card"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" style="margin:0 0 6px;display:block"><path d="M6 9h12l2 11H4L6 9Z" stroke="#14655B" stroke-width="2" stroke-linejoin="round"></path><path d="M9 9a3 3 0 0 1 6 0" stroke="#14655B" stroke-width="2"></path></svg>'
     + '<div class="metric-num">' + R.weightLabel + '</div><div class="metric-lbl">weight</div></div>'
     + '</div>'
-    + '<p style="margin:16px 0 0;padding-left:17px;font-size:15px;line-height:1.6;color:#33403A">' + esc(R.review) + '</p>';
+    + R.reviewHtml;
 
   /* daily nutrition targets */
   if(R.hasNutrition){
@@ -862,20 +914,20 @@ function finishScreen(){
       + '</div>';
   }
 
-  h += '<p style="margin:16px 0 0;font-size:12.5px;line-height:1.5;color:#7A867E">Informational only – not a medical prescription. Our team reviews every plan and you can adjust it any time.</p>'
-    + '</div>';
+  h += '</div>';
 
   /* a smarter solution */
   h += '<div style="background:#1E3B34;padding:40px 22px 44px">'
     + '<div style="text-align:center">'
     + '<div style="font-size:12px;font-weight:800;letter-spacing:.16em;color:#C9A542">A SMARTER SOLUTION</div>'
-    + '<h3 style="font-family:\'Domine\',serif;font-weight:700;font-size:27px;line-height:1.15;margin:10px 0 6px;color:#F7F2E9;text-wrap:balance">Your personalised supplement plan delivered to your home</h3>'
+    + '<h3 style="font-family:\'Domine\',serif;font-weight:700;font-size:27px;line-height:1.15;margin:10px 0 6px;color:#F7F2E9;text-wrap:balance">All your supplements in one box</h3>'
     + '<p style="margin:0 auto;max-width:320px;font-size:15px;line-height:1.55;color:#C4D2CA">Everything you take now, plus what your goals call for – in one daily pack.</p>'
     + '</div>'
 
     /* your daily plan */
     + '<div style="margin-top:26px;background:#F7F2E9;border-radius:20px;padding:22px 18px">'
-    + '<div style="text-align:center;margin-bottom:16px"><span style="font-size:11px;font-weight:800;letter-spacing:.14em;color:#A98E4E">YOUR DAILY PLAN</span></div>'
+    + '<div style="display:flex;align-items:center;justify-content:center;position:relative;margin-bottom:16px"><span style="font-size:11px;font-weight:800;letter-spacing:.14em;color:#A98E4E">YOUR DAILY PLAN</span>'
+    + '<button data-act="toggle-edit-plan" style="position:absolute;right:0;border:1.5px solid rgba(20,101,91,.3);background:#fff;color:#14655B;border-radius:999px;padding:5px 13px;font-size:11.5px;font-weight:800;cursor:pointer">' + (S.editPlan ? 'Done' : 'Edit') + '</button></div>'
     + '<div style="display:grid;grid-template-columns:1fr 1px 1fr;gap:0">'
     + '<div style="padding-right:14px">'
     + '<div style="display:flex;align-items:center;justify-content:center;gap:7px"><span style="font-size:15px">☀</span><span style="font-family:\'Domine\',serif;font-weight:600;font-size:17px;color:#3A4A42">Morning</span></div>'
@@ -886,14 +938,15 @@ function finishScreen(){
     + '<div style="display:flex;align-items:center;justify-content:center;gap:7px"><span style="font-size:14px">☾</span><span style="font-family:\'Domine\',serif;font-weight:600;font-size:17px;color:#3A4A42">Night</span></div>'
     + '<div style="display:flex;flex-direction:column;gap:8px;margin-top:12px">' + planCol(R.planNight) + '</div>'
     + '</div>'
-    + '</div></div>'
+    + '</div>'
+    + (S.editPlan ? '<p style="margin:14px 0 0;text-align:center;font-size:11.5px;line-height:1.45;color:#7A867E">Tap × to remove a supplement.' + ((S.removed && S.removed.length) ? ' <button data-act="restore-plan" style="border:none;background:none;color:#14655B;font-weight:800;text-decoration:underline;text-underline-offset:2px;cursor:pointer;font-size:11.5px;padding:0">Restore all</button>' : '') + '</p>' : '')
+    + '</div>'
 
     /* what's inside */
     + '<div style="margin-top:30px">'
-    + '<div style="text-align:center"><div style="font-size:11px;font-weight:800;letter-spacing:.14em;color:#C9A542">WHAT’S INSIDE</div></div>'
-    + '<img src="assets/opt/box-closed.png" alt="Sealed welme box with 28 daily packs" style="display:block;width:44%;max-width:172px;height:auto;margin:14px auto 0">'
-    + '<p style="margin:12px auto 0;max-width:260px;text-align:center;font-size:13.5px;line-height:1.5;color:#C4D2CA">28 daily cards – one for each day of the month</p>'
-    + '<div style="height:1px;background:rgba(196,210,202,.16);margin:24px 4px"></div>'
+    + '<img src="assets/opt/box-closed.png" alt="Sealed Welme box with 28 daily packs" style="display:block;width:44%;max-width:172px;height:auto;margin:0 auto">'
+    + '<p style="margin:12px auto 0;max-width:260px;text-align:center;font-size:13.5px;line-height:1.5;color:#C4D2CA">28 daily packs – one for each day of the month</p>'
+    + '<div style="height:1px;background:rgba(196,210,202,.16);margin:24px 4px 26px"></div>'
     + '<div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px">'
     + '<div style="text-align:center"><img src="assets/opt/pill-morning.png" alt="Opened morning sachet with supplements" style="width:100%;max-width:132px;height:auto;margin:0 auto"><div style="font-size:12.5px;font-weight:700;color:#F7F2E9;margin-top:6px">Morning</div></div>'
     + '<div style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:0 2px">'
@@ -903,15 +956,19 @@ function finishScreen(){
     + '</div>'
     + '<div style="text-align:center"><img src="assets/opt/pill-night.png" alt="Opened night sachet with supplements" style="width:100%;max-width:132px;height:auto;margin:0 auto"><div style="font-size:12.5px;font-weight:700;color:#F7F2E9;margin-top:6px">Night</div></div>'
     + '</div>'
-    + '<p style="margin:20px auto 0;max-width:280px;text-align:center;font-size:13.5px;line-height:1.5;color:#C4D2CA">Each card holds two sachets – a light one for the morning, a dark one for the night.</p>'
+    + '<p style="margin:20px auto 0;max-width:280px;text-align:center;font-size:13.5px;line-height:1.5;color:#C4D2CA">Each pack holds two sachets – a light one for the morning, a dark one for the night.</p>'
     + '</div>'
 
     /* how it works */
     + '<div style="display:flex;flex-direction:column;gap:12px;margin-top:26px">'
     + '<div class="how-step"><span class="how-num">1</span><p>Your box arrives with 28 daily packs – four weeks of your plan.</p></div>'
-    + '<div class="how-step"><span class="how-num">2</span><p>Tear off one card a day: morning sachet with breakfast, night sachet before bed.</p></div>'
+    + '<div class="how-step"><span class="how-num">2</span><p>Tear off one pack a day: morning sachet with breakfast, night sachet before bed.</p></div>'
     + '<div class="how-step"><span class="how-num">3</span><p>A fresh box arrives every month – free delivery, adjust any time.</p></div>'
     + '<div class="how-step"><span class="how-num">4</span><p>The price is set by the supplements in your plan – starting from $1 a day.</p></div>'
+    + '</div>'
+    + '<div style="margin-top:22px;background:rgba(247,242,233,.08);border:1px solid rgba(196,210,202,.16);border-radius:16px;padding:16px 18px">'
+    + '<div style="font-size:11px;font-weight:800;letter-spacing:.14em;color:#C9A542">HOW TO TAKE THEM</div>'
+    + '<p style="margin:8px 0 0;font-size:13.5px;line-height:1.6;color:#C4D2CA">Take each sachet with food and a full glass of water for the best absorption. Keep them separate from coffee and tea – the caffeine and tannins can block minerals like magnesium, zinc and iron, so leave an hour either side. Fat-soluble vitamins (D3, K2 and omega-3) absorb best with a meal that has some fat.</p>'
     + '</div>';
 
   /* email capture */
@@ -933,19 +990,19 @@ function finishScreen(){
   }
 
   h += '<div style="text-align:center;margin-top:26px">'
-    + '<a href="home.html" data-act="landing-click" style="font-size:15px;font-weight:700;color:#C4D2CA;text-decoration:underline;text-underline-offset:3px">Learn more about welme</a>'
+    + '<a href="home.html" data-act="landing-click" style="font-size:15px;font-weight:700;color:#C4D2CA;text-decoration:underline;text-underline-offset:3px">Learn more about Welme</a>'
     + '</div></div>';
 
   /* footer */
-  h += '<div style="background:#F7F2E9;padding:24px 22px">'
-    + '<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:nowrap">'
-    + '<span style="font-family:\'Domine\',serif;font-weight:700;font-size:16px;color:#14655B">welme</span>'
-    + '<div style="display:flex;gap:12px;font-size:12.5px;font-weight:600;color:#4A574F;white-space:nowrap">'
+  h += '<div style="background:#F7F2E9;padding:24px 22px;text-align:center">'
+    + '<span style="font-family:\'Domine\',serif;font-weight:700;font-size:16px;color:#14655B;display:block">Welme</span>'
+    + '<div style="display:flex;justify-content:center;flex-wrap:wrap;gap:8px 12px;font-size:12px;font-weight:600;color:#4A574F;margin-top:12px">'
     + '<a href="privacy.html" style="color:#4A574F;text-decoration:none">Privacy</a>'
     + '<a href="contact.html" style="color:#4A574F;text-decoration:none">Contact</a>'
     + '<a href="disclaimer.html" style="color:#4A574F;text-decoration:none">Disclaimer</a>'
     + '<a href="manufacturing.html" style="color:#4A574F;text-decoration:none">Manufacturing</a>'
-    + '</div></div>'
+    + '<a href="science.html" style="color:#4A574F;text-decoration:none">Science</a>'
+    + '</div>'
     + '<p style="margin:16px 0 0;font-size:12px;line-height:1.55;color:#8A968E">Welme provides informational wellness guidance only, not medical diagnoses or treatment. Consult a healthcare professional before starting any treatments.</p>'
     + '</div>';
 
@@ -1060,6 +1117,9 @@ document.addEventListener('click', function(e){
         window.scrollTo(0,0);
       }
       break;
+    case 'toggle-edit-plan': set({ editPlan: !S.editPlan }); break;
+    case 'remove-supp': if(arg) set({ removed: (S.removed || []).concat(arg) }); break;
+    case 'restore-plan': set({ removed: [] }); break;
     case 'submit-email': submitEmail(); break;
     case 'landing-click':
       e.preventDefault();
@@ -1068,7 +1128,7 @@ document.addEventListener('click', function(e){
     case 'restart':
       set({ step:0, goals:[], clarify:[], age:'', sex:'',
         weight:'', wUnit:'lb', hUnit:'ft', hFt:'', hIn:'', hCm:'', supps:[], customSupps:[],
-        suppDraft:'', conditions:[], customConditions:[], condDraft:'', email:'', sent:false,
+        suppDraft:'', conditions:[], customConditions:[], condDraft:'', removed:[], editPlan:false, email:'', sent:false,
         quizAttemptId:'', quizStartTracked:false, quizFinishTracked:false, emailSubmitTracked:false });
       window.scrollTo(0,0);
       break;

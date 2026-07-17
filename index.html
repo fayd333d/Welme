@@ -1667,6 +1667,7 @@ Separate with comma or newline"></textarea>
     <a href="contact.html">Contact</a>
     <a href="disclaimer.html">Disclaimer</a>
     <a href="manufacturing.html">Manufacturing</a>
+    <a href="science.html">Science</a>
   </div>
   <div>Welme provides informational wellness guidance only, not medical diagnoses or treatment. Consult a healthcare professional before starting any treatments.</div>
 </footer>
@@ -4565,10 +4566,10 @@ window.addEventListener('afterprint',restorePdfPrintTitle);
 
 function getPdfExportFileName(){
   var email=(window._welmeProtocolEmail||localStorage.getItem('welmeUserEmail')||'').trim();
-  var name=email?email.split('@')[0]:'welme';
+  var name=email?email.split('@')[0]:'Welme';
   name=name.toLowerCase()
     .replace(/[^a-z0-9]+/g,'-')
-    .replace(/^-+|-+$/g,'')||'welme';
+    .replace(/^-+|-+$/g,'')||'Welme';
   return name+'-health-protocol.pdf';
 }
 function setProtocolPdfMetadata(pdf){
