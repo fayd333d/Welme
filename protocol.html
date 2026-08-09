@@ -182,55 +182,95 @@ var PROTOCOL = {
 };
 
 var SUPP_INFO = {
+  // 7 shared foundation supplements (every plan)
+  'Omega-3 (EPA/DHA)':{time:'n',reason:'EPA/DHA for heart, brain and joint support; a TG-form, burp-free fish oil.'},
+  'Vitamin D3':{time:'m',reason:'Immune, bone and mood support; a foundational nutrient most people run low on.'},
   'Magnesium glycinate':{time:'n',reason:'Sleep, muscle relaxation and 300+ body processes.'},
-  'Omega-3 (EPA/DHA)':{time:'m',reason:'EPA/DHA for heart, brain and joint support.'},
-  'Vitamin D3 + K2':{time:'m',reason:'Immune, bone and mood support; K2 guides calcium into your bones.'},
   'B-Complex':{time:'m',reason:'Full B-range for energy metabolism and stress resilience.'},
-  'Vitamin C':{time:'m',reason:'Antioxidant for immunity; supports collagen and iron uptake.'},
-  'CoQ10':{time:'m',reason:'Cellular energy and heart support; declines with age.'},
   'Creatine':{time:'m',reason:'Supports muscle strength, recovery and mental energy.'},
+  'CoQ10':{time:'m',reason:'Cellular energy and heart support; declines with age.'},
   'Glycine':{time:'n',reason:'Calming amino acid that deepens sleep taken before bed.'},
+  // goal-specific layer
+  'L-theanine':{time:'n',reason:'Calm focus by day and an easier wind-down at night, without sedation.'},
+  'Taurine':{time:'m',reason:'Amino acid supporting heart function, cellular hydration and steady energy.'},
   'Ashwagandha':{time:'n',reason:'Adaptogen studied for stress, mood and recovery.'},
+  'Citicoline':{time:'m',reason:'Choline source studied for focus, attention and memory.'},
+  'Collagen (UC-II)':{time:'m',reason:'Undenatured type-II collagen (40 mg) that supports joint comfort and cartilage.'},
+  'Curcumin':{time:'m',reason:'A phytosome curcumin for a healthy inflammatory response and joint comfort.'},
+  'Probiotic':{time:'m',reason:'Supports gut flora balance and comfortable digestion.'},
+  'Digestive enzymes':{time:'m',reason:'Broad-spectrum enzymes that ease bloating and heaviness after meals.'},
+  // kept for matching a user's current routine
+  'Vitamin C':{time:'m',reason:'Antioxidant for immunity; supports collagen and iron uptake.'},
   'Zinc picolinate':{time:'n',reason:'Immune response, skin and tissue repair.'},
-  'Collagen':{time:'m',reason:'Peptides for joints, skin and connective tissue.'},
-  'Probiotic':{time:'m',reason:'Supports gut flora balance and comfortable digestion.'}
+  'Collagen':{time:'m',reason:'Peptides for joints, skin and connective tissue.'}
 };
 
 var DOSAGES = {
+  'Omega-3 (EPA/DHA)':'1,000–2,000 mg EPA/DHA',
+  'Vitamin D3':'2,000–4,000 IU',
   'Magnesium glycinate':'200–400 mg',
-  'Omega-3 (EPA/DHA)':'1,000 mg EPA/DHA',
-  'Vitamin D3 + K2':'2,000 IU D3 / 90 mcg K2',
   'B-Complex':'1 serving',
-  'Vitamin C':'500 mg',
-  'CoQ10':'100–200 mg',
   'Creatine':'3–5 g',
+  'CoQ10':'100–200 mg',
   'Glycine':'3 g',
+  'L-theanine':'100–200 mg',
+  'Taurine':'1–2 g',
   'Ashwagandha':'300–600 mg',
+  'Citicoline':'250–500 mg',
+  'Collagen (UC-II)':'40 mg',
+  'Curcumin':'500–1,000 mg',
+  'Probiotic':'10–30 billion CFU',
+  'Digestive enzymes':'1 serving with meals',
+  'Vitamin C':'500 mg',
   'Zinc picolinate':'15 mg',
-  'Collagen':'5–10 g',
-  'Probiotic':'10–20 billion CFU'
+  'Collagen':'5–10 g'
 };
 
-// Goal → supplement matrix. Each entry is [name, time] where time 'm'=morning, 'n'=night.
-var GOAL_MATRIX = {
-  sleep:     [['Magnesium glycinate','n'],['Omega-3 (EPA/DHA)','m'],['Vitamin D3 + K2','m'],['B-Complex','m'],['CoQ10','m'],['Glycine','n'],['Ashwagandha','n']],
-  energy:    [['Magnesium glycinate','n'],['Vitamin D3 + K2','m'],['B-Complex','m'],['Vitamin C','m'],['CoQ10','m'],['Creatine','m'],['Ashwagandha','n'],['Zinc picolinate','n']],
-  heart:     [['Magnesium glycinate','n'],['Omega-3 (EPA/DHA)','n'],['Vitamin D3 + K2','m'],['B-Complex','m'],['Vitamin C','m'],['CoQ10','m'],['Creatine','m'],['Ashwagandha','n']],
-  brain:     [['Magnesium glycinate','n'],['Omega-3 (EPA/DHA)','n'],['Vitamin D3 + K2','m'],['B-Complex','m'],['Vitamin C','m'],['CoQ10','m'],['Creatine','m'],['Ashwagandha','n']],
-  joints:    [['Magnesium glycinate','n'],['Omega-3 (EPA/DHA)','m'],['Vitamin D3 + K2','m'],['B-Complex','m'],['Vitamin C','m'],['Glycine','n'],['Zinc picolinate','n'],['Collagen','m']],
-  longevity: [['Magnesium glycinate','n'],['Omega-3 (EPA/DHA)','m'],['Vitamin D3 + K2','m'],['Vitamin C','m'],['CoQ10','m'],['Creatine','m'],['Glycine','n'],['Ashwagandha','n']],
-  digestion: [['Magnesium glycinate','n'],['Omega-3 (EPA/DHA)','m'],['Vitamin D3 + K2','m'],['B-Complex','m'],['Glycine','n'],['Zinc picolinate','n'],['Probiotic','m']],
-  stress:    [['Magnesium glycinate','n'],['Omega-3 (EPA/DHA)','m'],['Vitamin D3 + K2','m'],['B-Complex','m'],['Vitamin C','m'],['CoQ10','m'],['Glycine','n'],['Ashwagandha','n']]
+// 7 shared foundation supplements, in order, with their timing (m=morning, n=night).
+var FOUNDATION = [['Omega-3 (EPA/DHA)','n'],['Vitamin D3','m'],['Magnesium glycinate','n'],['B-Complex','m'],['Creatine','m'],['CoQ10','m'],['Glycine','n']];
+// Goal-specific layer added on top of the shared foundation.
+var GOAL_SPECIFIC = {
+  sleep:     [['L-theanine','n'],['Taurine','m'],['Ashwagandha','n']],
+  energy:    [['Taurine','m'],['L-theanine','n']],
+  heart:     [['Taurine','m'],['Curcumin','m']],
+  brain:     [['Citicoline','m'],['L-theanine','n'],['Taurine','m']],
+  joints:    [['Collagen (UC-II)','m'],['Curcumin','m']],
+  longevity: [['Taurine','m'],['Collagen (UC-II)','m'],['Curcumin','m']],
+  digestion: [['Probiotic','m'],['Digestive enzymes','m'],['Curcumin','m']],
+  stress:    [['L-theanine','n'],['Taurine','m'],['Ashwagandha','n']]
 };
+// Goal → full protocol = shared foundation + goal-specific layer.
+var GOAL_MATRIX = (function(){
+  var m = {};
+  Object.keys(GOAL_SPECIFIC).forEach(function(g){ m[g] = FOUNDATION.concat(GOAL_SPECIFIC[g]); });
+  return m;
+})();
 
-// Canonical display order for the recommended supplement list.
-var CANON_ORDER = ['Magnesium glycinate','Omega-3 (EPA/DHA)','Vitamin D3 + K2','B-Complex','Vitamin C','CoQ10','Creatine','Glycine','Ashwagandha','Zinc picolinate','Collagen','Probiotic'];
+// Canonical display order for the recommended supplement list (foundation first, then goal-specific).
+var CANON_ORDER = ['Omega-3 (EPA/DHA)','Vitamin D3','Magnesium glycinate','B-Complex','Creatine','CoQ10','Glycine','L-theanine','Taurine','Ashwagandha','Citicoline','Collagen (UC-II)','Curcumin','Probiotic','Digestive enzymes','Vitamin C','Zinc picolinate','Collagen'];
 
 // Distinctive supplements used as chips on each Protocol direction card.
 var GOAL_TAGS = {
-  sleep:['Magnesium glycinate','Glycine'], energy:['CoQ10','Creatine'], heart:['Omega-3 (EPA/DHA)','CoQ10'],
-  brain:['Omega-3 (EPA/DHA)','B-Complex'], joints:['Collagen','Glycine'], longevity:['CoQ10','Ashwagandha'],
-  digestion:['Probiotic','Zinc picolinate'], stress:['Ashwagandha','Magnesium glycinate']
+  sleep:['L-theanine','Ashwagandha'], energy:['Taurine','CoQ10'], heart:['Omega-3 (EPA/DHA)','Curcumin'],
+  brain:['Citicoline','L-theanine'], joints:['Collagen (UC-II)','Curcumin'], longevity:['Taurine','Collagen (UC-II)'],
+  digestion:['Probiotic','Digestive enzymes'], stress:['L-theanine','Ashwagandha']
+};
+
+// ── Condition-rules engine (internal math, from the Welme matrix). Adjusts the
+// plan silently: Block removes an item, Enable adds one, Reduce overrides its dose.
+var COND_BLOCK = {
+  'Kidney disease':['Creatine'],
+  'Recent surgery':['Omega-3 (EPA/DHA)','Curcumin'],
+  'Pregnant or breastfeeding':['Ashwagandha','Curcumin']
+};
+var COND_ENABLE = {
+  'Acid reflux / GERD':[['Probiotic','m']],
+  'IBS / sensitive gut':[['Probiotic','m']],
+  'No gallbladder':[['Digestive enzymes','m']]
+};
+var COND_DOSE = {
+  'On blood thinners':{'Omega-3 (EPA/DHA)':'≤ 1,000 mg EPA/DHA'},
+  'Kidney disease':{'Magnesium glycinate':'≤ 200 mg'}
 };
 
 var SUGG = {
@@ -254,7 +294,9 @@ var NOTE = {
   'Thyroid condition':'Calcium and iron are separated from thyroid-medication timing.',
   'On prescription meds':'Our team checks your plan for interactions before it ships.',
   'Type 2 diabetes / prediabetes':'Blood-sugar-supporting forms are chosen and sweetened bases avoided.',
-  'Liver condition':'Herbal extracts are kept conservative and reviewed by our team.'
+  'Liver condition':'Herbal extracts are kept conservative and reviewed by our team.',
+  'IBS / sensitive gut':'A probiotic is added and doses are eased in gradually to suit a sensitive gut.',
+  'Recent surgery':'Bleeding-risk actives such as omega-3 and curcumin are paused around surgery.'
 };
 
 /* ---------- state ---------- */
@@ -535,6 +577,17 @@ function buildResults(){
       if(!(pair[0] in timeOf)) timeOf[pair[0]] = pair[1]; // first selected goal sets the timing
     });
   });
+
+  /* ── condition-rules engine (silent): Enable → add, Block → remove, Reduce → dose override */
+  var doseOverride = {}, blocked = {};
+  allConds.forEach(function(c){
+    (COND_ENABLE[c] || []).forEach(function(pair){ if(!(pair[0] in timeOf)) timeOf[pair[0]] = pair[1]; });
+  });
+  allConds.forEach(function(c){
+    (COND_BLOCK[c] || []).forEach(function(n){ blocked[n] = 1; delete timeOf[n]; });
+    var m = COND_DOSE[c]; if(m) Object.keys(m).forEach(function(k){ doseOverride[k] = m[k]; });
+  });
+
   var ordered = CANON_ORDER.filter(function(n){ return n in timeOf; });
 
   var norm = function(str){ return String(str).toLowerCase()
@@ -554,7 +607,7 @@ function buildResults(){
     var info = SUPP_INFO[n] || { reason: '' };
     return Object.assign({
       name:n,
-      dosage:DOSAGES[n] || 'To be confirmed during plan review',
+      dosage:doseOverride[n] || DOSAGES[n] || 'To be confirmed during plan review',
       reason:info.reason,
       time:time,
       priorityLabel:index < 2 ? 'High priority' : 'Core support',
@@ -582,7 +635,7 @@ function buildResults(){
     }, timeMeta(time));
   });
   var removed = S.removed || [];
-  var notRemoved = function(p){ return removed.indexOf(p.name) === -1; };
+  var notRemoved = function(p){ return removed.indexOf(p.name) === -1 && !blocked[p.name]; };
   protocol = protocol.filter(notRemoved);
   var fullProtocol = protocol.concat(takeExtra).filter(notRemoved);
 
@@ -603,10 +656,10 @@ function buildResults(){
     sleep:[['Magnesium glycinate','calms the nervous system and relaxes tense muscles'],['glycine','gently lowers your core body temperature so sleep comes on faster and runs deeper']],
     energy:[['CoQ10','helps your cells turn food into usable energy inside the mitochondria'],['B vitamins','keep that energy pathway running to steady you through the afternoon']],
     heart:[['Omega-3','eases inflammation and supports healthy blood pressure and triglycerides'],['CoQ10','protects the heart muscle, one of the most energy-hungry tissues in the body']],
-    brain:[['Omega-3','supplies DHA, a core structural fat in your brain-cell membranes'],['B vitamins','fuel the neurotransmitters behind clear, focused thinking']],
-    joints:[['Collagen','provides the raw material your body uses to rebuild cartilage and connective tissue'],['omega-3','helps quiet the low-grade inflammation behind stiffness']],
+    brain:[['Citicoline','supplies choline for acetylcholine and healthy brain-cell membranes'],['omega-3','provides DHA, a core structural fat behind clear, focused thinking']],
+    joints:[['UC-II collagen','works through the gut-immune interface to support joint comfort and cartilage'],['curcumin','helps quiet the low-grade inflammation behind stiffness']],
     longevity:[['CoQ10','defends the mitochondria that power every cell as the years add up'],['omega-3','counters the chronic, low-level inflammation associated with ageing']],
-    digestion:[['Probiotics','help rebalance the gut microbiome that drives comfortable digestion'],['zinc','supports the gut lining and normal digestive-enzyme activity']],
+    digestion:[['Probiotics','help rebalance the gut microbiome that drives comfortable digestion'],['digestive enzymes','help break down meals so bloating and heaviness ease']],
     stress:[['Ashwagandha','helps regulate cortisol so your body recovers from stress more smoothly'],['magnesium','settles an over-active nervous system and eases physical tension']]
   };
 
