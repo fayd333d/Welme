@@ -555,7 +555,8 @@ function buildResults(){
   var primaryG = null;
   GOALS.forEach(function(g){ if(g.id === primaryGoal) primaryG = g; });
   var protoIcon = primaryG ? ic(primaryG.paths, 116, 1.5) : '';
-  /* hero title: selected goal names in the order they were picked, one per line */
+  var protoIconSm = primaryG ? ic(primaryG.paths, 30, 1.7) : '';
+  /* selected goal names, in the order they were picked */
   var heroLines = S.goals.map(function(id){
     var found = null;
     GOALS.forEach(function(g){ if(g.id === id) found = g; });
@@ -563,6 +564,11 @@ function buildResults(){
   }).filter(Boolean);
   if(!heroLines.length) heroLines = [proto.title];
   var heroTitleHtml = heroLines.map(function(t){ return esc(t); }).join('<br>');
+  /* general subtitle instead of listing every goal in the title */
+  var goalCount = heroLines.length;
+  var heroSubtitle = goalCount > 1
+    ? 'Built around your ' + goalCount + ' goals and current routine.'
+    : 'Built around your goal and current routine.';
 
   /* review copy */
   var selGoals = GOALS.filter(function(g){ return S.goals.indexOf(g.id) !== -1; });
@@ -702,8 +708,8 @@ function buildResults(){
   var review = reviewHtml.replace(/<[^>]+>/g, '');
 
   return {
-    proto: proto, heroTitleHtml: heroTitleHtml, protoIcon: protoIcon,
-    heroTitleLines: heroLines,
+    proto: proto, heroTitleHtml: heroTitleHtml, protoIcon: protoIcon, protoIconSm: protoIconSm,
+    heroTitleLines: heroLines, heroSubtitle: heroSubtitle,
     summaryChips: summaryChips, review: review, reviewHtml: reviewHtml,
     age: age || '–', bmi: bmiV ? bmiV.toFixed(1) : '–', bmiCat: bmiCat,
     heightLabel: heightLabel, weightLabel: weightLabel,
@@ -722,13 +728,13 @@ function buildResults(){
 function renderHeader(){
   var right = document.getElementById('hdrRight');
   var prog = document.getElementById('hdrProg');
-  var showSteps = S.step >= 1 && S.step < 4;
+  var showSteps = S.step >= 0 && S.step < 4;
   if(S.step === 4){
     right.innerHTML = '<button class="restart-btn" data-act="restart">Start over</button>';
     prog.innerHTML = '';
   } else if(showSteps){
-    right.innerHTML = '<span class="step-note">Step ' + S.step + ' of 3</span>';
-    prog.innerHTML = '<div class="prog-track"><div class="prog-fill" style="width:' + (S.step/3)*100 + '%"></div></div>';
+    right.innerHTML = '<span class="step-note">Step ' + (S.step + 1) + ' of 4</span>';
+    prog.innerHTML = '<div class="prog-track"><div class="prog-fill" style="width:' + ((S.step + 1)/4)*100 + '%"></div></div>';
   } else {
     right.innerHTML = '';
     prog.innerHTML = '';
@@ -878,14 +884,15 @@ function finishScreen(){
   var R = buildResults();
   var h = '<div>';
 
-  /* protocol lead */
-  h += '<div style="padding:22px 22px 34px;background:#F7F2E9">'
-    + '<div style="position:relative;overflow:hidden;border-radius:24px;padding:24px 22px 26px;min-height:200px;display:flex;flex-direction:column;justify-content:space-between;background:linear-gradient(152deg,#2E9A72 0%,#17705F 46%,#123F39 100%);box-shadow:0 26px 50px -26px rgba(15,74,66,.7);animation:heroIn .55s cubic-bezier(.2,.8,.2,1) both">'
-    + '<div style="position:absolute;inset:0;background:radial-gradient(130% 90% at 82% -10%,rgba(255,255,255,.20),transparent 58%);pointer-events:none"></div>'
-    + '<div style="position:absolute;top:0;bottom:0;width:36%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.14),transparent);animation:heroSheen 5.5s ease-in-out infinite;pointer-events:none"></div>'
-    + '<div style="position:absolute;top:16px;right:14px;color:rgba(255,255,255,.4);pointer-events:none">' + R.protoIcon + '</div>'
-    + '<div style="position:relative;font-size:11.5px;font-weight:800;letter-spacing:.18em;color:rgba(255,255,255,.72)">YOUR PERSONALISED PROTOCOL</div>'
-    + '<h2 style="position:relative;font-family:\'Domine\',serif;font-weight:700;font-size:25px;line-height:1.14;margin:14px 0 0;color:#FFFFFF;max-width:88%">' + R.heroTitleHtml + '</h2>'
+  /* protocol lead — clean, professional card (no coloured background) */
+  h += '<div style="padding:24px 22px 30px;background:#F7F2E9">'
+    + '<div style="display:flex;align-items:center;gap:16px;border:1px solid #E7E1D2;border-radius:20px;padding:22px 22px;background:#FFFFFF;box-shadow:0 14px 34px -24px rgba(15,74,66,.4);animation:heroIn .5s cubic-bezier(.2,.8,.2,1) both">'
+    +   '<div style="flex:none;width:58px;height:58px;border-radius:16px;background:#EAF3EE;color:#14655B;display:flex;align-items:center;justify-content:center">' + R.protoIconSm + '</div>'
+    +   '<div style="min-width:0">'
+    +     '<div style="font-size:11px;font-weight:800;letter-spacing:.16em;color:#A39877">YOUR PROTOCOL</div>'
+    +     '<h2 style="font-family:\'Domine\',serif;font-weight:700;font-size:22px;line-height:1.15;margin:5px 0 0;color:#1E3B34">Your daily supplement protocol</h2>'
+    +     '<p style="margin:6px 0 0;font-size:13.5px;line-height:1.45;color:#6A756D">' + esc(R.heroSubtitle) + '</p>'
+    +   '</div>'
     + '</div>';
 
   /* body metrics */
