@@ -145,15 +145,16 @@ var GOALS = [
   { id:'stress', title:'Stress & mood', paths:['M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2','M9.6 4.6A2 2 0 1 1 11 8H2','M12.6 19.4A2 2 0 1 0 14 16H2'] }
 ];
 
+// Kept short and mapped to what our actual shelf can support.
 var CLAR = {
-  sleep:['Trouble falling asleep','Wake up during the night','Wake up feeling unrefreshed','Hard to get out of bed'],
-  energy:['Tired throughout the day','Energy drops by afternoon','Low physical endurance','Rely on caffeine to stay alert'],
-  heart:['Get tired more easily','Short of breath during activity','Want to stay heart healthy','Focus on prevention'],
-  brain:['Brain fog','Forgetfulness','Trouble concentrating','Mental fatigue by afternoon'],
-  joints:['Stiff after sitting','Joint discomfort during movement','Slow recovery after activity','Want to stay active'],
-  longevity:['Want to age well','Stay active as I get older','Maintain strength with age','Focus on prevention'],
-  digestion:['Bloating','Discomfort after meals','Irregular digestion','Sensitive stomach'],
-  stress:['Feeling overwhelmed','Hard to relax','Feeling more irritable','Poor stress recovery']
+  sleep:['Trouble falling asleep','Wake up during the night','Wake up feeling unrefreshed'],
+  energy:['Tired throughout the day','Energy drops by afternoon','Low physical endurance'],
+  heart:['Get tired more easily','Want to stay heart healthy','Focus on prevention'],
+  brain:['Brain fog','Forgetfulness','Trouble concentrating'],
+  joints:['Stiff after sitting','Joint discomfort during movement','Slow recovery after activity'],
+  longevity:['Want to age well','Stay active as I get older','Maintain strength with age'],
+  digestion:['Bloating','Discomfort after meals','Irregular digestion'],
+  stress:['Feeling overwhelmed','Hard to relax','Poor stress recovery']
 };
 
 var SUPPS = ['Vitamin D3','Vitamin K2','Magnesium','Calcium','Zinc','Iron','Selenium',
@@ -208,7 +209,7 @@ var SUPP_INFO = {
 var DOSAGES = {
   'Omega-3 (EPA/DHA)':'1,000–2,000 mg EPA/DHA',
   'Vitamin D3':'2,000–4,000 IU',
-  'Magnesium glycinate':'200–400 mg',
+  'Magnesium glycinate':'300–400 mg',
   'B-Complex':'1 serving',
   'Creatine':'3–5 g',
   'CoQ10':'100–200 mg',
@@ -226,18 +227,18 @@ var DOSAGES = {
   'Collagen':'5–10 g'
 };
 
-// 7 shared foundation supplements, in order, with their timing (m=morning, n=night).
-var FOUNDATION = [['Omega-3 (EPA/DHA)','n'],['Vitamin D3','m'],['Magnesium glycinate','n'],['B-Complex','m'],['Creatine','m'],['CoQ10','m'],['Glycine','n']];
+// 6 shared foundation supplements, in order, with their timing (m=morning, n=night).
+var FOUNDATION = [['Omega-3 (EPA/DHA)','n'],['Vitamin D3','m'],['Magnesium glycinate','n'],['B-Complex','m'],['Creatine','m'],['Glycine','n']];
 // Goal-specific layer added on top of the shared foundation.
 var GOAL_SPECIFIC = {
-  sleep:     [['L-theanine','n'],['Taurine','m'],['Ashwagandha','n']],
-  energy:    [['Taurine','m'],['L-theanine','n']],
-  heart:     [['Taurine','m'],['Curcumin','m']],
+  sleep:     [['L-theanine','n'],['Ashwagandha','n'],['Taurine','m']],
+  energy:    [['CoQ10','m'],['Taurine','m'],['L-theanine','n']],
+  heart:     [['CoQ10','m'],['Taurine','m'],['Curcumin','m']],
   brain:     [['Citicoline','m'],['L-theanine','n'],['Taurine','m']],
   joints:    [['Collagen (UC-II)','m'],['Curcumin','m']],
-  longevity: [['Taurine','m'],['Collagen (UC-II)','m'],['Curcumin','m']],
+  longevity: [['CoQ10','m'],['Taurine','m'],['Curcumin','m']],
   digestion: [['Probiotic','m'],['Digestive enzymes','m'],['Curcumin','m']],
-  stress:    [['L-theanine','n'],['Taurine','m'],['Ashwagandha','n']]
+  stress:    [['L-theanine','n'],['Ashwagandha','n'],['Taurine','m']]
 };
 // Goal → full protocol = shared foundation + goal-specific layer.
 var GOAL_MATRIX = (function(){
@@ -247,12 +248,12 @@ var GOAL_MATRIX = (function(){
 })();
 
 // Canonical display order for the recommended supplement list (foundation first, then goal-specific).
-var CANON_ORDER = ['Omega-3 (EPA/DHA)','Vitamin D3','Magnesium glycinate','B-Complex','Creatine','CoQ10','Glycine','L-theanine','Taurine','Ashwagandha','Citicoline','Collagen (UC-II)','Curcumin','Probiotic','Digestive enzymes','Vitamin C','Zinc picolinate','Collagen'];
+var CANON_ORDER = ['Omega-3 (EPA/DHA)','Vitamin D3','Magnesium glycinate','B-Complex','Creatine','Glycine','CoQ10','L-theanine','Taurine','Ashwagandha','Citicoline','Collagen (UC-II)','Curcumin','Probiotic','Digestive enzymes','Vitamin C','Zinc picolinate','Collagen'];
 
 // Distinctive supplements used as chips on each Protocol direction card.
 var GOAL_TAGS = {
-  sleep:['L-theanine','Ashwagandha'], energy:['Taurine','CoQ10'], heart:['Omega-3 (EPA/DHA)','Curcumin'],
-  brain:['Citicoline','L-theanine'], joints:['Collagen (UC-II)','Curcumin'], longevity:['Taurine','Collagen (UC-II)'],
+  sleep:['L-theanine','Ashwagandha'], energy:['CoQ10','Taurine'], heart:['CoQ10','Curcumin'],
+  brain:['Citicoline','L-theanine'], joints:['Collagen (UC-II)','Curcumin'], longevity:['CoQ10','Taurine'],
   digestion:['Probiotic','Digestive enzymes'], stress:['L-theanine','Ashwagandha']
 };
 
@@ -751,10 +752,6 @@ function goalsScreen(){
     +   '<div class="eyebrow">YOUR PERSONALISED PROTOCOL</div>'
     +   '<h1 style="font-family:\'Domine\',serif;font-weight:700;font-size:30px;line-height:1.12;margin:12px 0 0;color:#1E3B34;text-wrap:balance">What would you like to improve?</h1>'
     +   '<p style="margin:12px auto 0;max-width:330px;font-size:15.5px;line-height:1.55;color:#4A574F">Pick the areas that matter to you – your supplement protocol is built around them.&nbsp;</p>'
-    +   '<div style="display:inline-flex;align-items:center;gap:9px;margin-top:18px;background:#EAF3EE;border-radius:999px;padding:8px 16px">'
-    +     '<span style="display:inline-flex;align-items:center;gap:1px;font-size:13px;line-height:1;color:#C9A542">★★★★<span style="position:relative;display:inline-block;color:#D9CBA6">★<span style="position:absolute;left:0;top:0;width:50%;overflow:hidden;color:#C9A542">★</span></span></span>'
-    +     '<span style="font-size:13px;font-weight:700;color:#14655B">10,000+ protocols built</span>'
-    +   '</div>'
     + '</div>'
     + '<div style="padding:22px 22px 0"><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">' + cards + '</div></div>'
     + '</div>';
