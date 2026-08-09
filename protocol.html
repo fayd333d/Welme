@@ -317,7 +317,10 @@ var DEFAULT_STATE = {
 var S = (function(){
   var saved = {};
   try{ saved = JSON.parse(localStorage.getItem('welme-ad-funnel') || '{}'); }catch(e){}
-  return Object.assign({}, DEFAULT_STATE, saved);
+  var s = Object.assign({}, DEFAULT_STATE, saved);
+  // Flow was renumbered (goals + specifics merged); keep any stale saved step in range.
+  if(typeof s.step !== 'number' || s.step < 0 || s.step > 4) s.step = 0;
+  return s;
 })();
 
 function persist(){
@@ -358,7 +361,6 @@ function stepValid(){
   var hOk = S.hUnit === 'cm' ? (parseFloat(S.hCm)||0) >= 90 : (parseFloat(S.hFt)||0) >= 3;
   var checks = [
     S.goals.length > 0,
-    true,
     (age >= 16 && age <= 110 && !!S.sex && wv > 0 && hOk),
     true, true
   ];
@@ -432,7 +434,7 @@ function trackingAvailable(){
 }
 
 function ensureQuizStarted(){
-  if(S.step >= 5) return;
+  if(S.step >= 4) return;
   if(!S.quizAttemptId){
     S.quizAttemptId = createAttemptId();
     S.quizStartTracked = false;
@@ -720,13 +722,13 @@ function buildResults(){
 function renderHeader(){
   var right = document.getElementById('hdrRight');
   var prog = document.getElementById('hdrProg');
-  var showSteps = S.step >= 1 && S.step < 5;
-  if(S.step === 5){
+  var showSteps = S.step >= 1 && S.step < 4;
+  if(S.step === 4){
     right.innerHTML = '<button class="restart-btn" data-act="restart">Start over</button>';
     prog.innerHTML = '';
   } else if(showSteps){
-    right.innerHTML = '<span class="step-note">Step ' + S.step + ' of 4</span>';
-    prog.innerHTML = '<div class="prog-track"><div class="prog-fill" style="width:' + (S.step/4)*100 + '%"></div></div>';
+    right.innerHTML = '<span class="step-note">Step ' + S.step + ' of 3</span>';
+    prog.innerHTML = '<div class="prog-track"><div class="prog-fill" style="width:' + (S.step/3)*100 + '%"></div></div>';
   } else {
     right.innerHTML = '';
     prog.innerHTML = '';
@@ -738,42 +740,31 @@ function chipHtml(label, on, act, arg){
   return '<button class="chip ' + (on ? 'on' : 'off') + '" data-act="' + act + '" data-arg="' + esc(arg) + '">' + esc(label) + '</button>';
 }
 
+// Combined first question: pick goals and, for each one selected, tap the
+// specifics that apply — laid out like the old "What's going on specifically?".
 function goalsScreen(){
-  var cards = GOALS.map(function(g){
+  var sections = GOALS.map(function(g){
     var on = S.goals.indexOf(g.id) !== -1;
-    return '<button class="goal-btn" data-act="toggle-goal" data-arg="' + g.id + '" style="background:' + (on ? '#EAF3EE' : '#fff') + ';border:1.5px solid ' + (on ? '#14655B' : 'rgba(20,101,91,.15)') + '">'
-      + '<span class="goal-icon">' + ic(g.paths) + '</span>'
-      + '<span class="goal-name">' + esc(g.title) + '</span>'
-      + '<span class="goal-check" style="border:2px solid ' + (on ? '#14655B' : '#C6CFC9') + ';background:' + (on ? '#14655B' : 'transparent') + '">' + (on ? '✓' : '') + '</span>'
+    var header = '<button data-act="toggle-goal" data-arg="' + g.id + '" style="width:100%;display:flex;align-items:center;gap:11px;background:' + (on ? '#EAF3EE' : '#fff') + ';border:1.5px solid ' + (on ? '#14655B' : 'rgba(20,101,91,.15)') + ';border-radius:14px;padding:13px 15px;cursor:pointer;text-align:left;font-family:inherit">'
+      + '<span class="goal-icon" style="flex:none">' + ic(g.paths, 20) + '</span>'
+      + '<span style="flex:1;min-width:0;font-size:15px;font-weight:800;color:' + (on ? '#14655B' : '#1E3B34') + '">' + esc(g.title) + '</span>'
+      + '<span class="goal-check" style="position:static;flex:none;border:2px solid ' + (on ? '#14655B' : '#C6CFC9') + ';background:' + (on ? '#14655B' : 'transparent') + '">' + (on ? '✓' : '') + '</span>'
       + '</button>';
-  }).join('');
-  return '<div>'
-    + '<div style="background:linear-gradient(180deg,#F7F2E9,#FFFFFF);padding:32px 22px 6px;text-align:center">'
-    +   '<div class="eyebrow">YOUR PERSONALISED PROTOCOL</div>'
-    +   '<h1 style="font-family:\'Domine\',serif;font-weight:700;font-size:30px;line-height:1.12;margin:12px 0 0;color:#1E3B34;text-wrap:balance">What would you like to improve?</h1>'
-    +   '<p style="margin:12px auto 0;max-width:330px;font-size:15.5px;line-height:1.55;color:#4A574F">Pick the areas that matter to you – your supplement protocol is built around them.&nbsp;</p>'
-    + '</div>'
-    + '<div style="padding:22px 22px 0"><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">' + cards + '</div></div>'
-    + '</div>';
-}
-
-function clarifyScreen(){
-  var sections = GOALS.filter(function(g){ return S.goals.indexOf(g.id) !== -1; }).map(function(g){
-    var opts = (CLAR[g.id]||[]).map(function(label){
-      var val = g.id + '::' + label;
-      return chipHtml(label, S.clarify.indexOf(val) !== -1, 'toggle-clarify', val);
-    }).join('');
-    return '<div>'
-      + '<div style="display:flex;align-items:center;gap:8px"><span style="width:7px;height:7px;flex:none;border-radius:50%;background:#14655B"></span>'
-      + '<div style="font-size:14px;font-weight:800;color:#14655B">' + esc(g.title) + '</div></div>'
-      + '<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:11px">' + opts + '</div>'
-      + '</div>';
+    var chips = '';
+    if(on){
+      var opts = (CLAR[g.id]||[]).map(function(label){
+        var val = g.id + '::' + label;
+        return chipHtml(label, S.clarify.indexOf(val) !== -1, 'toggle-clarify', val);
+      }).join('');
+      chips = '<div style="display:flex;flex-wrap:wrap;gap:8px;margin:11px 4px 2px">' + opts + '</div>';
+    }
+    return '<div>' + header + chips + '</div>';
   }).join('');
   return '<div style="padding:28px 22px 0">'
-    + '<div class="eyebrow">YOUR GOALS, IN DETAIL</div>'
-    + '<h2 class="q-title">What’s going on specifically?</h2>'
-    + '<p class="q-sub" style="margin-bottom:4px">Tap anything that sounds like you. This sharpens your protocol – skip anything that doesn’t apply.</p>'
-    + '<div style="display:flex;flex-direction:column;gap:22px;margin-top:20px">' + sections + '</div>'
+    + '<div class="eyebrow">YOUR PERSONALISED PROTOCOL</div>'
+    + '<h2 class="q-title">What would you like to improve?</h2>'
+    + '<p class="q-sub" style="margin-bottom:4px">Pick the areas that matter to you, then tap anything that sounds like you – skip whatever doesn’t apply.</p>'
+    + '<div style="display:flex;flex-direction:column;gap:14px;margin-top:20px">' + sections + '</div>'
     + '</div>';
 }
 
@@ -847,7 +838,7 @@ function condScreen(){
 
 function navHtml(){
   var valid = stepValid();
-  var label = S.step === 4 ? 'See my protocol →' : (S.step === 0 ? 'Continue →' : 'Continue');
+  var label = S.step === 3 ? 'See my protocol →' : (S.step === 0 ? 'Continue →' : 'Continue');
   return '<div class="nav"><div class="nav-row">'
     + (S.step > 0 ? '<button class="back-btn" data-act="back">←</button>' : '')
     + '<button class="next-btn" id="btnNext" data-act="next"' + (valid ? '' : ' disabled') + ' style="background:' + (valid ? '#14655B' : '#A9BAB3') + '">' + label + '</button>'
@@ -1102,12 +1093,11 @@ function render(){
   var screen = document.getElementById('screen');
   var html = '';
   if(S.step === 0) html = goalsScreen();
-  else if(S.step === 1) html = clarifyScreen();
-  else if(S.step === 2) html = aboutScreen();
-  else if(S.step === 3) html = suppsScreen();
-  else if(S.step === 4) html = condScreen();
+  else if(S.step === 1) html = aboutScreen();
+  else if(S.step === 2) html = suppsScreen();
+  else if(S.step === 3) html = condScreen();
   else html = finishScreen();
-  if(S.step < 5) html += navHtml();
+  if(S.step < 4) html += navHtml();
   screen.innerHTML = html;
   /* replay the enter animation only when the step changes */
   if(lastRenderedStep !== S.step){
@@ -1144,7 +1134,14 @@ document.addEventListener('click', function(e){
   var act = t.getAttribute('data-act');
   var arg = t.getAttribute('data-arg');
   switch(act){
-    case 'toggle-goal': toggleIn('goals', arg); break;
+    case 'toggle-goal': {
+      var goalOn = S.goals.indexOf(arg) !== -1;
+      set({
+        goals: goalOn ? S.goals.filter(function(x){ return x !== arg; }) : S.goals.concat(arg),
+        clarify: goalOn ? S.clarify.filter(function(v){ return v.indexOf(arg + '::') !== 0; }) : S.clarify
+      });
+      break;
+    }
     case 'toggle-clarify': toggleIn('clarify', arg); break;
     case 'toggle-supp': toggleIn('supps', arg); break;
     case 'toggle-customsupp': toggleIn('customSupps', arg); break;
@@ -1163,7 +1160,7 @@ document.addEventListener('click', function(e){
     case 'next':
       if(stepValid()){
         var next = S.step + 1;
-        if(next === 5) trackQuizFinish();
+        if(next === 4) trackQuizFinish();
         set({step: next});
         window.scrollTo(0,0);
       }
