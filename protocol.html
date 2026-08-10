@@ -953,12 +953,11 @@ function finishScreen(){
   /* one daily pack */
   h += '<div style="background:#1E3B34;padding:40px 22px 44px">'
     + '<div style="text-align:center">'
-    + '<h3 style="font-family:\'Domine\',serif;font-weight:700;font-size:27px;line-height:1.15;margin:0 0 6px;color:#F7F2E9;text-wrap:balance">All your supplements in one pack</h3>'
-    + '<p style="margin:0 auto;max-width:320px;font-size:15px;line-height:1.55;color:#C4D2CA">Everything your goals call for, together in one daily pack – taken with your main meal.</p>'
+    + '<h3 style="font-family:\'Domine\',serif;font-weight:700;font-size:27px;line-height:1.15;margin:0;color:#F7F2E9;text-wrap:balance">All your supplements in one pack</h3>'
     + '</div>'
 
     /* your daily pack — one list */
-    + '<div style="margin-top:26px;background:#F7F2E9;border-radius:20px;padding:22px 18px">'
+    + '<div style="margin:26px auto 0;max-width:290px;background:#F7F2E9;border-radius:20px;padding:22px 18px">'
     + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px"><span style="font-size:11px;font-weight:800;letter-spacing:.14em;color:#A98E4E">YOUR DAILY PACK</span>'
     + '<button data-act="toggle-edit-plan" style="border:1.5px solid rgba(20,101,91,.3);background:#fff;color:#14655B;border-radius:999px;padding:5px 13px;font-size:11.5px;font-weight:800;cursor:pointer">' + (S.editPlan ? 'Done' : 'Edit') + '</button></div>'
     + '<div style="display:flex;flex-direction:column;gap:8px">' + planCol(R.plan) + '</div>'
@@ -968,7 +967,6 @@ function finishScreen(){
     /* what's inside */
     + '<div style="margin-top:30px">'
     + '<img src="assets/opt/box-closed.png" alt="Sealed Welme box with 28 daily packs" style="display:block;width:44%;max-width:172px;height:auto;margin:0 auto">'
-    + '<p style="margin:12px auto 0;max-width:260px;text-align:center;font-size:13.5px;line-height:1.5;color:#C4D2CA">28 daily packs – one for each day of the month</p>'
     + '</div>'
 
     /* how it works */
