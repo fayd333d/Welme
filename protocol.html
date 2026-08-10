@@ -884,15 +884,22 @@ function finishScreen(){
   var R = buildResults();
   var h = '<div>';
 
-  /* protocol lead — clean, professional card (no coloured background) */
-  h += '<div style="padding:24px 22px 30px;background:#F7F2E9">'
-    + '<div style="display:flex;align-items:center;gap:16px;border:1px solid #E7E1D2;border-radius:20px;padding:22px 22px;background:#FFFFFF;box-shadow:0 14px 34px -24px rgba(15,74,66,.4);animation:heroIn .5s cubic-bezier(.2,.8,.2,1) both">'
-    +   '<div style="flex:none;width:58px;height:58px;border-radius:16px;background:#EAF3EE;color:#14655B;display:flex;align-items:center;justify-content:center">' + R.protoIconSm + '</div>'
-    +   '<div style="min-width:0">'
-    +     '<div style="font-size:11px;font-weight:800;letter-spacing:.16em;color:#A39877">YOUR PROTOCOL</div>'
-    +     '<h2 style="font-family:\'Domine\',serif;font-weight:700;font-size:22px;line-height:1.15;margin:5px 0 0;color:#1E3B34">Your daily supplement protocol</h2>'
-    +     '<p style="margin:6px 0 0;font-size:13.5px;line-height:1.45;color:#6A756D">' + esc(R.heroSubtitle) + '</p>'
-    +   '</div>'
+  /* protocol lead — frameless header, left-aligned, with realistic daily-pack cards */
+  var mCount = R.planMorning.length, nCount = R.planNight.length;
+  var packCard = function(img, label, count){
+    return '<div style="flex:1;min-width:0;background:#FFFFFF;border:1px solid #ECE6D6;border-radius:16px;padding:15px 16px">'
+      + '<img src="' + img + '" alt="" style="width:40px;height:40px;object-fit:contain;display:block">'
+      + '<div style="font-family:\'Domine\',serif;font-weight:700;font-size:16px;color:#1E3B34;margin-top:10px">' + label + '</div>'
+      + '<div style="font-size:13px;color:#6A756D;margin-top:2px">' + count + ' supplement' + (count === 1 ? '' : 's') + '</div>'
+      + '</div>';
+  };
+  h += '<div style="padding:30px 22px 26px;background:#F7F2E9">'
+    + '<h2 style="font-family:\'Domine\',serif;font-weight:700;font-size:27px;line-height:1.13;margin:0;color:#1E3B34;animation:heroIn .5s cubic-bezier(.2,.8,.2,1) both">Your daily supplement protocol</h2>'
+    + '<p style="margin:11px 0 0;font-size:15px;line-height:1.5;color:#5A655D">' + esc(R.heroSubtitle) + '</p>'
+    + '<div style="display:flex;gap:12px;margin-top:20px">'
+    +   packCard('assets/opt/pill-morning.png', 'Morning', mCount)
+    +   packCard('assets/opt/pill-night.png', 'Night', nCount)
+    + '</div>'
     + '</div>';
 
   /* body metrics */
