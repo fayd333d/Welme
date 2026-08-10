@@ -304,6 +304,29 @@ var COND_DOSE = {
   'On blood thinners':{'Omega-3 (EPA/DHA)':'≤ 1,000 mg EPA/DHA'},
   'Kidney disease':{'Magnesium glycinate':'≤ 200 mg'}
 };
+// Substitutions sheet: when a supplement is blocked, swap in this in-list
+// replacement — but only if the user isn't also blocked from it and it isn't
+// already in the plan; otherwise the protocol just shortens. Foundation is
+// never dropped except by an explicit safety Block above.
+var SUBSTITUTE = {
+  'Creatine':'Taurine',
+  'Omega-3 (EPA/DHA)':'Curcumin',
+  'Magnesium glycinate':'Glycine',
+  'Curcumin':'Omega-3 (EPA/DHA)',
+  'Taurine':'Magnesium glycinate',
+  'CoQ10':'Taurine',
+  'L-theanine':'Glycine',
+  'Ashwagandha':'L-theanine',
+  'Glycine':'L-theanine',
+  'Digestive enzymes':'Probiotic',
+  'Probiotic':'Digestive enzymes'
+};
+// With-food flag for every shelf item (for supplements swapped in as substitutes).
+var SUPP_FOOD = {
+  'Omega-3 (EPA/DHA)':'f','Vitamin D3':'f','Magnesium glycinate':'a','B-Complex':'a','Creatine':'a',
+  'CoQ10':'f','Taurine':'a','Curcumin':'f','L-theanine':'a','Ashwagandha':'a','Glycine':'a',
+  'Citicoline':'a','Collagen (UC-II)':'a','Digestive enzymes':'f','Probiotic':'f'
+};
 
 var SUGG = {
   sleep:{text:'Magnesium and glycine before bed are shown to shorten time-to-sleep and deepen sleep in clinical studies.',hack:'Keep the bedroom cool (18–19°C / 65°F) and stop screens 45 minutes before bed – light and temperature are the two biggest sleep levers.'},
@@ -615,14 +638,28 @@ function buildResults(){
     });
   });
 
-  /* ── condition-rules engine (silent): Enable → add, Block → remove, Reduce → dose override */
+  /* ── condition-rules engine (silent): Enable → add, Block → remove/substitute, Reduce → dose override */
   var doseOverride = {}, blocked = {};
   allConds.forEach(function(c){
     (COND_ENABLE[c] || []).forEach(function(pair){ if(!(pair[0] in timeOf)) timeOf[pair[0]] = pair[1]; });
   });
+  var planBeforeBlock = Object.keys(timeOf);
   allConds.forEach(function(c){
     (COND_BLOCK[c] || []).forEach(function(n){ blocked[n] = 1; delete timeOf[n]; });
     var m = COND_DOSE[c]; if(m) Object.keys(m).forEach(function(k){ doseOverride[k] = m[k]; });
+  });
+
+  /* Substitutions: for each blocked supplement that was in the plan, swap in its
+     in-list replacement — only if the user isn't also blocked from it and it isn't
+     already present; otherwise the protocol just shortens. */
+  var substitutions = [];
+  planBeforeBlock.forEach(function(n){
+    if(!blocked[n]) return;
+    var sub = SUBSTITUTE[n];
+    if(sub && !blocked[sub] && !(sub in timeOf)){
+      timeOf[sub] = SUPP_FOOD[sub] || 'a';
+      substitutions.push({ removed: n, added: sub });
+    }
   });
 
   var ordered = CANON_ORDER.filter(function(n){ return n in timeOf; });
@@ -659,6 +696,9 @@ function buildResults(){
   var heroSymbols = selGoals.map(function(g){ return { title:g.title, icon:ic(g.paths, 22) }; });
 
   var notes = allConds.map(function(c){ return NOTE[c]; }).filter(Boolean);
+  substitutions.forEach(function(s){
+    notes.push(s.added + ' takes the place of ' + s.removed + ', which isn’t suitable given what you told us – so you keep the benefit without the risk.');
+  });
 
   /* ---- personalised, mechanism-led explanation (physician-style, no diagnoses) ---- */
   var joinList = function(a){ a = a.filter(Boolean); if(a.length <= 1) return a[0] || ''; if(a.length === 2) return a[0] + ' and ' + a[1]; return a.slice(0,-1).join(', ') + ' and ' + a[a.length-1]; };
