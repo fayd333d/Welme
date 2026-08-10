@@ -33,7 +33,7 @@ src="https://www.facebook.com/tr?id=1028962489819655&ev=PageView&noscript=1"
 <link rel="icon" href="/favicon.ico" type="image/x-icon">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Welme – Build your personalised supplement protocol</title>
-<meta name="description" content="Answer a short quiz and get a personalised supplement protocol – one daily sachet built around your goals, body and health.">
+<meta name="description" content="Answer a short quiz and get a personalised supplement protocol – one daily pack built around your goals, body and health.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Domine:wght@400;500;600;700&family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -244,7 +244,7 @@ var DOSAGES = {
 };
 
 // 5 shared foundation supplements in every box. Second value = 'f' take with
-// food, 'a' anytime. Everything ships in ONE mixed sachet taken with a main meal.
+// food, 'a' anytime. Everything ships in ONE mixed pack taken with a main meal.
 var FOUNDATION = [['Omega-3 (EPA/DHA)','f'],['Vitamin D3','f'],['Magnesium glycinate','a'],['B-Complex','a'],['Creatine','a']];
 // Goal-specific layer added on top of the shared foundation (→ 7-8 per protocol).
 var GOAL_SPECIFIC = {
@@ -482,7 +482,7 @@ function buildReadableResultsSummary(resultData){
   var lines = [];
   var planItems = resultData.plan || [];
 
-  lines.push('Daily sachet:');
+  lines.push('Daily pack:');
   if(planItems.length){
     planItems.forEach(function(item){ lines.push(formatSupplementLine(item)); });
   } else {
@@ -582,8 +582,8 @@ function buildResults(){
   /* general subtitle instead of listing every goal in the title */
   var goalCount = heroLines.length;
   var heroSubtitle = goalCount > 1
-    ? 'One daily sachet, built around your ' + goalCount + ' selected goals.'
-    : 'One daily sachet, built around your selected goal.';
+    ? 'One daily pack, built around your ' + goalCount + ' selected goals.'
+    : 'One daily pack, built around your selected goal.';
 
   /* review copy */
   var selGoals = GOALS.filter(function(g){ return S.goals.indexOf(g.id) !== -1; });
@@ -614,7 +614,7 @@ function buildResults(){
 
   var ordered = CANON_ORDER.filter(function(n){ return n in timeOf; });
 
-  /* build the box: one mixed sachet, canonical order */
+  /* build the box: one mixed pack, canonical order */
   var protocol = ordered.map(function(n, index){
     var info = SUPP_INFO[n] || { reason: '' };
     return {
@@ -920,7 +920,7 @@ function finishScreen(){
 
   /* your supplements */
   h += secHead('Your supplements')
-    + '<p style="margin:12px 0 0;padding-left:17px;font-size:15px;line-height:1.55;color:#33403A"><span style="font-weight:800;color:#14655B">' + R.plan.length + ' supplements</span> in one daily sachet, chosen for your goals, symptoms and profile.</p>'
+    + '<p style="margin:12px 0 0;padding-left:17px;font-size:15px;line-height:1.55;color:#33403A"><span style="font-weight:800;color:#14655B">' + R.plan.length + ' supplements</span> in one daily pack, chosen for your goals, symptoms and profile.</p>'
     + '<div style="display:flex;flex-direction:column;gap:10px;margin-top:14px">' + R.plan.map(recCard).join('') + '</div>';
 
   /* worth checking — user's own supplements that overlap or interact (flag only) */
@@ -950,16 +950,16 @@ function finishScreen(){
 
   h += '</div>';
 
-  /* one daily sachet */
+  /* one daily pack */
   h += '<div style="background:#1E3B34;padding:40px 22px 44px">'
     + '<div style="text-align:center">'
-    + '<h3 style="font-family:\'Domine\',serif;font-weight:700;font-size:27px;line-height:1.15;margin:0 0 6px;color:#F7F2E9;text-wrap:balance">All your supplements in one sachet</h3>'
-    + '<p style="margin:0 auto;max-width:320px;font-size:15px;line-height:1.55;color:#C4D2CA">Everything your goals call for, together in one daily sachet – taken with your main meal.</p>'
+    + '<h3 style="font-family:\'Domine\',serif;font-weight:700;font-size:27px;line-height:1.15;margin:0 0 6px;color:#F7F2E9;text-wrap:balance">All your supplements in one pack</h3>'
+    + '<p style="margin:0 auto;max-width:320px;font-size:15px;line-height:1.55;color:#C4D2CA">Everything your goals call for, together in one daily pack – taken with your main meal.</p>'
     + '</div>'
 
-    /* your daily sachet — one list */
+    /* your daily pack — one list */
     + '<div style="margin-top:26px;background:#F7F2E9;border-radius:20px;padding:22px 18px">'
-    + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px"><span style="font-size:11px;font-weight:800;letter-spacing:.14em;color:#A98E4E">YOUR DAILY SACHET</span>'
+    + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px"><span style="font-size:11px;font-weight:800;letter-spacing:.14em;color:#A98E4E">YOUR DAILY PACK</span>'
     + '<button data-act="toggle-edit-plan" style="border:1.5px solid rgba(20,101,91,.3);background:#fff;color:#14655B;border-radius:999px;padding:5px 13px;font-size:11.5px;font-weight:800;cursor:pointer">' + (S.editPlan ? 'Done' : 'Edit') + '</button></div>'
     + '<div style="display:flex;flex-direction:column;gap:8px">' + planCol(R.plan) + '</div>'
     + (S.editPlan ? '<p style="margin:14px 0 0;text-align:center;font-size:11.5px;line-height:1.45;color:#7A867E">Tap × to remove a supplement.' + ((S.removed && S.removed.length) ? ' <button data-act="restore-plan" style="border:none;background:none;color:#14655B;font-weight:800;text-decoration:underline;text-underline-offset:2px;cursor:pointer;font-size:11.5px;padding:0">Restore all</button>' : '') + '</p>' : '')
@@ -967,23 +967,23 @@ function finishScreen(){
 
     /* what's inside */
     + '<div style="margin-top:30px">'
-    + '<img src="assets/opt/box-closed.png" alt="Sealed Welme box with 28 daily sachets" style="display:block;width:44%;max-width:172px;height:auto;margin:0 auto">'
-    + '<p style="margin:12px auto 0;max-width:260px;text-align:center;font-size:13.5px;line-height:1.5;color:#C4D2CA">28 daily sachets – one for each day of the month</p>'
+    + '<img src="assets/opt/box-closed.png" alt="Sealed Welme box with 28 daily packs" style="display:block;width:44%;max-width:172px;height:auto;margin:0 auto">'
+    + '<p style="margin:12px auto 0;max-width:260px;text-align:center;font-size:13.5px;line-height:1.5;color:#C4D2CA">28 daily packs – one for each day of the month</p>'
     + '<div style="height:1px;background:rgba(196,210,202,.16);margin:24px 4px 26px"></div>'
-    + '<div style="text-align:center"><img src="assets/opt/sachet-daily.png" alt="A see-through daily sachet holding the supplements in your plan" style="width:100%;max-width:236px;height:auto;margin:0 auto"><div style="font-size:12.5px;font-weight:700;color:#F7F2E9;margin-top:8px">One daily sachet</div></div>'
-    + '<p style="margin:18px auto 0;max-width:280px;text-align:center;font-size:13.5px;line-height:1.5;color:#C4D2CA">One see-through sachet a day – all your supplements together, taken with your main meal.</p>'
+    + '<div style="text-align:center"><img src="assets/opt/pack-daily.png" alt="A see-through daily pack holding the supplements in your plan" style="width:100%;max-width:260px;height:auto;margin:0 auto"><div style="font-size:12.5px;font-weight:700;color:#F7F2E9;margin-top:8px">One daily pack</div></div>'
+    + '<p style="margin:18px auto 0;max-width:280px;text-align:center;font-size:13.5px;line-height:1.5;color:#C4D2CA">One see-through pack a day – all your supplements together, taken with your main meal.</p>'
     + '</div>'
 
     /* how it works */
     + '<div style="display:flex;flex-direction:column;gap:12px;margin-top:26px">'
-    + '<div class="how-step"><span class="how-num">1</span><p>Your box arrives with 28 daily sachets – four weeks of your plan.</p></div>'
-    + '<div class="how-step"><span class="how-num">2</span><p>Take one sachet a day with your main meal.</p></div>'
+    + '<div class="how-step"><span class="how-num">1</span><p>Your box arrives with 28 daily packs – four weeks of your plan.</p></div>'
+    + '<div class="how-step"><span class="how-num">2</span><p>Take one pack a day with your main meal.</p></div>'
     + '<div class="how-step"><span class="how-num">3</span><p>A fresh box arrives every month – free delivery, adjust any time.</p></div>'
     + '<div class="how-step"><span class="how-num">4</span><p>The price is set by the supplements in your plan – starting from $1 a day.</p></div>'
     + '</div>'
     + '<div style="margin-top:22px;background:rgba(247,242,233,.08);border:1px solid rgba(196,210,202,.16);border-radius:16px;padding:16px 18px">'
     + '<div style="font-size:11px;font-weight:800;letter-spacing:.14em;color:#C9A542">HOW TO TAKE IT</div>'
-    + '<p style="margin:8px 0 0;font-size:13.5px;line-height:1.6;color:#C4D2CA">Take your sachet with your main meal and a full glass of water. Keep it away from coffee and tea – caffeine and tannins can block minerals like magnesium, so leave an hour either side. The fat-soluble parts (D3 and omega-3) absorb best with some fat in the meal.</p>'
+    + '<p style="margin:8px 0 0;font-size:13.5px;line-height:1.6;color:#C4D2CA">Take your pack with your main meal and a full glass of water. Keep it away from coffee and tea – caffeine and tannins can block minerals like magnesium, so leave an hour either side. The fat-soluble parts (D3 and omega-3) absorb best with some fat in the meal.</p>'
     + '</div>';
 
   /* email capture */
