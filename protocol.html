@@ -33,7 +33,7 @@ src="https://www.facebook.com/tr?id=1028962489819655&ev=PageView&noscript=1"
 <link rel="icon" href="/favicon.ico" type="image/x-icon">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Welme – Build your personalised supplement protocol</title>
-<meta name="description" content="Answer a short quiz and get a personalised supplement protocol – morning and night sachets built around your goals, body and routine.">
+<meta name="description" content="Answer a short quiz and get a personalised supplement protocol – one daily sachet built around your goals, body and health.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Domine:wght@400;500;600;700&family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -157,13 +157,29 @@ var CLAR = {
   stress:['Feeling overwhelmed','Hard to relax','Poor stress recovery']
 };
 
-var SUPPS = ['Vitamin D3','Vitamin K2','Magnesium','Calcium','Zinc','Iron','Selenium',
-  'Omega-3 / fish oil','Cod liver oil','Flaxseed oil','Black seed oil','Evening primrose oil','Krill oil',
-  'Vitamin C','Vitamin B12','B-Complex','Folate','Vitamin E',
-  'Multivitamin','Probiotic','Fiber / prebiotic','Collagen','CoQ10',
-  'Curcumin / turmeric','Ashwagandha','Rhodiola','Ginkgo','Lion’s mane',
-  'Melatonin','L-theanine','Glycine','Creatine','Glucosamine','MSM',
-  'Biotin','Hyaluronic acid','Resveratrol','Green tea extract','Berberine','Milk thistle'];
+// Step 3 lists ONLY substances that overlap our shelf or carry a real
+// interaction/contraindication with it (source: Restrictions sheet). General
+// dietary supplements are left out — our boxes are fixed, predefined protocols.
+var RESTRICTED_SUBS = [
+  {label:'Omega-3 / fish oil', note:'Your box already includes omega-3 — don’t double up; combined high EPA/DHA can add to bleeding risk.'},
+  {label:'Cod liver oil', note:'Holds both omega-3 and vitamin D, which are in your box — combining can push both doses high.'},
+  {label:'Krill oil', note:'Another omega-3 source that’s already in your box — avoid stacking to limit bleeding risk.'},
+  {label:'Vitamin D3', note:'Vitamin D3 is in your box — keep total intake under 4000 IU/day unless a blood test says otherwise.'},
+  {label:'Vitamin K2', note:'Vitamin K can interact with blood thinners — mention it to your pharmacist.'},
+  {label:'Vitamin E', note:'High-dose vitamin E adds to the bleeding risk of omega-3.'},
+  {label:'Magnesium', note:'Magnesium is in your box — combined high doses can loosen stools; keep it conservative with kidney disease.'},
+  {label:'Iron', note:'Iron can bind curcumin and reduce absorption — take them a couple of hours apart.'},
+  {label:'Creatine', note:'Creatine is in your box — don’t double up, and stay well hydrated.'},
+  {label:'CoQ10', note:'CoQ10 may be in your box — it can affect warfarin and blood pressure, so monitor if relevant.'},
+  {label:'Curcumin / turmeric', note:'Curcumin may be in your box — combined doses add a mild antiplatelet effect; pause before surgery.'},
+  {label:'Ashwagandha', note:'Ashwagandha may be in your box — use caution with thyroid, autoimmune or sedative medication, and in pregnancy.'},
+  {label:'Ginkgo', note:'Ginkgo adds to bleeding risk alongside omega-3 and blood thinners.'},
+  {label:'Berberine', note:'Berberine lowers blood sugar — watch for additive effects with glucose-lowering medication.'},
+  {label:'Green tea extract', note:'High-dose green tea extract can stress the liver — keep intake moderate.'},
+  {label:'Melatonin', note:'Melatonin adds to the calming effect of magnesium, glycine and L-theanine.'}
+];
+var SUPPS = RESTRICTED_SUBS.map(function(x){ return x.label; });
+var SUB_NOTE = {}; RESTRICTED_SUBS.forEach(function(x){ SUB_NOTE[x.label] = x.note; });
 
 var CONDS = ['No gallbladder','Thyroid condition','Type 2 diabetes / prediabetes','High blood pressure',
   'Kidney disease','Liver condition','Acid reflux / GERD','IBS / sensitive gut','Hard to swallow pills',
@@ -227,18 +243,19 @@ var DOSAGES = {
   'Collagen':'5–10 g'
 };
 
-// 6 shared foundation supplements, in order, with their timing (m=morning, n=night).
-var FOUNDATION = [['Omega-3 (EPA/DHA)','n'],['Vitamin D3','m'],['Magnesium glycinate','n'],['B-Complex','m'],['Creatine','m'],['Glycine','n']];
-// Goal-specific layer added on top of the shared foundation.
+// 5 shared foundation supplements in every box. Second value = 'f' take with
+// food, 'a' anytime. Everything ships in ONE mixed sachet taken with a main meal.
+var FOUNDATION = [['Omega-3 (EPA/DHA)','f'],['Vitamin D3','f'],['Magnesium glycinate','a'],['B-Complex','a'],['Creatine','a']];
+// Goal-specific layer added on top of the shared foundation (→ 7-8 per protocol).
 var GOAL_SPECIFIC = {
-  sleep:     [['L-theanine','n'],['Ashwagandha','n'],['Taurine','m']],
-  energy:    [['CoQ10','m'],['Taurine','m'],['L-theanine','n']],
-  heart:     [['CoQ10','m'],['Taurine','m'],['Curcumin','m']],
-  brain:     [['Citicoline','m'],['L-theanine','n'],['Taurine','m']],
-  joints:    [['Collagen (UC-II)','m'],['Curcumin','m']],
-  longevity: [['CoQ10','m'],['Taurine','m'],['Curcumin','m']],
-  digestion: [['Probiotic','m'],['Digestive enzymes','m'],['Curcumin','m']],
-  stress:    [['L-theanine','n'],['Ashwagandha','n'],['Taurine','m']]
+  sleep:     [['Glycine','a'],['L-theanine','a'],['Ashwagandha','a']],
+  energy:    [['CoQ10','f'],['Taurine','a']],
+  heart:     [['CoQ10','f'],['Taurine','a'],['Curcumin','f']],
+  brain:     [['Citicoline','a'],['L-theanine','a'],['Taurine','a']],
+  joints:    [['Collagen (UC-II)','a'],['Curcumin','f']],
+  longevity: [['CoQ10','f'],['Taurine','a'],['Curcumin','f']],
+  digestion: [['Probiotic','f'],['Digestive enzymes','f'],['Curcumin','f']],
+  stress:    [['L-theanine','a'],['Ashwagandha','a'],['Glycine','a']]
 };
 // Goal → full protocol = shared foundation + goal-specific layer.
 var GOAL_MATRIX = (function(){
@@ -248,7 +265,7 @@ var GOAL_MATRIX = (function(){
 })();
 
 // Canonical display order for the recommended supplement list (foundation first, then goal-specific).
-var CANON_ORDER = ['Omega-3 (EPA/DHA)','Vitamin D3','Magnesium glycinate','B-Complex','Creatine','Glycine','CoQ10','L-theanine','Taurine','Ashwagandha','Citicoline','Collagen (UC-II)','Curcumin','Probiotic','Digestive enzymes','Vitamin C','Zinc picolinate','Collagen'];
+var CANON_ORDER = ['Omega-3 (EPA/DHA)','Vitamin D3','Magnesium glycinate','B-Complex','Creatine','CoQ10','Taurine','L-theanine','Ashwagandha','Glycine','Citicoline','Collagen (UC-II)','Curcumin','Probiotic','Digestive enzymes'];
 
 // Distinctive supplements used as chips on each Protocol direction card.
 var GOAL_TAGS = {
@@ -265,9 +282,10 @@ var COND_BLOCK = {
   'Pregnant or breastfeeding':['Ashwagandha','Curcumin']
 };
 var COND_ENABLE = {
-  'Acid reflux / GERD':[['Probiotic','m']],
-  'IBS / sensitive gut':[['Probiotic','m']],
-  'No gallbladder':[['Digestive enzymes','m']]
+  'Acid reflux / GERD':[['Probiotic','f']],
+  'IBS / sensitive gut':[['Probiotic','f']],
+  'No gallbladder':[['Digestive enzymes','f']],
+  'Low stomach acid':[['Digestive enzymes','f']]
 };
 var COND_DOSE = {
   'On blood thinners':{'Omega-3 (EPA/DHA)':'≤ 1,000 mg EPA/DHA'},
@@ -453,32 +471,29 @@ function cleanParts(parts){
 }
 
 function formatSupplementLine(item){
-  var timing = item.time === 'm' ? 'Morning' : (item.time === 'n' ? 'Night' : '');
   return cleanParts([
     item.name,
     item.dosage,
-    timing
+    item.withFood ? 'with food' : ''
   ]).join(' — ');
 }
 
 function buildReadableResultsSummary(resultData){
   var lines = [];
-  var selectedSupplements = resultData.recTake || [];
-  var suggestedSupplements = resultData.recNew || [];
+  var planItems = resultData.plan || [];
 
-  lines.push('Selected / included supplements:');
-  if(selectedSupplements.length){
-    selectedSupplements.forEach(function(item){ lines.push(formatSupplementLine(item)); });
+  lines.push('Daily sachet:');
+  if(planItems.length){
+    planItems.forEach(function(item){ lines.push(formatSupplementLine(item)); });
   } else {
-    lines.push('None selected');
+    lines.push('None');
   }
 
-  lines.push('');
-  lines.push('Suggested supplements:');
-  if(suggestedSupplements.length){
-    suggestedSupplements.forEach(function(item){ lines.push(formatSupplementLine(item)); });
-  } else {
-    lines.push('None suggested');
+  var flags = resultData.subRestrictions || [];
+  if(flags.length){
+    lines.push('');
+    lines.push('Flagged from what you take:');
+    flags.forEach(function(f){ lines.push(f.name); });
   }
 
   return lines.join('\n');
@@ -567,8 +582,8 @@ function buildResults(){
   /* general subtitle instead of listing every goal in the title */
   var goalCount = heroLines.length;
   var heroSubtitle = goalCount > 1
-    ? 'Built around your ' + goalCount + ' goals and current routine.'
-    : 'Built around your goal and current routine.';
+    ? 'One daily sachet, built around your ' + goalCount + ' selected goals.'
+    : 'One daily sachet, built around your selected goal.';
 
   /* review copy */
   var selGoals = GOALS.filter(function(g){ return S.goals.indexOf(g.id) !== -1; });
@@ -599,60 +614,36 @@ function buildResults(){
 
   var ordered = CANON_ORDER.filter(function(n){ return n in timeOf; });
 
-  var norm = function(str){ return String(str).toLowerCase()
-    .replace(/\s*[\/(+].*/, '')
-    .replace(/\b(glycinate|picolinate|bisglycinate|citrate|monohydrate|malate|oxide|peptides)\b/g, '')
-    .replace(/[^a-z0-9]/g, ''); };
-  var userSupps = S.supps.concat(S.customSupps);
-  var userNorm = userSupps.map(norm);
-  var userHas = function(n){ return userNorm.indexOf(norm(n)) !== -1; };
-  var timeMeta = function(time){ return {
-    timeLabel: time === 'm' ? 'MORNING' : 'NIGHT',
-    timeBg: time === 'm' ? '#F0E7CF' : '#E4EEF0',
-    timeColor: time === 'm' ? '#8A6D1F' : '#3C5A66'
-  }; };
+  /* build the box: one mixed sachet, canonical order */
   var protocol = ordered.map(function(n, index){
-    var time = timeOf[n];
     var info = SUPP_INFO[n] || { reason: '' };
-    return Object.assign({
-      name:n,
-      dosage:doseOverride[n] || DOSAGES[n] || 'To be confirmed during plan review',
-      reason:info.reason,
-      time:time,
-      priorityLabel:index < 2 ? 'High priority' : 'Core support',
-      isNew:!userHas(n)
-    }, timeMeta(time));
-  });
-
-  /* integrate the user's current supplements that aren't already in the recommended set */
-  var CANON = {}; Object.keys(SUPP_INFO).forEach(function(k){ CANON[norm(k)] = k; });
-  var orderedNorm = ordered.map(norm);
-  var seenExtra = {};
-  var takeExtra = userSupps.filter(function(n){
-    var k = norm(n);
-    if(orderedNorm.indexOf(k) !== -1 || seenExtra[k]) return false;
-    seenExtra[k] = 1; return true;
-  }).map(function(n){
-    var canon = CANON[norm(n)];
-    var info = canon ? SUPP_INFO[canon] : null;
-    var time = info ? info.time : 'm';
-    return Object.assign({
-      name: canon || n,
-      dosage: canon && DOSAGES[canon] ? DOSAGES[canon] : 'To be confirmed during plan review',
-      reason: info ? info.reason : 'Kept from your current routine and slotted into your daily schedule.',
-      time: time, priorityLabel:'Current routine', isNew: false
-    }, timeMeta(time));
+    return {
+      name: n,
+      dosage: doseOverride[n] || DOSAGES[n] || 'To be confirmed during plan review',
+      reason: info.reason,
+      withFood: timeOf[n] === 'f',
+      priorityLabel: index < 2 ? 'High priority' : 'Core support'
+    };
   });
   var removed = S.removed || [];
   var notRemoved = function(p){ return removed.indexOf(p.name) === -1 && !blocked[p.name]; };
-  protocol = protocol.filter(notRemoved);
-  var fullProtocol = protocol.concat(takeExtra).filter(notRemoved);
+  var fullProtocol = protocol.filter(notRemoved);
+
+  /* substances the user already takes that overlap or interact with the box —
+     flagged only, never added (we offer everything the goals need). */
+  var subRestrictions = [];
+  S.supps.forEach(function(l){
+    if(SUB_NOTE[l] && !subRestrictions.some(function(x){ return x.name === l; })) subRestrictions.push({ name: l, note: SUB_NOTE[l] });
+  });
 
   /* protocol direction (lifestyle "try this" tips per goal) */
   var directions = selGoals.map(function(g){
     var d = SUGG[g.id]; if(!d) return null;
     return { goalTitle:g.title, text:d.text, hack:d.hack, tags:(GOAL_TAGS[g.id]||[]), icon:ic(g.paths, 23) };
   }).filter(Boolean);
+
+  /* small goal symbols for the header */
+  var heroSymbols = selGoals.map(function(g){ return { title:g.title, icon:ic(g.paths, 22) }; });
 
   var notes = allConds.map(function(c){ return NOTE[c]; }).filter(Boolean);
 
@@ -674,52 +665,39 @@ function buildResults(){
 
   var areasBold = selGoals.map(function(g){ return B(GOAL_AREA[g.id]); });
 
-  /* P1 — natural, explanatory opener */
+  /* ---- short, personalised summary (goals → body → conditions → one habit) ---- */
   var p1 = selGoals.length
-    ? 'To help improve ' + joinList(areasBold) + ', your body may benefit from a focused set of active ingredients, each chosen for how it works rather than added to a generic list.'
-    : 'Your plan focuses on the everyday foundations that support overall health and prevention, chosen for how each nutrient works in the body.';
+    ? 'Your box targets ' + joinList(areasBold) + ' with a small set of actives chosen for how they work in the body – not a generic multivitamin.'
+    : 'Your box covers the everyday foundations that support overall health and prevention.';
 
-  /* P2 — mechanisms, tied to each selected area */
-  var p2 = selGoals.map(function(g){
-    var e = GOAL_EXPL[g.id]; if(!e) return '';
-    return 'For ' + B(GOAL_AREA[g.id]) + ', ' + B(e[0][0]) + ' ' + e[0][1] + ', while ' + B(e[1][0]) + ' ' + e[1][1] + '.';
-  }).filter(Boolean).join(' ');
-
-  /* P3 — profile nuance (age / body composition), phrased clinically */
-  var p3 = '';
-  if(bmiCat === 'healthy') p3 = 'With your body composition already in a ' + B('healthy range') + ', the aim is to maintain and fine-tune, so doses stay sensible and foundational.';
-  else if(bmiCat === 'elevated' || bmiCat === 'high') p3 = 'With a ' + B('higher body-mass index') + ', there is added emphasis on ' + B('omega-3') + ' and ' + B('magnesium') + ', which help support healthy metabolism, blood pressure and insulin sensitivity.';
-  else if(bmiCat === 'underweight') p3 = 'With a ' + B('lower body weight') + ', absorption becomes the priority, so fat-soluble nutrients are paired with food for better uptake.';
-  if(age >= 50 && p3) p3 += ' As the body ages it produces less ' + B('CoQ10') + ' and leans harder on its ' + B('antioxidant defences') + ', so these carry a little extra weight here.';
-
-  /* P4 — current supplements, no counts */
-  var takeItems = fullProtocol.filter(function(p){ return !p.isNew; });
-  var p4 = takeItems.length
-    ? 'Where an ingredient is already part of your routine, such as ' + B(takeItems[0].name) + ', it is kept and the surrounding doses are balanced so nothing doubles up.'
+  var bodyAim = bmiCat === 'healthy' ? 'the plan is about maintaining and fine-tuning at sensible doses'
+    : (bmiCat === 'elevated' || bmiCat === 'high') ? B('omega-3') + ' and ' + B('magnesium') + ' get a little extra weight for metabolic and blood-pressure support'
+    : bmiCat === 'underweight' ? 'fat-soluble nutrients are paired with a meal so you absorb more of them'
+    : 'the plan stays at standard starting doses';
+  var p2 = (age && bmiCat !== '–')
+    ? 'At ' + B(age + ', ' + bmiCat + ' BMI') + ', ' + bodyAim + (age >= 50 ? ', and with age the body makes less ' + B('CoQ10') + ', so that earns its place too' : '') + '.'
     : '';
 
-  /* P5 — conditions */
-  var p5 = allConds.length
-    ? 'With ' + joinList(allConds.slice(0,3).map(function(c){ return B(c.toLowerCase()); })) + (allConds.length > 3 ? ' and more' : '') + ' in mind, gentler forms and more conservative doses are chosen, and anything worth discussing with your doctor is flagged.'
+  var p3 = allConds.length
+    ? 'Because you flagged ' + joinList(allConds.slice(0,3).map(function(c){ return B(c.toLowerCase()); })) + (allConds.length > 3 ? ' and more' : '') + ', your plan leans to gentler forms and more conservative doses, and flags anything worth a pharmacist’s review.'
     : '';
 
-  var reviewParasHtml = [p1, p2, p3, p4, p5].filter(Boolean);
+  var tip = (SUGG[primaryGoal] || {}).hack;
+  var p4 = tip ? '<b style="color:#A98E4E">One habit that helps:</b> ' + esc(tip) : '';
+
+  var reviewParasHtml = [p1, p2, p3, p4].filter(Boolean);
   var reviewHtml = reviewParasHtml.map(function(t){ return '<p style="margin:14px 12px 0 17px;font-size:15px;line-height:1.62;color:#33403A">' + t + '</p>'; }).join('');
   var review = reviewHtml.replace(/<[^>]+>/g, '');
 
   return {
     proto: proto, heroTitleHtml: heroTitleHtml, protoIcon: protoIcon, protoIconSm: protoIconSm,
-    heroTitleLines: heroLines, heroSubtitle: heroSubtitle,
+    heroTitleLines: heroLines, heroSubtitle: heroSubtitle, heroSymbols: heroSymbols,
     summaryChips: summaryChips, review: review, reviewHtml: reviewHtml,
     age: age || '–', bmi: bmiV ? bmiV.toFixed(1) : '–', bmiCat: bmiCat,
     heightLabel: heightLabel, weightLabel: weightLabel,
     hasNutrition: kcal > 0,
     kcal: kcal || '–', protein: protein ? protein + 'g' : '–', fat: fat ? fat + 'g' : '–', carbs: carbs ? carbs + 'g' : '–',
-    fullProtocol: fullProtocol,
-    recNew: protocol.filter(function(p){ return p.isNew; }).sort(function(a,b){ return (a.time === 'm' ? 0 : 1) - (b.time === 'm' ? 0 : 1); }),
-    recTake: fullProtocol.filter(function(p){ return !p.isNew; }).sort(function(a,b){ return (a.time === 'm' ? 0 : 1) - (b.time === 'm' ? 0 : 1); }),
-    planMorning: fullProtocol.filter(function(p){ return p.time === 'm'; }),
-    planNight: fullProtocol.filter(function(p){ return p.time === 'n'; }),
+    plan: fullProtocol, recNew: fullProtocol, subRestrictions: subRestrictions,
     directions: directions, notes: notes
   };
 }
@@ -820,11 +798,11 @@ function suppsScreen(){
     .concat(S.customSupps.map(function(l){ return chipHtml(l, true, 'toggle-customsupp', l); })).join('');
   return '<div style="padding:28px 22px 0">'
     + '<div class="eyebrow">YOUR ROUTINE</div>'
-    + '<h2 class="q-title">What do you already take?</h2>'
-    + '<p class="q-sub" style="margin-bottom:18px">Vitamins, minerals, oils, herbal extracts – anything. We fold what works into one pack and flag any overlaps.</p>'
+    + '<h2 class="q-title">Already taking any of these?</h2>'
+    + '<p class="q-sub" style="margin-bottom:18px">These are the supplements that overlap with your box or can interact with it – so we can flag anything worth checking. Skip anything you don’t take.</p>'
     + '<div style="display:flex;flex-wrap:wrap;gap:9px">' + chips + '</div>'
     + '<div class="add-row"><input type="text" id="inSuppDraft" value="' + esc(S.suppDraft) + '" placeholder="Add another…"><button data-act="add-supp">Add</button></div>'
-    + '<p style="margin:14px 0 0;font-size:13px;color:#7A867E">Take nothing yet? Just continue – we’ll start from scratch.</p>'
+    + '<p style="margin:14px 0 0;font-size:13px;color:#7A867E">None of these? Just continue – your box already contains everything your goals need.</p>'
     + '</div>';
 }
 
@@ -863,14 +841,13 @@ function syncNext(){
 function recCard(r){
   return '<div class="rec-card"><div class="rec-top">'
     + '<span class="rec-name">' + esc(r.name) + '</span>'
-    + '<span class="rec-time" style="color:' + r.timeColor + ';background:' + r.timeBg + '">' + r.timeLabel + '</span>'
+    + (r.withFood ? '<span class="rec-time" style="color:#8A6D1F;background:#F0E7CF">WITH FOOD</span>' : '')
     + '</div><p class="rec-reason">' + esc(r.reason) + '</p></div>';
 }
 
 function planCol(items){
   return items.map(function(p){
     return '<div class="plan-item"><span class="plan-dot"></span><span class="plan-name">' + esc(p.name) + '</span>'
-      + (p.isNew ? '<span class="plan-new">NEW</span>' : '')
       + (S.editPlan ? '<button data-act="remove-supp" data-arg="' + esc(p.name) + '" aria-label="Remove ' + esc(p.name) + '" style="margin-left:auto;flex:none;width:20px;height:20px;border:none;border-radius:50%;background:#E7D9D2;color:#9A5B4A;font-size:14px;font-weight:800;line-height:18px;text-align:center;cursor:pointer">×</button>' : '')
       + '</div>';
   }).join('');
@@ -884,21 +861,16 @@ function finishScreen(){
   var R = buildResults();
   var h = '<div>';
 
-  /* protocol lead — frameless header, left-aligned, with realistic daily-pack cards */
-  var mCount = R.planMorning.length, nCount = R.planNight.length;
-  var packCard = function(img, label, count){
-    return '<div style="flex:1;min-width:0;background:#FFFFFF;border:1px solid #ECE6D6;border-radius:16px;padding:15px 16px">'
-      + '<img src="' + img + '" alt="" style="width:40px;height:40px;object-fit:contain;display:block">'
-      + '<div style="font-family:\'Domine\',serif;font-weight:700;font-size:16px;color:#1E3B34;margin-top:10px">' + label + '</div>'
-      + '<div style="font-size:13px;color:#6A756D;margin-top:2px">' + count + ' supplement' + (count === 1 ? '' : 's') + '</div>'
-      + '</div>';
-  };
+  /* protocol lead — frameless header, left-aligned, with the protocol-direction symbols */
   h += '<div style="padding:30px 22px 26px;background:#F7F2E9">'
     + '<h2 style="font-family:\'Domine\',serif;font-weight:700;font-size:27px;line-height:1.13;margin:0;color:#1E3B34;animation:heroIn .5s cubic-bezier(.2,.8,.2,1) both">Your daily supplement protocol</h2>'
     + '<p style="margin:11px 0 0;font-size:15px;line-height:1.5;color:#5A655D">' + esc(R.heroSubtitle) + '</p>'
-    + '<div style="display:flex;gap:12px;margin-top:20px">'
-    +   packCard('assets/opt/pill-morning.png', 'Morning', mCount)
-    +   packCard('assets/opt/pill-night.png', 'Night', nCount)
+    + '<div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:20px">'
+    +   R.heroSymbols.map(function(s){
+          return '<span style="display:inline-flex;align-items:center;gap:8px;background:#EFE7D6;border-radius:999px;padding:8px 14px 8px 10px">'
+            + '<span style="flex:none;width:30px;height:30px;border-radius:9px;background:#EAF3EE;display:flex;align-items:center;justify-content:center;color:#14655B">' + s.icon + '</span>'
+            + '<span style="font-size:13.5px;font-weight:700;color:#1E3B34">' + esc(s.title) + '</span></span>';
+        }).join('')
     + '</div>'
     + '</div>';
 
@@ -946,17 +918,23 @@ function finishScreen(){
       }).join('')
     + '</div>';
 
-  /* already in your routine */
-  if(R.recTake.length){
-    h += secHead('Already in your routine')
-      + '<p style="margin:8px 0 0;padding-left:17px;font-size:14px;line-height:1.5;color:#4A574F">We keep these in your pack and balance doses so nothing overlaps.</p>'
-      + '<div style="display:flex;flex-direction:column;gap:10px;margin-top:14px">' + R.recTake.map(recCard).join('') + '</div>';
-  }
+  /* your supplements */
+  h += secHead('Your supplements')
+    + '<p style="margin:12px 0 0;padding-left:17px;font-size:15px;line-height:1.55;color:#33403A"><span style="font-weight:800;color:#14655B">' + R.plan.length + ' supplements</span> in one daily sachet, chosen for your goals, symptoms and profile.</p>'
+    + '<div style="display:flex;flex-direction:column;gap:10px;margin-top:14px">' + R.plan.map(recCard).join('') + '</div>';
 
-  /* recommended supplements */
-  h += secHead('Recommended supplements')
-    + '<p style="margin:12px 0 0;padding-left:17px;font-size:15px;line-height:1.55;color:#33403A"><span style="font-weight:800;color:#14655B">' + R.recNew.length + ' supplements</span> across morning and night, chosen for your goals, symptoms and profile.</p>'
-    + '<div style="display:flex;flex-direction:column;gap:10px;margin-top:14px">' + R.recNew.map(recCard).join('') + '</div>';
+  /* worth checking — user's own supplements that overlap or interact (flag only) */
+  if(R.subRestrictions.length){
+    h += secHead('Worth checking with what you take')
+      + '<p style="margin:8px 0 0;padding-left:17px;font-size:14px;line-height:1.5;color:#4A574F">Your box already contains everything your goals need, so we don’t add these – but they’re worth a look:</p>'
+      + '<div style="display:flex;flex-direction:column;gap:8px;margin-top:12px">'
+      + R.subRestrictions.map(function(s){
+          return '<div style="background:#FFFDF8;border:1px solid rgba(20,101,91,.12);border-radius:14px;padding:13px 15px">'
+            + '<div style="font-size:14.5px;font-weight:800;color:#1E3B34">' + esc(s.name) + '</div>'
+            + '<p style="margin:4px 0 0;font-size:13.5px;line-height:1.5;color:#4A574F">' + esc(s.note) + '</p></div>';
+        }).join('')
+      + '</div>';
+  }
 
   /* safety notes */
   if(R.notes.length){
@@ -976,55 +954,37 @@ function finishScreen(){
   h += '<div style="background:#1E3B34;padding:40px 22px 44px">'
     + '<div style="text-align:center">'
     + '<div style="font-size:12px;font-weight:800;letter-spacing:.16em;color:#C9A542">A SMARTER SOLUTION</div>'
-    + '<h3 style="font-family:\'Domine\',serif;font-weight:700;font-size:27px;line-height:1.15;margin:10px 0 6px;color:#F7F2E9;text-wrap:balance">All your supplements in one box</h3>'
-    + '<p style="margin:0 auto;max-width:320px;font-size:15px;line-height:1.55;color:#C4D2CA">Everything you take now, plus what your goals call for – in one daily pack.</p>'
+    + '<h3 style="font-family:\'Domine\',serif;font-weight:700;font-size:27px;line-height:1.15;margin:10px 0 6px;color:#F7F2E9;text-wrap:balance">All your supplements in one sachet</h3>'
+    + '<p style="margin:0 auto;max-width:320px;font-size:15px;line-height:1.55;color:#C4D2CA">Everything your goals call for, together in one daily sachet – taken with your main meal.</p>'
     + '</div>'
 
-    /* your daily plan */
+    /* your daily sachet — one list */
     + '<div style="margin-top:26px;background:#F7F2E9;border-radius:20px;padding:22px 18px">'
-    + '<div style="display:flex;align-items:center;justify-content:center;position:relative;margin-bottom:16px"><span style="font-size:11px;font-weight:800;letter-spacing:.14em;color:#A98E4E">YOUR DAILY PLAN</span>'
-    + '<button data-act="toggle-edit-plan" style="position:absolute;right:0;border:1.5px solid rgba(20,101,91,.3);background:#fff;color:#14655B;border-radius:999px;padding:5px 13px;font-size:11.5px;font-weight:800;cursor:pointer">' + (S.editPlan ? 'Done' : 'Edit') + '</button></div>'
-    + '<div style="display:grid;grid-template-columns:1fr 1px 1fr;gap:0">'
-    + '<div style="padding-right:14px">'
-    + '<div style="display:flex;align-items:center;justify-content:center;gap:7px"><span style="font-size:15px">☀</span><span style="font-family:\'Domine\',serif;font-weight:600;font-size:17px;color:#3A4A42">Morning</span></div>'
-    + '<div style="display:flex;flex-direction:column;gap:8px;margin-top:12px">' + planCol(R.planMorning) + '</div>'
-    + '</div>'
-    + '<div style="background:rgba(20,101,91,.15)"></div>'
-    + '<div style="padding-left:14px">'
-    + '<div style="display:flex;align-items:center;justify-content:center;gap:7px"><span style="font-size:14px">☾</span><span style="font-family:\'Domine\',serif;font-weight:600;font-size:17px;color:#3A4A42">Night</span></div>'
-    + '<div style="display:flex;flex-direction:column;gap:8px;margin-top:12px">' + planCol(R.planNight) + '</div>'
-    + '</div>'
-    + '</div>'
+    + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px"><span style="font-size:11px;font-weight:800;letter-spacing:.14em;color:#A98E4E">YOUR DAILY SACHET</span>'
+    + '<button data-act="toggle-edit-plan" style="border:1.5px solid rgba(20,101,91,.3);background:#fff;color:#14655B;border-radius:999px;padding:5px 13px;font-size:11.5px;font-weight:800;cursor:pointer">' + (S.editPlan ? 'Done' : 'Edit') + '</button></div>'
+    + '<div style="display:flex;flex-direction:column;gap:8px">' + planCol(R.plan) + '</div>'
     + (S.editPlan ? '<p style="margin:14px 0 0;text-align:center;font-size:11.5px;line-height:1.45;color:#7A867E">Tap × to remove a supplement.' + ((S.removed && S.removed.length) ? ' <button data-act="restore-plan" style="border:none;background:none;color:#14655B;font-weight:800;text-decoration:underline;text-underline-offset:2px;cursor:pointer;font-size:11.5px;padding:0">Restore all</button>' : '') + '</p>' : '')
     + '</div>'
 
     /* what's inside */
     + '<div style="margin-top:30px">'
-    + '<img src="assets/opt/box-closed.png" alt="Sealed Welme box with 28 daily packs" style="display:block;width:44%;max-width:172px;height:auto;margin:0 auto">'
-    + '<p style="margin:12px auto 0;max-width:260px;text-align:center;font-size:13.5px;line-height:1.5;color:#C4D2CA">28 daily packs – one for each day of the month</p>'
+    + '<img src="assets/opt/box-closed.png" alt="Sealed Welme box with 28 daily sachets" style="display:block;width:44%;max-width:172px;height:auto;margin:0 auto">'
+    + '<p style="margin:12px auto 0;max-width:260px;text-align:center;font-size:13.5px;line-height:1.5;color:#C4D2CA">28 daily sachets – one for each day of the month</p>'
     + '<div style="height:1px;background:rgba(196,210,202,.16);margin:24px 4px 26px"></div>'
-    + '<div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px">'
-    + '<div style="text-align:center"><img src="assets/opt/pill-morning.png" alt="Opened morning sachet with supplements" style="width:100%;max-width:132px;height:auto;margin:0 auto"><div style="font-size:12.5px;font-weight:700;color:#F7F2E9;margin-top:6px">Morning</div></div>'
-    + '<div style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:0 2px">'
-    + '<div style="width:1px;height:38px;background:rgba(196,210,202,.22)"></div>'
-    + '<span style="font-size:10.5px;font-weight:800;letter-spacing:.08em;color:#C9A542;writing-mode:vertical-rl;white-space:nowrap">8H APART</span>'
-    + '<div style="width:1px;height:38px;background:rgba(196,210,202,.22)"></div>'
-    + '</div>'
-    + '<div style="text-align:center"><img src="assets/opt/pill-night.png" alt="Opened night sachet with supplements" style="width:100%;max-width:132px;height:auto;margin:0 auto"><div style="font-size:12.5px;font-weight:700;color:#F7F2E9;margin-top:6px">Night</div></div>'
-    + '</div>'
-    + '<p style="margin:20px auto 0;max-width:280px;text-align:center;font-size:13.5px;line-height:1.5;color:#C4D2CA">Each pack holds two sachets – a light one for the morning, a dark one for the night.</p>'
+    + '<div style="text-align:center"><img src="assets/opt/pill-morning.png" alt="An opened daily sachet with the supplements" style="width:100%;max-width:172px;height:auto;margin:0 auto"><div style="font-size:12.5px;font-weight:700;color:#F7F2E9;margin-top:8px">One daily sachet</div></div>'
+    + '<p style="margin:18px auto 0;max-width:280px;text-align:center;font-size:13.5px;line-height:1.5;color:#C4D2CA">One mixed sachet a day – all your supplements together, taken with your main meal.</p>'
     + '</div>'
 
     /* how it works */
     + '<div style="display:flex;flex-direction:column;gap:12px;margin-top:26px">'
-    + '<div class="how-step"><span class="how-num">1</span><p>Your box arrives with 28 daily packs – four weeks of your plan.</p></div>'
-    + '<div class="how-step"><span class="how-num">2</span><p>Tear off one pack a day: morning sachet with breakfast, night sachet before bed.</p></div>'
+    + '<div class="how-step"><span class="how-num">1</span><p>Your box arrives with 28 daily sachets – four weeks of your plan.</p></div>'
+    + '<div class="how-step"><span class="how-num">2</span><p>Take one sachet a day with your main meal.</p></div>'
     + '<div class="how-step"><span class="how-num">3</span><p>A fresh box arrives every month – free delivery, adjust any time.</p></div>'
     + '<div class="how-step"><span class="how-num">4</span><p>The price is set by the supplements in your plan – starting from $1 a day.</p></div>'
     + '</div>'
     + '<div style="margin-top:22px;background:rgba(247,242,233,.08);border:1px solid rgba(196,210,202,.16);border-radius:16px;padding:16px 18px">'
-    + '<div style="font-size:11px;font-weight:800;letter-spacing:.14em;color:#C9A542">HOW TO TAKE THEM</div>'
-    + '<p style="margin:8px 0 0;font-size:13.5px;line-height:1.6;color:#C4D2CA">Take each sachet with food and a full glass of water for the best absorption. Keep them separate from coffee and tea – the caffeine and tannins can block minerals like magnesium, zinc and iron, so leave an hour either side. Fat-soluble vitamins (D3, K2 and omega-3) absorb best with a meal that has some fat.</p>'
+    + '<div style="font-size:11px;font-weight:800;letter-spacing:.14em;color:#C9A542">HOW TO TAKE IT</div>'
+    + '<p style="margin:8px 0 0;font-size:13.5px;line-height:1.6;color:#C4D2CA">Take your sachet with your main meal and a full glass of water. Keep it away from coffee and tea – caffeine and tannins can block minerals like magnesium, so leave an hour either side. The fat-soluble parts (D3 and omega-3) absorb best with some fat in the meal.</p>'
     + '</div>';
 
   /* email capture */
