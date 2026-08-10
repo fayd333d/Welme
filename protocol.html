@@ -178,8 +178,21 @@ var RESTRICTED_SUBS = [
   {label:'Green tea extract', note:'High-dose green tea extract can stress the liver — keep intake moderate.'},
   {label:'Melatonin', note:'Melatonin adds to the calming effect of magnesium, glycine and L-theanine.'}
 ];
+// Medications worth accounting for when preparing the course (source: Restrictions sheet).
+var RESTRICTED_MEDS = [
+  {label:'Antidepressants', note:'SSRIs/SNRIs can interact with calming actives (L-theanine, ashwagandha) — worth a pharmacist review, and don’t add St John’s Wort or 5-HTP alongside them.'},
+  {label:'Blood thinners / anticoagulants', note:'Omega-3, curcumin and ginkgo add to bleeding risk — omega-3 is capped and curcumin flagged for review.'},
+  {label:'Thyroid medication', note:'We space vitamin D and magnesium ~4h from your thyroid tablet, and flag ashwagandha, which can shift thyroid hormone.'},
+  {label:'Blood-pressure medication', note:'Magnesium, taurine, CoQ10 and L-theanine can gently lower blood pressure — a helpful direction, but worth monitoring.'},
+  {label:'Diabetes / blood-sugar medication', note:'Ashwagandha, curcumin and CoQ10 can lower blood sugar — watch for additive effects and check with your clinician.'},
+  {label:'Sedatives / sleep medication', note:'L-theanine, glycine and ashwagandha add to a calming effect — start low if you already take a sedative or sleep aid.'},
+  {label:'Levodopa (Parkinson’s)', note:'High-dose B6 and citicoline can affect levodopa — we keep B6 at label dose and flag citicoline for your neurologist.'}
+];
 var SUPPS = RESTRICTED_SUBS.map(function(x){ return x.label; });
-var SUB_NOTE = {}; RESTRICTED_SUBS.forEach(function(x){ SUB_NOTE[x.label] = x.note; });
+var MEDS  = RESTRICTED_MEDS.map(function(x){ return x.label; });
+var SUB_NOTE = {};
+RESTRICTED_SUBS.forEach(function(x){ SUB_NOTE[x.label] = x.note; });
+RESTRICTED_MEDS.forEach(function(x){ SUB_NOTE[x.label] = x.note; });
 
 var CONDS = ['No gallbladder','Thyroid condition','Type 2 diabetes / prediabetes','High blood pressure',
   'Kidney disease','Liver condition','Acid reflux / GERD','IBS / sensitive gut','Hard to swallow pills',
@@ -794,15 +807,20 @@ function aboutScreen(){
 }
 
 function suppsScreen(){
-  var chips = SUPPS.map(function(l){ return chipHtml(l, S.supps.indexOf(l) !== -1, 'toggle-supp', l); })
+  var groupLabel = function(t){ return '<div style="font-size:12px;font-weight:800;letter-spacing:.08em;color:#A98E4E;margin:20px 0 11px">' + t + '</div>'; };
+  var suppChips = SUPPS.map(function(l){ return chipHtml(l, S.supps.indexOf(l) !== -1, 'toggle-supp', l); })
     .concat(S.customSupps.map(function(l){ return chipHtml(l, true, 'toggle-customsupp', l); })).join('');
+  var medChips = MEDS.map(function(l){ return chipHtml(l, S.supps.indexOf(l) !== -1, 'toggle-supp', l); }).join('');
   return '<div style="padding:28px 22px 0">'
     + '<div class="eyebrow">YOUR ROUTINE</div>'
     + '<h2 class="q-title">Already taking any of these?</h2>'
-    + '<p class="q-sub" style="margin-bottom:18px">These are the supplements that overlap with your box or can interact with it – so we can flag anything worth checking. Skip anything you don’t take.</p>'
-    + '<div style="display:flex;flex-wrap:wrap;gap:9px">' + chips + '</div>'
+    + '<p class="q-sub" style="margin-bottom:4px">Only the supplements and medications that overlap with your box or can interact with it – so we can flag anything worth checking. Skip anything you don’t take.</p>'
+    + groupLabel('SUPPLEMENTS')
+    + '<div style="display:flex;flex-wrap:wrap;gap:9px">' + suppChips + '</div>'
     + '<div class="add-row"><input type="text" id="inSuppDraft" value="' + esc(S.suppDraft) + '" placeholder="Add another…"><button data-act="add-supp">Add</button></div>'
-    + '<p style="margin:14px 0 0;font-size:13px;color:#7A867E">None of these? Just continue – your box already contains everything your goals need.</p>'
+    + groupLabel('MEDICATIONS')
+    + '<div style="display:flex;flex-wrap:wrap;gap:9px">' + medChips + '</div>'
+    + '<p style="margin:16px 0 0;font-size:13px;color:#7A867E">None of these? Just continue – your box already contains everything your goals need.</p>'
     + '</div>';
 }
 
@@ -867,9 +885,9 @@ function finishScreen(){
     + '<p style="margin:11px 0 0;font-size:15px;line-height:1.5;color:#5A655D">' + esc(R.heroSubtitle) + '</p>'
     + '<div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:20px">'
     +   R.heroSymbols.map(function(s){
-          return '<span style="display:inline-flex;align-items:center;gap:8px;background:#EFE7D6;border-radius:999px;padding:8px 14px 8px 10px">'
-            + '<span style="flex:none;width:30px;height:30px;border-radius:9px;background:#EAF3EE;display:flex;align-items:center;justify-content:center;color:#14655B">' + s.icon + '</span>'
-            + '<span style="font-size:13.5px;font-weight:700;color:#1E3B34">' + esc(s.title) + '</span></span>';
+          return '<span style="display:inline-flex;align-items:center;gap:11px;background:#FFFFFF;border:1.5px solid rgba(20,101,91,.18);border-radius:14px;padding:10px 16px 10px 11px">'
+            + '<span style="flex:none;width:38px;height:38px;border-radius:11px;background:#EAF3EE;display:flex;align-items:center;justify-content:center;color:#14655B">' + s.icon + '</span>'
+            + '<span style="font-size:15px;font-weight:800;color:#1E3B34">' + esc(s.title) + '</span></span>';
         }).join('')
     + '</div>'
     + '</div>';
