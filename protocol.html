@@ -936,6 +936,9 @@ function finishScreen(){
     + '</div>'
     + '</div>';
 
+  /* body content — inset from the page edges so headers, dots and cards aren't flush left */
+  h += '<div style="padding:0 20px">';
+
   /* body metrics */
   h += secHead('Body metrics')
     + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px">'
@@ -1010,6 +1013,7 @@ function finishScreen(){
       + '</div>';
   }
 
+  h += '</div>';  /* close body-content inset wrapper */
   h += '</div>';
 
   /* all your supplements in one box */
