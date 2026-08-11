@@ -161,7 +161,7 @@ body{background:#F6F7F3;color:var(--text);
 .landing-primary-cta:hover{background:#0F544B}
 .landing-pack-card{margin:28px auto 0;max-width:330px;background:#F7F2E9;border:1px solid rgba(20,101,91,.12);
   border-radius:26px;padding:18px;box-shadow:0 18px 42px -34px rgba(45,55,45,.48)}
-.landing-pack-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.landing-pack-row{display:grid;grid-template-columns:1fr;gap:12px}
 .landing-pack{background:#fff;border-radius:20px;padding:18px 12px;border:1px solid rgba(20,101,91,.10)}
 .landing-pack strong{display:block;font-family:'Bricolage Grotesque',sans-serif;font-size:1.05rem;color:#1E3B34}
 .landing-pack span{display:block;font-size:.72rem;color:#7E8980;margin-top:4px}
@@ -1360,12 +1360,11 @@ body{background:#F6F7F3;color:var(--text);
   <div id="introScreen" class="screen on">
     <div class="landing-hero">
       <h1>All your daily supplements in one clear protocol.</h1>
-      <p>Your morning and evening supplement plan, tailored to your body, goals, current routine, and dosage needs.</p>
+      <p>Your whole supplement plan in one daily pack, tailored to your body, goals, current routine, and dosage needs.</p>
       <button class="landing-primary-cta" onclick="trackLandingAction('hero_build_plan');document.getElementById('protocolChooser').scrollIntoView({behavior:'smooth',block:'start'})">Build My Plan →</button>
       <div class="landing-pack-card" aria-label="Welme daily protocol overview">
         <div class="landing-pack-row">
-          <div class="landing-pack"><strong>Morning</strong><span>Energy, focus, metabolic support</span></div>
-          <div class="landing-pack"><strong>Evening</strong><span>Recovery, calm, sleep support</span></div>
+          <div class="landing-pack"><strong>One daily pack</strong><span>Every supplement in your plan, together, with your main meal</span></div>
         </div>
       </div>
     </div>
