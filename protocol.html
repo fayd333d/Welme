@@ -925,11 +925,11 @@ function finishScreen(){
 
   /* protocol lead — frameless header, left-aligned, with the protocol-direction symbols */
   h += '<div style="padding:30px 20px 26px;background:#F7F2E9">'
-    + '<h2 style="font-family:\'Domine\',serif;font-weight:700;font-size:min(23px,5vw);white-space:nowrap;line-height:1.15;margin:0;color:#1E3B34;animation:heroIn .5s cubic-bezier(.2,.8,.2,1) both">Your daily supplement protocol</h2>'
+    + '<h2 style="font-family:\'Domine\',serif;font-weight:700;font-size:min(22px,5vw);white-space:nowrap;line-height:1.15;margin:0;color:#1E3B34;animation:heroIn .5s cubic-bezier(.2,.8,.2,1) both">Your daily supplement protocol</h2>'
     + '<p style="margin:11px 0 0;font-size:15px;line-height:1.5;color:#5A655D">' + esc(R.heroSubtitle) + '</p>'
-    + '<div style="display:flex;flex-wrap:nowrap;gap:8px;margin-top:18px;overflow-x:auto;-webkit-overflow-scrolling:touch">'
+    + '<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:18px">'
     +   R.heroSymbols.map(function(s){
-          return '<span style="flex:none;display:inline-flex;align-items:center;gap:8px;background:#EFE7D6;border-radius:999px;padding:6px 13px 6px 7px">'
+          return '<span style="flex:none;display:inline-flex;align-items:center;gap:8px;background:#EFE7D6;border-radius:999px;padding:6px 13px 6px 7px;max-width:100%">'
             + '<span style="flex:none;width:28px;height:28px;border-radius:9px;background:#EAF3EE;display:flex;align-items:center;justify-content:center;color:#14655B">' + s.icon + '</span>'
             + '<span style="font-size:13px;font-weight:700;color:#1E3B34;white-space:nowrap">' + esc(s.title) + '</span></span>';
         }).join('')
