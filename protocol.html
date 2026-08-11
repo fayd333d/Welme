@@ -630,39 +630,48 @@ function buildResults(){
   if(age) summaryChips.push(age + ' yrs');
   if(bmiV) summaryChips.push('BMI ' + bmiV.toFixed(1));
 
-  /* recommendation set — union of the selected goals' matrix rows */
+  /* recommendation set — the PRIMARY goal's protocol only (matrix: one goal → one box) */
+  var baseGoal = primaryGoal || S.goals[0];
   var timeOf = {};
-  S.goals.forEach(function(g){
-    (GOAL_MATRIX[g] || []).forEach(function(pair){
-      if(!(pair[0] in timeOf)) timeOf[pair[0]] = pair[1]; // first selected goal sets the timing
-    });
-  });
+  (GOAL_MATRIX[baseGoal] || []).forEach(function(pair){ timeOf[pair[0]] = pair[1]; });
 
   /* ── condition-rules engine (silent): Enable → add, Block → remove/substitute, Reduce → dose override */
-  var doseOverride = {}, blocked = {};
+  var doseOverride = {}, blocked = {}, enabledSet = {};
   allConds.forEach(function(c){
-    (COND_ENABLE[c] || []).forEach(function(pair){ if(!(pair[0] in timeOf)) timeOf[pair[0]] = pair[1]; });
+    (COND_ENABLE[c] || []).forEach(function(pair){ if(!(pair[0] in timeOf)){ timeOf[pair[0]] = pair[1]; enabledSet[pair[0]] = 1; } });
   });
   var planBeforeBlock = Object.keys(timeOf);
   allConds.forEach(function(c){
-    (COND_BLOCK[c] || []).forEach(function(n){ blocked[n] = 1; delete timeOf[n]; });
+    (COND_BLOCK[c] || []).forEach(function(n){ blocked[n] = 1; delete timeOf[n]; delete enabledSet[n]; });
     var m = COND_DOSE[c]; if(m) Object.keys(m).forEach(function(k){ doseOverride[k] = m[k]; });
   });
 
   /* Substitutions: for each blocked supplement that was in the plan, swap in its
      in-list replacement — only if the user isn't also blocked from it and it isn't
      already present; otherwise the protocol just shortens. */
-  var substitutions = [];
+  var substitutions = [], substituteSet = {};
   planBeforeBlock.forEach(function(n){
     if(!blocked[n]) return;
     var sub = SUBSTITUTE[n];
     if(sub && !blocked[sub] && !(sub in timeOf)){
       timeOf[sub] = SUPP_FOOD[sub] || 'a';
+      substituteSet[sub] = 1;
       substitutions.push({ removed: n, added: sub });
     }
   });
 
-  var ordered = CANON_ORDER.filter(function(n){ return n in timeOf; });
+  /* order by priority (foundation → substitutes → goal-specific → enabled) and cap at 7 per person */
+  var MAX_SUPP = 7;
+  var foundationNames = FOUNDATION.map(function(p){ return p[0]; });
+  var goalSpecNames = (GOAL_SPECIFIC[baseGoal] || []).map(function(p){ return p[0]; });
+  var ordered = [];
+  var pushIf = function(n){ if((n in timeOf) && ordered.indexOf(n) === -1) ordered.push(n); };
+  foundationNames.forEach(pushIf);
+  Object.keys(substituteSet).forEach(pushIf);
+  goalSpecNames.forEach(pushIf);
+  Object.keys(enabledSet).forEach(pushIf);
+  Object.keys(timeOf).forEach(pushIf);
+  ordered = ordered.slice(0, MAX_SUPP);
 
   /* build the box: one mixed pack, canonical order */
   var protocol = ordered.map(function(n, index){
@@ -847,19 +856,14 @@ function aboutScreen(){
 }
 
 function suppsScreen(){
-  var groupLabel = function(t){ return '<div style="font-size:12px;font-weight:800;letter-spacing:.08em;color:#A98E4E;margin:20px 0 11px">' + t + '</div>'; };
-  var suppChips = SUPPS.map(function(l){ return chipHtml(l, S.supps.indexOf(l) !== -1, 'toggle-supp', l); })
+  var chips = SUPPS.concat(MEDS).map(function(l){ return chipHtml(l, S.supps.indexOf(l) !== -1, 'toggle-supp', l); })
     .concat(S.customSupps.map(function(l){ return chipHtml(l, true, 'toggle-customsupp', l); })).join('');
-  var medChips = MEDS.map(function(l){ return chipHtml(l, S.supps.indexOf(l) !== -1, 'toggle-supp', l); }).join('');
   return '<div style="padding:28px 22px 0">'
     + '<div class="eyebrow">YOUR ROUTINE</div>'
     + '<h2 class="q-title">Already taking any of these?</h2>'
-    + '<p class="q-sub" style="margin-bottom:4px">Only the supplements and medications that overlap with your box or can interact with it – so we can flag anything worth checking. Skip anything you don’t take.</p>'
-    + groupLabel('SUPPLEMENTS')
-    + '<div style="display:flex;flex-wrap:wrap;gap:9px">' + suppChips + '</div>'
+    + '<p class="q-sub" style="margin-bottom:18px">Only the supplements and medications that overlap with your box or can interact with it – so we can flag anything worth checking. Skip anything you don’t take.</p>'
+    + '<div style="display:flex;flex-wrap:wrap;gap:9px">' + chips + '</div>'
     + '<div class="add-row"><input type="text" id="inSuppDraft" value="' + esc(S.suppDraft) + '" placeholder="Add another…"><button data-act="add-supp">Add</button></div>'
-    + groupLabel('MEDICATIONS')
-    + '<div style="display:flex;flex-wrap:wrap;gap:9px">' + medChips + '</div>'
     + '<p style="margin:16px 0 0;font-size:13px;color:#7A867E">None of these? Just continue – your box already contains everything your goals need.</p>'
     + '</div>';
 }
@@ -921,7 +925,7 @@ function finishScreen(){
 
   /* protocol lead — frameless header, left-aligned, with the protocol-direction symbols */
   h += '<div style="padding:30px 22px 26px;background:#F7F2E9">'
-    + '<h2 style="font-family:\'Domine\',serif;font-weight:700;font-size:27px;line-height:1.13;margin:0;color:#1E3B34;animation:heroIn .5s cubic-bezier(.2,.8,.2,1) both">Your daily supplement protocol</h2>'
+    + '<h2 style="font-family:\'Domine\',serif;font-weight:700;font-size:min(20px,4.6vw);white-space:nowrap;line-height:1.15;margin:0;color:#1E3B34;animation:heroIn .5s cubic-bezier(.2,.8,.2,1) both">Your daily supplement protocol</h2>'
     + '<p style="margin:11px 0 0;font-size:15px;line-height:1.5;color:#5A655D">' + esc(R.heroSubtitle) + '</p>'
     + '<div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:20px">'
     +   R.heroSymbols.map(function(s){
@@ -1022,17 +1026,17 @@ function finishScreen(){
     + (S.editPlan ? '<p style="margin:14px 0 0;text-align:center;font-size:11.5px;line-height:1.45;color:#7A867E">Tap × to remove a supplement.' + ((S.removed && S.removed.length) ? ' <button data-act="restore-plan" style="border:none;background:none;color:#14655B;font-weight:800;text-decoration:underline;text-underline-offset:2px;cursor:pointer;font-size:11.5px;padding:0">Restore all</button>' : '') + '</p>' : '')
     + '</div>'
 
-    /* what's inside */
-    + '<div style="margin-top:30px">'
-    + '<img src="assets/opt/box-closed.png" alt="Sealed Welme box with 28 daily packs" style="display:block;width:44%;max-width:172px;height:auto;margin:0 auto">'
-    + '</div>'
-
-    /* how it works */
+    /* how it works — numbered steps, between the daily-pack frame and the box picture */
     + '<div style="display:flex;flex-direction:column;gap:12px;margin-top:26px">'
     + '<div class="how-step"><span class="how-num">1</span><p>Your box arrives with 28 daily packs – four weeks of your plan.</p></div>'
     + '<div class="how-step"><span class="how-num">2</span><p>Take one pack a day with your main meal.</p></div>'
     + '<div class="how-step"><span class="how-num">3</span><p>A fresh box arrives every month – free delivery, adjust any time.</p></div>'
     + '<div class="how-step"><span class="how-num">4</span><p>The price is set by the supplements in your plan – starting from $1 a day.</p></div>'
+    + '</div>'
+
+    /* what's inside */
+    + '<div style="margin-top:30px">'
+    + '<img src="assets/opt/box-closed.png" alt="Sealed Welme box with 28 daily packs" style="display:block;width:44%;max-width:172px;height:auto;margin:0 auto">'
     + '</div>'
     + '<div style="margin-top:22px;background:rgba(247,242,233,.08);border:1px solid rgba(196,210,202,.16);border-radius:16px;padding:16px 18px">'
     + '<div style="font-size:11px;font-weight:800;letter-spacing:.14em;color:#C9A542">HOW TO TAKE IT</div>'
