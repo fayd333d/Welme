@@ -321,6 +321,20 @@ var SUBSTITUTE = {
   'Digestive enzymes':'Probiotic',
   'Probiotic':'Digestive enzymes'
 };
+// Canonical active behind each shelf item AND each thing a user can say they take.
+// Used to guarantee one active never appears twice, and to tell the user when
+// something they already take duplicates what's in the box.
+var ACTIVE_OF = {
+  // shelf
+  'Omega-3 (EPA/DHA)':'omega3','Vitamin D3':'vitd','Magnesium glycinate':'magnesium','B-Complex':'bcomplex',
+  'Creatine':'creatine','CoQ10':'coq10','Taurine':'taurine','Curcumin':'curcumin','L-theanine':'theanine',
+  'Ashwagandha':'ashwagandha','Glycine':'glycine','Citicoline':'citicoline','Collagen (UC-II)':'collagen',
+  'Digestive enzymes':'enzymes','Probiotic':'probiotic',
+  // what a user may already take (step 3)
+  'Omega-3 / fish oil':'omega3','Cod liver oil':'omega3','Krill oil':'omega3',
+  'Magnesium':'magnesium','Curcumin / turmeric':'curcumin'
+};
+function activeOf(name){ return ACTIVE_OF[name] || String(name).toLowerCase(); }
 // With-food flag for every shelf item (for supplements swapped in as substitutes).
 var SUPP_FOOD = {
   'Omega-3 (EPA/DHA)':'f','Vitamin D3':'f','Magnesium glycinate':'a','B-Complex':'a','Creatine':'a',
@@ -528,8 +542,10 @@ function buildReadableResultsSummary(resultData){
   var flags = resultData.subRestrictions || [];
   if(flags.length){
     lines.push('');
-    lines.push('Flagged from what you take:');
-    flags.forEach(function(f){ lines.push(f.name); });
+    lines.push('--- NOT IN THE BOX (user already takes these — flagged only) ---');
+    flags.forEach(function(f){
+      lines.push('[not in box] ' + f.name + (f.duplicateOf ? ' — overlaps ' + f.duplicateOf + ' in the box' : ''));
+    });
   }
 
   return lines.join('\n');
@@ -664,8 +680,14 @@ function buildResults(){
   var MAX_SUPP = 7;
   var foundationNames = FOUNDATION.map(function(p){ return p[0]; });
   var goalSpecNames = (GOAL_SPECIFIC[baseGoal] || []).map(function(p){ return p[0]; });
-  var ordered = [];
-  var pushIf = function(n){ if((n in timeOf) && ordered.indexOf(n) === -1) ordered.push(n); };
+  var ordered = [], seenActive = {};
+  var pushIf = function(n){
+    if(!(n in timeOf) || ordered.indexOf(n) !== -1) return;
+    var a = activeOf(n);
+    if(seenActive[a]) return;   // never two forms of the same active in one box
+    seenActive[a] = 1;
+    ordered.push(n);
+  };
   foundationNames.forEach(pushIf);
   Object.keys(substituteSet).forEach(pushIf);
   goalSpecNames.forEach(pushIf);
@@ -691,8 +713,11 @@ function buildResults(){
   /* substances the user already takes that overlap or interact with the box —
      flagged only, never added (we offer everything the goals need). */
   var subRestrictions = [];
+  var planActives = {}; ordered.forEach(function(n){ planActives[activeOf(n)] = n; });
   S.supps.forEach(function(l){
-    if(SUB_NOTE[l] && !subRestrictions.some(function(x){ return x.name === l; })) subRestrictions.push({ name: l, note: SUB_NOTE[l] });
+    if(!SUB_NOTE[l] || subRestrictions.some(function(x){ return x.name === l; })) return;
+    var dupOf = planActives[activeOf(l)] || null;   // same active is already in the box
+    subRestrictions.push({ name: l, note: SUB_NOTE[l], duplicateOf: dupOf });
   });
 
   /* protocol direction (lifestyle "try this" tips per goal) */
@@ -995,7 +1020,8 @@ function finishScreen(){
       + '<div style="display:flex;flex-direction:column;gap:8px;margin-top:12px">'
       + R.subRestrictions.map(function(s){
           return '<div style="background:#FFFDF8;border:1px solid rgba(20,101,91,.12);border-radius:14px;padding:13px 15px">'
-            + '<div style="font-size:14.5px;font-weight:800;color:#1E3B34">' + esc(s.name) + '</div>'
+            + '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-size:14.5px;font-weight:800;color:#1E3B34">' + esc(s.name) + '</span>'
+            + (s.duplicateOf ? '<span style="font-size:10.5px;font-weight:800;letter-spacing:.06em;color:#8A6D1F;background:#F0E7CF;border-radius:999px;padding:3px 9px">ALREADY IN YOUR BOX</span>' : '') + '</div>'
             + '<p style="margin:4px 0 0;font-size:13.5px;line-height:1.5;color:#4A574F">' + esc(s.note) + '</p></div>';
         }).join('')
       + '</div>';
