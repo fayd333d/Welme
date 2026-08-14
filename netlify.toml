@@ -17,6 +17,11 @@
   to = "/protocol.html"
   status = 200
 
+[[redirects]]
+  from = "/order"
+  to = "/order.html"
+  status = 200
+
 # Legacy paths → new ones (301 permanent)
 [[redirects]]
   from = "/landing"
