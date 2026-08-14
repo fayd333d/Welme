@@ -81,5 +81,62 @@
     <p class="foot-disc">Welme provides informational wellness guidance only, not medical diagnoses or treatment. Consult a healthcare professional before starting any treatments.</p>
   </div>
 </div>
+
+<script>
+(function () {
+  const params =
+    new URLSearchParams(
+      window.location.search
+    );
+
+  const userId =
+    params.get("id");
+
+  if (!userId) {
+    return;
+  }
+
+  /*
+   * IMPORTANT:
+   * Replace this with the SAME Apps Script /exec URL
+   * that your Welme website already uses for tracking.
+   */
+  const trackingUrl =
+    "https://script.google.com/macros/s/AKfycbxg1FEwB5KIZwoEr6hOVpgH52wrLgVVxfKSoKveXtLYtiA2e6D4Q2XOXml_IOms_CjA/exec";
+
+  fetch(
+    trackingUrl +
+      "?action=purchase_click&id=" +
+      encodeURIComponent(userId) +
+      "&t=" +
+      Date.now(),
+    {
+      method: "GET",
+      mode: "no-cors",
+      cache: "no-store"
+    }
+  ).catch(function () {
+    /*
+     * Tracking must never interfere
+     * with the customer page.
+     */
+  });
+
+
+  /*
+   * Remove the user ID from the browser URL
+   * after the tracking request begins.
+   *
+   * User then simply sees:
+   *
+   * https://welme.io/order
+   */
+  window.history.replaceState(
+    {},
+    document.title,
+    window.location.pathname
+  );
+})();
+</script>
 </body>
 </html>
