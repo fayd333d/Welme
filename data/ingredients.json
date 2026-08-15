@@ -1,0 +1,338 @@
+[
+  {
+    "id": "omega3",
+    "name": "Omega-3 (EPA/DHA)",
+    "brand": "TG form, burp-free",
+    "dose": "1000-2000 mg",
+    "form": "softgel",
+    "timing": "MEAL",
+    "fat_soluble": true,
+    "take_with_food": true,
+    "gentle": true,
+    "tags": [
+      "heart",
+      "brain",
+      "joints",
+      "longevity",
+      "digestion",
+      "sleep",
+      "stress"
+    ],
+    "cost_tier": "commodity",
+    "restrictions": {
+      "avoid": "None absolute; stop ~7 days before surgery.",
+      "caution": "Blood thinners (bleeding >3 g); fish allergy → algae form.",
+      "form": "With a meal; burp-free/enteric if reflux; emulsified if no gallbladder."
+    }
+  },
+  {
+    "id": "mag_glycinate",
+    "name": "Magnesium Glycinate",
+    "brand": "",
+    "dose": "300-400 mg elem.",
+    "form": "capsule",
+    "timing": "MEAL",
+    "fat_soluble": false,
+    "take_with_food": false,
+    "gentle": true,
+    "tags": [
+      "sleep",
+      "stress",
+      "heart",
+      "digestion"
+    ],
+    "cost_tier": "commodity",
+    "restrictions": {
+      "avoid": "Advanced kidney disease.",
+      "caution": "Loose stools at high dose; space 2-4h from thyroid meds & some antibiotics.",
+      "form": "Glycinate = gentle on the gut."
+    }
+  },
+  {
+    "id": "vit_d3",
+    "name": "Vitamin D3",
+    "brand": "emulsified option",
+    "dose": "2000-4000 IU",
+    "form": "softgel",
+    "timing": "MEAL",
+    "fat_soluble": true,
+    "take_with_food": true,
+    "gentle": true,
+    "tags": [
+      "joints",
+      "longevity",
+      "energy",
+      "immune",
+      "stress"
+    ],
+    "cost_tier": "commodity",
+    "restrictions": {
+      "avoid": "Hypercalcemia, sarcoidosis, hyperparathyroidism.",
+      "caution": "Thiazides, digoxin; don't exceed 4000 IU without labs.",
+      "form": "Fat-soluble — with a meal; emulsified if no gallbladder."
+    }
+  },
+  {
+    "id": "b12",
+    "name": "Vitamin B12 (methylcobalamin)",
+    "brand": "sublingual option",
+    "dose": "500-1000 mcg",
+    "form": "capsule",
+    "timing": "MEAL",
+    "fat_soluble": false,
+    "take_with_food": false,
+    "gentle": true,
+    "tags": [
+      "energy",
+      "brain",
+      "stress"
+    ],
+    "cost_tier": "commodity",
+    "restrictions": {
+      "avoid": "None.",
+      "caution": "Absorption falls with age, PPIs and metformin — the reason it's here.",
+      "form": "Sublingual bypasses stomach absorption issues."
+    }
+  },
+  {
+    "id": "creatine",
+    "name": "Creatine Monohydrate",
+    "brand": "Creapure",
+    "dose": "3-5 g",
+    "form": "tablet",
+    "timing": "MEAL",
+    "fat_soluble": false,
+    "take_with_food": false,
+    "gentle": true,
+    "tags": [
+      "energy",
+      "brain",
+      "longevity",
+      "joints"
+    ],
+    "cost_tier": "commodity",
+    "restrictions": {
+      "avoid": "Kidney disease unless cleared by a nephrologist.",
+      "caution": "Raises serum creatinine (lab artefact, not damage); needs hydration.",
+      "form": "Any time; split if GI upset."
+    }
+  },
+  {
+    "id": "coq10",
+    "name": "CoQ10 / Ubiquinol",
+    "brand": "Kaneka",
+    "dose": "100-200 mg",
+    "form": "softgel",
+    "timing": "MEAL",
+    "fat_soluble": true,
+    "take_with_food": true,
+    "gentle": true,
+    "tags": [
+      "energy",
+      "heart",
+      "longevity",
+      "brain"
+    ],
+    "cost_tier": "branded",
+    "restrictions": {
+      "avoid": "None.",
+      "caution": "Lowers BP & glucose (additive); may reduce warfarin effect — monitor INR.",
+      "form": "Ubiquinol form if over 60; with a meal."
+    }
+  },
+  {
+    "id": "taurine",
+    "name": "Taurine",
+    "brand": "",
+    "dose": "1-2 g",
+    "form": "capsule",
+    "timing": "MEAL",
+    "fat_soluble": false,
+    "take_with_food": false,
+    "gentle": true,
+    "tags": [
+      "heart",
+      "energy",
+      "longevity",
+      "sleep",
+      "brain"
+    ],
+    "cost_tier": "commodity",
+    "restrictions": {
+      "avoid": "None.",
+      "caution": "Mild additive BP-lowering; theoretical caution in bipolar.",
+      "form": "Well tolerated; no stimulation."
+    }
+  },
+  {
+    "id": "glycine",
+    "name": "Glycine",
+    "brand": "",
+    "dose": "3 g",
+    "form": "capsule",
+    "timing": "MEAL",
+    "fat_soluble": false,
+    "take_with_food": false,
+    "gentle": true,
+    "tags": [
+      "sleep",
+      "longevity",
+      "stress"
+    ],
+    "cost_tier": "commodity",
+    "restrictions": {
+      "avoid": "None.",
+      "caution": "Clozapine (may reduce effect); mild drowsiness at high dose.",
+      "form": "Evening; supports sleep onset."
+    }
+  },
+  {
+    "id": "l_theanine",
+    "name": "L-Theanine",
+    "brand": "Suntheanine",
+    "dose": "100-200 mg",
+    "form": "capsule",
+    "timing": "MEAL",
+    "fat_soluble": false,
+    "take_with_food": false,
+    "gentle": true,
+    "tags": [
+      "sleep",
+      "brain",
+      "stress",
+      "energy"
+    ],
+    "cost_tier": "commodity",
+    "restrictions": {
+      "avoid": "None.",
+      "caution": "Additive with sedatives / BP meds (mild).",
+      "form": "Non-sedating calm; any time."
+    }
+  },
+  {
+    "id": "citicoline",
+    "name": "Citicoline",
+    "brand": "Cognizin",
+    "dose": "250-500 mg",
+    "form": "capsule",
+    "timing": "MEAL",
+    "fat_soluble": false,
+    "take_with_food": false,
+    "gentle": true,
+    "tags": [
+      "brain"
+    ],
+    "cost_tier": "branded",
+    "restrictions": {
+      "avoid": "None.",
+      "caution": "Levodopa (may enhance — Parkinson's).",
+      "form": "Good human data in older adults; rare mild headache."
+    }
+  },
+  {
+    "id": "collagen_uc2",
+    "name": "Collagen (UC-II)",
+    "brand": "UC-II 40 mg",
+    "dose": "40 mg",
+    "form": "capsule",
+    "timing": "MEAL",
+    "fat_soluble": false,
+    "take_with_food": false,
+    "gentle": true,
+    "tags": [
+      "joints",
+      "longevity"
+    ],
+    "cost_tier": "branded",
+    "restrictions": {
+      "avoid": "Bovine/chicken-source allergy.",
+      "caution": "Minimal — works by oral tolerance, not dose loading.",
+      "form": "One small capsule."
+    }
+  },
+  {
+    "id": "probiotic",
+    "name": "Probiotic (multi-strain)",
+    "brand": "shelf-stable",
+    "dose": "10-30B CFU",
+    "form": "capsule",
+    "timing": "MEAL",
+    "fat_soluble": false,
+    "take_with_food": true,
+    "gentle": true,
+    "tags": [
+      "digestion",
+      "mood"
+    ],
+    "cost_tier": "branded",
+    "restrictions": {
+      "avoid": "Severe immunocompromise / central venous line.",
+      "caution": "Transient gas; SIBO caution.",
+      "form": "With or after food."
+    }
+  },
+  {
+    "id": "dig_enzymes",
+    "name": "Digestive Enzymes (+lipase)",
+    "brand": "broad-spectrum + ox bile",
+    "dose": "with meals",
+    "form": "capsule",
+    "timing": "MEAL",
+    "fat_soluble": false,
+    "take_with_food": true,
+    "gentle": true,
+    "tags": [
+      "digestion"
+    ],
+    "cost_tier": "commodity",
+    "restrictions": {
+      "avoid": "Active peptic ulcer/gastritis, acute pancreatitis, bile-duct obstruction.",
+      "caution": "High-dose proteases — theoretical bleeding additivity.",
+      "form": "With meals; lipase essential if no gallbladder."
+    }
+  },
+  {
+    "id": "curcumin",
+    "name": "Curcumin (phytosome)",
+    "brand": "Meriva",
+    "dose": "500-1000 mg",
+    "form": "capsule",
+    "timing": "MEAL",
+    "fat_soluble": true,
+    "take_with_food": true,
+    "gentle": false,
+    "tags": [
+      "joints",
+      "longevity",
+      "digestion",
+      "heart"
+    ],
+    "cost_tier": "branded",
+    "restrictions": {
+      "avoid": "Gallstones/bile-duct obstruction; blood thinners; recent surgery; pregnancy.",
+      "caution": "Reflux; lowers glucose; alters CYP-metabolised drug levels; iron chelation.",
+      "form": "Phytosome + meal; enteric if reflux."
+    }
+  },
+  {
+    "id": "ashwagandha",
+    "name": "Ashwagandha",
+    "brand": "KSM-66",
+    "dose": "300-600 mg",
+    "form": "capsule",
+    "timing": "MEAL",
+    "fat_soluble": false,
+    "take_with_food": false,
+    "gentle": false,
+    "tags": [
+      "stress",
+      "sleep"
+    ],
+    "cost_tier": "branded",
+    "restrictions": {
+      "avoid": "Thyroid condition; autoimmune condition; liver condition; pregnancy/breastfeeding.",
+      "caution": "Sedatives; lowers glucose & BP; nightshade allergy.",
+      "form": "Evening with food. Auto-excluded for the groups above."
+    }
+  }
+]

@@ -1,0 +1,22 @@
+{
+  "shelf_size": 15,
+  "budget_usd": 15000,
+  "default_pill_cap": 12,
+  "foundation": [
+    "omega3",
+    "mag_glycinate"
+  ],
+  "slot_weights": {
+    "core": 3,
+    "branch": 2,
+    "extended": 1
+  },
+  "model": "15 geriatric-appropriate actives. Differentiation comes from DEDUPE (removing what the user already takes), not from riskier ingredients. Two higher-risk botanicals are hard-gated (auto-excluded) for their risk groups, then substituted or the protocol shortens.",
+  "product": {
+    "format": "one mixed sachet per day (pills + capsules)",
+    "take_with": "main meal",
+    "sachets_per_day": 1,
+    "sachets_per_box": 28,
+    "box": "28-day supply"
+  }
+}

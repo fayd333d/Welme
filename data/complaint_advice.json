@@ -1,0 +1,122 @@
+[
+  {
+    "goal": "Sleep quality",
+    "complaint": "Trouble falling asleep",
+    "advice": "Keep the same wind-down every night: dim the lights an hour before bed and keep the bedroom cool and dark. If you're still awake after about 20 minutes, get up and sit quietly somewhere else until you feel sleepy — lying there watching the clock trains your body to stay alert in bed."
+  },
+  {
+    "goal": "Sleep quality",
+    "complaint": "Wake up during the night",
+    "advice": "Stop drinking fluids about two hours before bed and keep the room properly dark — even a little light makes it harder to fall back asleep. Don't check the time when you wake; turn the clock away. If you're waking because of the bathroom several times a night, that's worth mentioning to your doctor."
+  },
+  {
+    "goal": "Sleep quality",
+    "complaint": "Wake up feeling unrefreshed",
+    "advice": "Getting up at the same time every day, including weekends, does more for sleep quality than going to bed earlier. Get outside into daylight within half an hour of waking. If you snore heavily or wake gasping, ask your doctor about a sleep assessment — unrefreshing sleep is the most common sign of sleep apnoea."
+  },
+  {
+    "goal": "Energy & vitality",
+    "complaint": "Tired throughout the day",
+    "advice": "Daylight in the morning and regular meals do most of the work here. Try not to skip breakfast, and include protein at each meal. If the tiredness is new or persistent, ask your doctor to check thyroid, B12 and iron — all three are common and easily treated at this age."
+  },
+  {
+    "goal": "Energy & vitality",
+    "complaint": "Energy drops by afternoon",
+    "advice": "The afternoon dip usually traces back to lunch: a meal heavy on bread, pasta or potatoes with little protein makes it much sharper. Add protein, then take a ten-minute walk afterwards. Keep any caffeine to before early afternoon so it isn't costing you that night's sleep."
+  },
+  {
+    "goal": "Energy & vitality",
+    "complaint": "Low physical endurance",
+    "advice": "Endurance rebuilds faster than most people expect, but only with gradual progression — add a little distance or time each week rather than pushing hard occasionally. Two short sessions a week of resistance work (even chair-based) makes ordinary activity feel easier, and eat enough protein to support it."
+  },
+  {
+    "goal": "Heart health",
+    "complaint": "Get tired more easily",
+    "advice": "Build activity back gradually rather than in bursts, and pay attention to whether the tiredness is steady or getting worse. A noticeable change in how easily you tire is worth raising with your doctor rather than waiting for your next appointment."
+  },
+  {
+    "goal": "Heart health",
+    "complaint": "Want to stay heart healthy",
+    "advice": "The strongest levers are unglamorous: around 150 minutes of moderate activity a week, less salt and less ultra-processed food, and not smoking. A home blood-pressure monitor is genuinely useful — readings taken calmly at home reflect your real numbers better than one taken at the clinic."
+  },
+  {
+    "goal": "Heart health",
+    "complaint": "Focus on prevention",
+    "advice": "Know your numbers and track them over time: blood pressure, cholesterol panel, HbA1c. Prevention at this stage is mostly about catching drift early, so keep the annual check-up even in a year when you feel well."
+  },
+  {
+    "goal": "Brain & memory",
+    "complaint": "Brain fog",
+    "advice": "Sleep, hydration and daylight affect clarity more than anything you can buy. One thing often missed: many common prescriptions — antihistamines, sleep aids, some bladder and blood-pressure medicines — cause fog as a side effect. It's worth asking your pharmacist to review your list."
+  },
+  {
+    "goal": "Brain & memory",
+    "complaint": "Forgetfulness",
+    "advice": "Reduce the load rather than fighting it: keep a consistent place for keys and glasses, use lists and a calendar, and do one thing at a time. Learning something genuinely new and staying socially active both protect memory. If forgetfulness is clearly worsening or others have noticed, see your doctor."
+  },
+  {
+    "goal": "Brain & memory",
+    "complaint": "Trouble concentrating",
+    "advice": "Work in shorter blocks with real breaks, and remove background noise and notifications rather than trying to push through them. If you find yourself straining to follow conversation in groups, get your hearing checked — untreated hearing loss is a common and very fixable cause of concentration difficulty."
+  },
+  {
+    "goal": "Joints & mobility",
+    "complaint": "Stiff after sitting",
+    "advice": "The fix is frequency, not intensity: stand and move every 30 to 45 minutes, even briefly. A warm shower in the morning and gentle range-of-motion movements before you get going make the first hour of the day much easier."
+  },
+  {
+    "goal": "Joints & mobility",
+    "complaint": "Joint discomfort during movement",
+    "advice": "Keep moving, but shift towards low-impact — swimming, cycling and walking are easier on joints than stairs or running. Strengthening the muscles around a sore joint reduces the load on it, and decent supportive footwear often matters more than people expect."
+  },
+  {
+    "goal": "Joints & mobility",
+    "complaint": "Slow recovery after activity",
+    "advice": "Recovery needs protein and sleep more than rest days. Eat a protein-containing meal after activity, and progress in small increments — most slow recovery comes from doing too much on good days and nothing in between."
+  },
+  {
+    "goal": "Longevity",
+    "complaint": "Want to age well",
+    "advice": "If you do one thing, make it resistance training twice a week — nothing else has as much evidence for staying independent. Add enough protein to support it, protect your sleep, and keep social contact deliberate rather than incidental."
+  },
+  {
+    "goal": "Longevity",
+    "complaint": "Stay active as I get older",
+    "advice": "Choose movement you'd actually keep doing; consistency beats intensity by a wide margin. Include balance work — standing on one leg while the kettle boils counts — because falls are the main thing that ends independent activity."
+  },
+  {
+    "goal": "Longevity",
+    "complaint": "Maintain strength with age",
+    "advice": "Muscle is lost fastest through disuse, and it responds at any age. Two progressive resistance sessions a week and around 1.2g of protein per kg of body weight daily is the combination with the best evidence behind it."
+  },
+  {
+    "goal": "Digestion & gut",
+    "complaint": "Bloating",
+    "advice": "Eat more slowly and in smaller portions, and take a short walk after meals — both do more than most people assume. If bloating is consistent, keep a simple food diary for two weeks; the trigger is usually identifiable and often something ordinary like onion, wheat or dairy."
+  },
+  {
+    "goal": "Digestion & gut",
+    "complaint": "Discomfort after meals",
+    "advice": "Smaller portions, thorough chewing, and staying upright for two to three hours after eating make the biggest difference. Large evening meals are the most common culprit — shifting your main meal earlier in the day often resolves it on its own."
+  },
+  {
+    "goal": "Digestion & gut",
+    "complaint": "Irregular digestion",
+    "advice": "Increase fibre gradually rather than all at once, drink enough water alongside it, and move daily — inactivity slows the gut more than diet does. Eating at roughly consistent times helps, as the digestive system runs on a daily rhythm like the rest of the body."
+  },
+  {
+    "goal": "Stress & mood",
+    "complaint": "Feeling overwhelmed",
+    "advice": "Break what's in front of you into the next single step rather than the whole picture, and get outside daily — daylight and movement together measurably shift mood. Slow breathing, longer out than in, works within minutes when things feel acute."
+  },
+  {
+    "goal": "Stress & mood",
+    "complaint": "Hard to relax",
+    "advice": "Build a genuine wind-down rather than expecting to switch off on demand, and set a limit on news and screens in the evening. Gentle rhythmic movement — walking, yoga, tai chi, gardening — relaxes the nervous system more reliably than sitting still does."
+  },
+  {
+    "goal": "Stress & mood",
+    "complaint": "Poor stress recovery",
+    "advice": "Recovery depends most on sleep and on contact with other people; both are the first things dropped under stress and the most important to protect. Saying no to one thing a week is a practical way to leave room for recovery to happen."
+  }
+]

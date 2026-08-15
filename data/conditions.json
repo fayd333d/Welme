@@ -1,0 +1,305 @@
+{
+  "On blood thinners": {
+    "freq": 0.112,
+    "rules": [
+      {
+        "action": "REDUCE_DOSE",
+        "target": "omega3",
+        "to": "<=1000 mg",
+        "why": "additive bleeding risk at high EPA/DHA"
+      },
+      {
+        "action": "BLOCK",
+        "target": "curcumin",
+        "why": "antiplatelet effect — excluded on anticoagulants"
+      }
+    ]
+  },
+  "Kidney disease": {
+    "freq": 0.094,
+    "rules": [
+      {
+        "action": "BLOCK",
+        "target": "creatine",
+        "why": "renal caution unless cleared by nephrologist"
+      },
+      {
+        "action": "REDUCE_DOSE",
+        "target": "mag_glycinate",
+        "to": "<=200 mg",
+        "why": "magnesium accumulates in CKD"
+      },
+      {
+        "action": "FLAG",
+        "target": "taurine",
+        "why": "nitrogen load — clinician review"
+      }
+    ]
+  },
+  "No gallbladder": {
+    "freq": 0.188,
+    "rules": [
+      {
+        "action": "PREFER_FORM",
+        "target": "tag:fat_soluble",
+        "to": "emulsified / micellar",
+        "why": "impaired fat absorption without bile"
+      },
+      {
+        "action": "REDUCE_DOSE",
+        "target": "tag:fat_soluble",
+        "to": "-25%",
+        "why": "take with the largest meal"
+      },
+      {
+        "action": "ENABLE",
+        "target": "dig_enzymes",
+        "why": "lipase + ox bile aid fat-soluble absorption"
+      }
+    ]
+  },
+  "Thyroid condition": {
+    "freq": 0.188,
+    "rules": [
+      {
+        "action": "BLOCK",
+        "target": "ashwagandha",
+        "why": "can shift thyroid hormones — excluded outright, not just flagged"
+      },
+      {
+        "action": "TIMING",
+        "target": [
+          "mag_glycinate",
+          "vit_d3"
+        ],
+        "to": "4h from thyroid meds",
+        "why": "absorption interference"
+      }
+    ]
+  },
+  "Type 2 diabetes / prediabetes": {
+    "freq": 0.159,
+    "rules": [
+      {
+        "action": "FLAG",
+        "target": [
+          "ashwagandha",
+          "curcumin"
+        ],
+        "why": "may lower blood glucose — watch additive hypoglycemia"
+      },
+      {
+        "action": "ENABLE",
+        "target": "b12",
+        "why": "metformin depletes B12"
+      }
+    ]
+  },
+  "High blood pressure": {
+    "freq": 0.365,
+    "rules": [
+      {
+        "action": "FLAG",
+        "target": "*",
+        "to": "favors BP-supportive actives (Mg, omega-3, taurine)",
+        "why": "informational — these help"
+      }
+    ]
+  },
+  "Liver condition": {
+    "freq": 0.029,
+    "rules": [
+      {
+        "action": "BLOCK",
+        "target": "ashwagandha",
+        "why": "rare hepatotoxicity case reports — excluded"
+      },
+      {
+        "action": "FLAG",
+        "target": "curcumin",
+        "why": "high-dose botanical — clinician review"
+      }
+    ]
+  },
+  "Acid reflux / GERD": {
+    "freq": 0.259,
+    "rules": [
+      {
+        "action": "PREFER_FORM",
+        "target": [
+          "omega3",
+          "curcumin"
+        ],
+        "to": "enteric-coated",
+        "why": "reduce reflux / burping"
+      },
+      {
+        "action": "ENABLE",
+        "target": "b12",
+        "why": "PPIs impair B12 absorption"
+      },
+      {
+        "action": "ENABLE",
+        "target": "probiotic",
+        "why": "mucosal / microbiome support"
+      }
+    ]
+  },
+  "IBS / sensitive gut": {
+    "freq": 0.176,
+    "rules": [
+      {
+        "action": "REDUCE_DOSE",
+        "target": "tag:digestion",
+        "to": "titrate up slowly",
+        "why": "sensitive-gut tolerance"
+      },
+      {
+        "action": "ENABLE",
+        "target": "probiotic",
+        "why": "strain support"
+      }
+    ]
+  },
+  "Lactose intolerant": {
+    "freq": 0.135,
+    "rules": [
+      {
+        "action": "EXCIPIENT",
+        "target": "*",
+        "to": "lactose-free fillers",
+        "why": "GI symptoms"
+      }
+    ]
+  },
+  "Celiac / gluten sensitive": {
+    "freq": 0.035,
+    "rules": [
+      {
+        "action": "EXCIPIENT",
+        "target": "*",
+        "to": "certified gluten-free",
+        "why": "cross-contamination"
+      }
+    ]
+  },
+  "Pregnant or breastfeeding": {
+    "freq": 0.0,
+    "rules": [
+      {
+        "action": "BLOCK",
+        "target": [
+          "ashwagandha",
+          "curcumin"
+        ],
+        "why": "insufficient safety data"
+      },
+      {
+        "action": "FLAG",
+        "target": "*",
+        "to": "out of core segment — OB guidance only",
+        "why": "conservative"
+      }
+    ]
+  },
+  "On prescription meds": {
+    "freq": 0.418,
+    "rules": [
+      {
+        "action": "FLAG",
+        "target": "*",
+        "to": "pharmacist interaction check + 2-4h spacing from Rx",
+        "why": "polypharmacy is the cohort norm"
+      }
+    ]
+  },
+  "Food allergies": {
+    "freq": 0.059,
+    "rules": [
+      {
+        "action": "FLAG",
+        "target": "omega3",
+        "to": "offer algae-based omega-3",
+        "why": "fish allergen"
+      }
+    ]
+  },
+  "Hard to swallow pills": {
+    "freq": 0.088,
+    "rules": [
+      {
+        "action": "PREFER_FORM",
+        "target": "*",
+        "to": "smallest softgel/capsule; offer liquid D3, sublingual B12",
+        "why": "dysphagia"
+      },
+      {
+        "action": "CAP_TOTAL",
+        "target": "*",
+        "to": "lower pill ceiling",
+        "why": "pill burden"
+      }
+    ]
+  },
+  "Autoimmune condition": {
+    "freq": 0.047,
+    "rules": [
+      {
+        "action": "BLOCK",
+        "target": "ashwagandha",
+        "why": "immunomodulatory — excluded for autoimmune conditions"
+      }
+    ]
+  },
+  "Iron-deficiency anemia": {
+    "freq": 0.047,
+    "rules": [
+      {
+        "action": "FLAG",
+        "target": "*",
+        "to": "iron is a special-order add-on (not on the shelf) — only on a lab result",
+        "why": "not stocked in v1"
+      }
+    ]
+  },
+  "Recent surgery": {
+    "freq": 0.024,
+    "rules": [
+      {
+        "action": "BLOCK",
+        "target": [
+          "omega3",
+          "curcumin"
+        ],
+        "why": "pause bleeding-risk actives peri-operatively"
+      }
+    ]
+  },
+  "Gout / high uric acid": {
+    "freq": 0.047,
+    "rules": [
+      {
+        "action": "EXCIPIENT",
+        "target": "*",
+        "to": "no high-dose niacin",
+        "why": "niacin raises uric acid"
+      },
+      {
+        "action": "FLAG",
+        "target": "creatine",
+        "to": "ensure hydration",
+        "why": "keep well hydrated"
+      }
+    ]
+  },
+  "Low stomach acid": {
+    "freq": 0.018,
+    "rules": [
+      {
+        "action": "ENABLE",
+        "target": "dig_enzymes",
+        "why": "supports digestion when hypochlorhydric (if no GERD/ulcer)"
+      }
+    ]
+  }
+}
