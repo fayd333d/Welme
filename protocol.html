@@ -128,6 +128,7 @@ src="https://www.facebook.com/tr?id=1028962489819655&ev=PageView&noscript=1"
 </div>
 
 <script src="welme-tracking.js"></script>
+<script src="engine.js?v=4"></script>
 <script>
 'use strict';
 
@@ -145,38 +146,28 @@ var GOALS = [
   { id:'stress', title:'Stress & mood', paths:['M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2','M9.6 4.6A2 2 0 1 1 11 8H2','M12.6 19.4A2 2 0 1 0 14 16H2'] }
 ];
 
-// Kept short and mapped to what our actual shelf can support.
-var CLAR = {
-  sleep:['Trouble falling asleep','Wake up during the night','Wake up feeling unrefreshed'],
-  energy:['Tired throughout the day','Energy drops by afternoon','Low physical endurance'],
-  heart:['Get tired more easily','Want to stay heart healthy','Focus on prevention'],
-  brain:['Brain fog','Forgetfulness','Trouble concentrating'],
-  joints:['Stiff after sitting','Joint discomfort during movement','Slow recovery after activity'],
-  longevity:['Want to age well','Stay active as I get older','Maintain strength with age'],
-  digestion:['Bloating','Discomfort after meals','Irregular digestion'],
-  stress:['Feeling overwhelmed','Hard to relax','Poor stress recovery']
-};
+// Sub-complaints come from data/complaint_advice.json (3 per goal). They drive
+// the advice section only — never the box. Populated by applyFormularyData().
+var CLAR = {};
 
 // Step 3 lists ONLY substances that overlap our shelf or carry a real
 // interaction/contraindication with it (source: Restrictions sheet). General
 // dietary supplements are left out — our boxes are fixed, predefined protocols.
+// Shelf items a user may already take are built from data/ingredients.json at load
+// (see applyFormularyData) so every one of the 15 can be deduped out of the box.
+// The entries below are substances that are NOT on our shelf but still interact —
+// they are flagged only and never deduped.
+var SHELF_SUBS = [];
 var RESTRICTED_SUBS = [
-  {label:'Omega-3 / fish oil', note:'Your box already includes omega-3 — don’t double up; combined high EPA/DHA can add to bleeding risk.'},
-  {label:'Cod liver oil', note:'Holds both omega-3 and vitamin D, which are in your box — combining can push both doses high.'},
-  {label:'Krill oil', note:'Another omega-3 source that’s already in your box — avoid stacking to limit bleeding risk.'},
-  {label:'Vitamin D3', note:'Vitamin D3 is in your box — keep total intake under 4000 IU/day unless a blood test says otherwise.'},
+  {label:'Cod liver oil', note:'Holds both omega-3 and vitamin D — combining can push both doses high.'},
+  {label:'Krill oil', note:'Another omega-3 source — avoid stacking to limit bleeding risk.'},
   {label:'Vitamin K2', note:'Vitamin K can interact with blood thinners — mention it to your pharmacist.'},
   {label:'Vitamin E', note:'High-dose vitamin E adds to the bleeding risk of omega-3.'},
-  {label:'Magnesium', note:'Magnesium is in your box — combined high doses can loosen stools; keep it conservative with kidney disease.'},
   {label:'Iron', note:'Iron can bind curcumin and reduce absorption — take them a couple of hours apart.'},
-  {label:'Creatine', note:'Creatine is in your box — don’t double up, and stay well hydrated.'},
-  {label:'CoQ10', note:'CoQ10 may be in your box — it can affect warfarin and blood pressure, so monitor if relevant.'},
-  {label:'Curcumin / turmeric', note:'Curcumin may be in your box — combined doses add a mild antiplatelet effect; pause before surgery.'},
-  {label:'Ashwagandha', note:'Ashwagandha may be in your box — use caution with thyroid, autoimmune or sedative medication, and in pregnancy.'},
   {label:'Ginkgo', note:'Ginkgo adds to bleeding risk alongside omega-3 and blood thinners.'},
   {label:'Berberine', note:'Berberine lowers blood sugar — watch for additive effects with glucose-lowering medication.'},
   {label:'Green tea extract', note:'High-dose green tea extract can stress the liver — keep intake moderate.'},
-  {label:'Melatonin', note:'Melatonin adds to the calming effect of magnesium, glycine and L-theanine.'}
+  {label:'Melatonin', note:'Melatonin adds to the calming effect of magnesium, L-theanine and ashwagandha.'}
 ];
 // Medications worth accounting for when preparing the course (source: Restrictions sheet).
 var RESTRICTED_MEDS = [
@@ -185,20 +176,18 @@ var RESTRICTED_MEDS = [
   {label:'Thyroid medication', note:'We space vitamin D and magnesium ~4h from your thyroid tablet, and flag ashwagandha, which can shift thyroid hormone.'},
   {label:'Blood-pressure medication', note:'Magnesium, taurine, CoQ10 and L-theanine can gently lower blood pressure — a helpful direction, but worth monitoring.'},
   {label:'Diabetes / blood-sugar medication', note:'Ashwagandha, curcumin and CoQ10 can lower blood sugar — watch for additive effects and check with your clinician.'},
-  {label:'Sedatives / sleep medication', note:'L-theanine, glycine and ashwagandha add to a calming effect — start low if you already take a sedative or sleep aid.'},
+  {label:'Sedatives / sleep medication', note:'L-theanine, magnesium and ashwagandha add to a calming effect — start low if you already take a sedative or sleep aid.'},
   {label:'Levodopa (Parkinson’s)', note:'High-dose B6 and citicoline can affect levodopa — we keep B6 at label dose and flag citicoline for your neurologist.'}
 ];
-var SUPPS = RESTRICTED_SUBS.map(function(x){ return x.label; });
+var SUPPS = [];   // rebuilt in applyFormularyData(): shelf items + the non-shelf list above
 var MEDS  = RESTRICTED_MEDS.map(function(x){ return x.label; });
-var SUB_NOTE = {};
+var SUB_NOTE = {};        // label -> interaction note (flag-only substances)
+var SUPP_ID_OF = {};      // label -> ingredient id, for the dedupe step
 RESTRICTED_SUBS.forEach(function(x){ SUB_NOTE[x.label] = x.note; });
 RESTRICTED_MEDS.forEach(function(x){ SUB_NOTE[x.label] = x.note; });
 
-var CONDS = ['No gallbladder','Thyroid condition','Type 2 diabetes / prediabetes','High blood pressure',
-  'Kidney disease','Liver condition','Acid reflux / GERD','IBS / sensitive gut','Hard to swallow pills',
-  'Iron-deficiency anemia','Lactose intolerant','Celiac / gluten sensitive','Pregnant or breastfeeding',
-  'On blood thinners','On prescription meds','Food allergies','Autoimmune condition','Gout / high uric acid',
-  'Low stomach acid','Recent surgery'];
+// Health conditions come from data/conditions.json. Populated by applyFormularyData().
+var CONDS = [];
 
 var PROTOCOL = {
   sleep:{title:'Restful Sleep',sub:'Fall asleep faster and wake up rested'},
@@ -211,139 +200,12 @@ var PROTOCOL = {
   stress:{title:'Calm & Resilience',sub:'Steadier mood and better stress recovery'}
 };
 
-var SUPP_INFO = {
-  // 7 shared foundation supplements (every plan)
-  'Omega-3 (EPA/DHA)':{time:'n',reason:'EPA/DHA for heart, brain and joint support; a TG-form, burp-free fish oil.'},
-  'Vitamin D3':{time:'m',reason:'Immune, bone and mood support; a foundational nutrient most people run low on.'},
-  'Magnesium glycinate':{time:'n',reason:'Sleep, muscle relaxation and 300+ body processes.'},
-  'B-Complex':{time:'m',reason:'Full B-range for energy metabolism and stress resilience.'},
-  'Creatine':{time:'m',reason:'Supports muscle strength, recovery and mental energy.'},
-  'CoQ10':{time:'m',reason:'Cellular energy and heart support; declines with age.'},
-  'Glycine':{time:'n',reason:'Calming amino acid that deepens sleep taken before bed.'},
-  // goal-specific layer
-  'L-theanine':{time:'n',reason:'Calm focus by day and an easier wind-down at night, without sedation.'},
-  'Taurine':{time:'m',reason:'Amino acid supporting heart function, cellular hydration and steady energy.'},
-  'Ashwagandha':{time:'n',reason:'Adaptogen studied for stress, mood and recovery.'},
-  'Citicoline':{time:'m',reason:'Choline source studied for focus, attention and memory.'},
-  'Collagen (UC-II)':{time:'m',reason:'Undenatured type-II collagen (40 mg) that supports joint comfort and cartilage.'},
-  'Curcumin':{time:'m',reason:'A phytosome curcumin for a healthy inflammatory response and joint comfort.'},
-  'Probiotic':{time:'m',reason:'Supports gut flora balance and comfortable digestion.'},
-  'Digestive enzymes':{time:'m',reason:'Broad-spectrum enzymes that ease bloating and heaviness after meals.'},
-  // kept for matching a user's current routine
-  'Vitamin C':{time:'m',reason:'Antioxidant for immunity; supports collagen and iron uptake.'},
-  'Zinc picolinate':{time:'n',reason:'Immune response, skin and tissue repair.'},
-  'Collagen':{time:'m',reason:'Peptides for joints, skin and connective tissue.'}
-};
-
-var DOSAGES = {
-  'Omega-3 (EPA/DHA)':'1,000–2,000 mg EPA/DHA',
-  'Vitamin D3':'2,000–4,000 IU',
-  'Magnesium glycinate':'300–400 mg',
-  'B-Complex':'1 serving',
-  'Creatine':'3–5 g',
-  'CoQ10':'100–200 mg',
-  'Glycine':'3 g',
-  'L-theanine':'100–200 mg',
-  'Taurine':'1–2 g',
-  'Ashwagandha':'300–600 mg',
-  'Citicoline':'250–500 mg',
-  'Collagen (UC-II)':'40 mg',
-  'Curcumin':'500–1,000 mg',
-  'Probiotic':'10–30 billion CFU',
-  'Digestive enzymes':'1 serving with meals',
-  'Vitamin C':'500 mg',
-  'Zinc picolinate':'15 mg',
-  'Collagen':'5–10 g'
-};
-
-// 5 shared foundation supplements in every box. Second value = 'f' take with
-// food, 'a' anytime. Everything ships in ONE mixed pack taken with a main meal.
-var FOUNDATION = [['Omega-3 (EPA/DHA)','f'],['Vitamin D3','f'],['Magnesium glycinate','a'],['B-Complex','a'],['Creatine','a']];
-// Goal-specific layer added on top of the shared foundation (→ 7-8 per protocol).
-var GOAL_SPECIFIC = {
-  sleep:     [['Glycine','a'],['L-theanine','a'],['Ashwagandha','a']],
-  energy:    [['CoQ10','f'],['Taurine','a']],
-  heart:     [['CoQ10','f'],['Taurine','a'],['Curcumin','f']],
-  brain:     [['Citicoline','a'],['L-theanine','a'],['Taurine','a']],
-  joints:    [['Collagen (UC-II)','a'],['Curcumin','f']],
-  longevity: [['CoQ10','f'],['Taurine','a'],['Curcumin','f']],
-  digestion: [['Probiotic','f'],['Digestive enzymes','f'],['Curcumin','f']],
-  stress:    [['L-theanine','a'],['Ashwagandha','a'],['Glycine','a']]
-};
-// Goal → full protocol = shared foundation + goal-specific layer.
-var GOAL_MATRIX = (function(){
-  var m = {};
-  Object.keys(GOAL_SPECIFIC).forEach(function(g){ m[g] = FOUNDATION.concat(GOAL_SPECIFIC[g]); });
-  return m;
-})();
-
-// Canonical display order for the recommended supplement list (foundation first, then goal-specific).
-var CANON_ORDER = ['Omega-3 (EPA/DHA)','Vitamin D3','Magnesium glycinate','B-Complex','Creatine','CoQ10','Taurine','L-theanine','Ashwagandha','Glycine','Citicoline','Collagen (UC-II)','Curcumin','Probiotic','Digestive enzymes'];
-
-// Distinctive supplements used as chips on each Protocol direction card.
-var GOAL_TAGS = {
-  sleep:['L-theanine','Ashwagandha'], energy:['CoQ10','Taurine'], heart:['CoQ10','Curcumin'],
-  brain:['Citicoline','L-theanine'], joints:['Collagen (UC-II)','Curcumin'], longevity:['CoQ10','Taurine'],
-  digestion:['Probiotic','Digestive enzymes'], stress:['L-theanine','Ashwagandha']
-};
-
-// ── Condition-rules engine (internal math, from the Welme matrix). Adjusts the
-// plan silently: Block removes an item, Enable adds one, Reduce overrides its dose.
-var COND_BLOCK = {
-  'Kidney disease':['Creatine'],
-  'Recent surgery':['Omega-3 (EPA/DHA)','Curcumin'],
-  'Pregnant or breastfeeding':['Ashwagandha','Curcumin']
-};
-var COND_ENABLE = {
-  'Acid reflux / GERD':[['Probiotic','f']],
-  'IBS / sensitive gut':[['Probiotic','f']],
-  'No gallbladder':[['Digestive enzymes','f']],
-  'Low stomach acid':[['Digestive enzymes','f']]
-};
-var COND_DOSE = {
-  'On blood thinners':{'Omega-3 (EPA/DHA)':'≤ 1,000 mg EPA/DHA'},
-  'Kidney disease':{'Magnesium glycinate':'≤ 200 mg'}
-};
-// Substitutions sheet: when a supplement is blocked, swap in this in-list
-// replacement — but only if the user isn't also blocked from it and it isn't
-// already in the plan; otherwise the protocol just shortens. Foundation is
-// never dropped except by an explicit safety Block above.
-var SUBSTITUTE = {
-  'Creatine':'Taurine',
-  'Omega-3 (EPA/DHA)':'Curcumin',
-  'Magnesium glycinate':'Glycine',
-  'Curcumin':'Omega-3 (EPA/DHA)',
-  'Taurine':'Magnesium glycinate',
-  'CoQ10':'Taurine',
-  'L-theanine':'Glycine',
-  'Ashwagandha':'L-theanine',
-  'Glycine':'L-theanine',
-  'Digestive enzymes':'Probiotic',
-  'Probiotic':'Digestive enzymes'
-};
-// Canonical active behind each shelf item AND each thing a user can say they take.
-// Used to guarantee one active never appears twice, and to tell the user when
-// something they already take duplicates what's in the box.
-var ACTIVE_OF = {
-  // shelf
-  'Omega-3 (EPA/DHA)':'omega3','Vitamin D3':'vitd','Magnesium glycinate':'magnesium','B-Complex':'bcomplex',
-  'Creatine':'creatine','CoQ10':'coq10','Taurine':'taurine','Curcumin':'curcumin','L-theanine':'theanine',
-  'Ashwagandha':'ashwagandha','Glycine':'glycine','Citicoline':'citicoline','Collagen (UC-II)':'collagen',
-  'Digestive enzymes':'enzymes','Probiotic':'probiotic',
-  // what a user may already take (step 3)
-  'Omega-3 / fish oil':'omega3','Cod liver oil':'omega3','Krill oil':'omega3',
-  'Magnesium':'magnesium','Curcumin / turmeric':'curcumin'
-};
-function activeOf(name){ return ACTIVE_OF[name] || String(name).toLowerCase(); }
-// With-food flag for every shelf item (for supplements swapped in as substitutes).
-var SUPP_FOOD = {
-  'Omega-3 (EPA/DHA)':'f','Vitamin D3':'f','Magnesium glycinate':'a','B-Complex':'a','Creatine':'a',
-  'CoQ10':'f','Taurine':'a','Curcumin':'f','L-theanine':'a','Ashwagandha':'a','Glycine':'a',
-  'Citicoline':'a','Collagen (UC-II)':'a','Digestive enzymes':'f','Probiotic':'f'
-};
+// The supplement layer (ingredients, doses, protocols, condition rules,
+// substitutions, viability, age tuning) now lives in /data/*.json and is
+// resolved by engine.js. Nothing about the formulary is hardcoded here.
 
 var SUGG = {
-  sleep:{text:'Magnesium and glycine before bed are shown to shorten time-to-sleep and deepen sleep in clinical studies.',hack:'Keep the bedroom cool (18–19°C / 65°F) and stop screens 45 minutes before bed – light and temperature are the two biggest sleep levers.'},
+  sleep:{text:'Magnesium and L-theanine in the evening are studied for a calmer wind-down and easier sleep onset.',hack:'Keep the bedroom cool (18–19°C / 65°F) and stop screens 45 minutes before bed – light and temperature are the two biggest sleep levers.'},
   energy:{text:'CoQ10 and B-vitamins are linked to reduced fatigue, especially past 40 when natural CoQ10 production declines.',hack:'Get 10 minutes of daylight within an hour of waking and keep caffeine before noon – both measurably improve daytime energy.'},
   heart:{text:'Omega-3 (EPA/DHA) has some of the strongest evidence in nutrition for triglyceride and blood-pressure support.',hack:'A brisk 30-minute walk five days a week lowers blood pressure about as much as some first-line medications.'},
   brain:{text:'DHA and B12 status track with cognitive performance; supplementation helps most when dietary intake is low.',hack:'Two servings of oily fish weekly plus regular aerobic exercise is the best-evidenced combo for long-term brain health.'},
@@ -368,6 +230,49 @@ var NOTE = {
   'Recent surgery':'Bleeding-risk actives such as omega-3 and curcumin are paused around surgery.'
 };
 
+/* ---------- formulary data (/data/*.json → engine.js) ---------- */
+var FORMULARY = null;          // {ingredients, protocols, conditions, ...}
+var ADVICE_BY_GOAL = {};       // goal label -> [{complaint, advice}]
+
+function applyFormularyData(d){
+  FORMULARY = d;
+  WelmeEngine.init(d);
+
+  // Sub-complaints (3 per goal) come from complaint_advice.json — single source.
+  CLAR = {}; ADVICE_BY_GOAL = {};
+  var labelToId = {};
+  Object.keys(d.protocols).forEach(function(k){ labelToId[d.protocols[k].label] = d.protocols[k].id; });
+  d.complaint_advice.forEach(function(e){
+    var id = labelToId[e.goal]; if(!id) return;
+    (CLAR[id] = CLAR[id] || []).push(e.complaint);
+    (ADVICE_BY_GOAL[id] = ADVICE_BY_GOAL[id] || []).push({ complaint: e.complaint, advice: e.advice });
+  });
+
+  // Health conditions come from conditions.json.
+  CONDS = Object.keys(d.conditions);
+
+  // Goal limit is configured in engine_config.json.
+  if(d.engine_config && d.engine_config.max_goals) MAX_GOALS = d.engine_config.max_goals;
+
+  // "Already taking" chips: every shelf item (so it can be deduped) + the
+  // non-shelf interacting substances declared above (flagged only).
+  SHELF_SUBS = d.ingredients.map(function(i){ return { label: i.name, id: i.id }; });
+  SUPP_ID_OF = {};
+  SHELF_SUBS.forEach(function(x){ SUPP_ID_OF[x.label] = x.id; });
+  SUPPS = SHELF_SUBS.map(function(x){ return x.label; })
+            .concat(RESTRICTED_SUBS.map(function(x){ return x.label; }));
+}
+
+// Ingredient ids for everything the user said they already take → the dedupe step.
+function takingIds(){
+  var out = [];
+  (S.supps || []).forEach(function(l){
+    var id = SUPP_ID_OF[l];
+    if(id && out.indexOf(id) === -1) out.push(id);
+  });
+  return out;
+}
+
 /* ---------- state ---------- */
 var DEFAULT_STATE = {
   step: 0,
@@ -382,12 +287,23 @@ var DEFAULT_STATE = {
   emailSubmitTracked: false
 };
 
+// Health goals a user may pick on the first question.
+// Overridden from data/engine_config.json (max_goals) once the formulary loads.
+var MAX_GOALS = 3;
+
 var S = (function(){
   var saved = {};
   try{ saved = JSON.parse(localStorage.getItem('welme-ad-funnel') || '{}'); }catch(e){}
   var s = Object.assign({}, DEFAULT_STATE, saved);
   // Flow was renumbered (goals + specifics merged); keep any stale saved step in range.
   if(typeof s.step !== 'number' || s.step < 0 || s.step > 4) s.step = 0;
+  // Saved sessions from before the limit may hold more than MAX_GOALS.
+  if(Array.isArray(s.goals) && s.goals.length > MAX_GOALS){
+    s.goals = s.goals.slice(0, MAX_GOALS);
+    s.clarify = (s.clarify || []).filter(function(v){
+      return s.goals.indexOf(String(v).split('::')[0]) !== -1;
+    });
+  }
   return s;
 })();
 
@@ -567,6 +483,21 @@ function trackQuizFinish(){
       problems:problemsColumnValue()
     });
   }
+  // Pause is logged separately — a rising pause rate is a quiz-design signal,
+  // not a conversion failure.
+  try{
+    var outcome = buildResults();
+    if(trackingAvailable() && outcome.status !== 'sell'){
+      window.WelmeTracking.trackEvent({
+        page:'results',
+        event: outcome.status === 'pause' ? 'plan_pause' : 'plan_switch',
+        goal:goalColumnValue(),
+        problems:problemsColumnValue(),
+        reason:(outcome.deferReasons || []).map(function(d){ return d.condition; }).join(', ')
+              || (outcome.deadPlans || []).join(', ')
+      });
+    }
+  }catch(e){}
   S.quizFinishTracked = true;
   persist();
 }
@@ -646,109 +577,78 @@ function buildResults(){
   if(age) summaryChips.push(age + ' yrs');
   if(bmiV) summaryChips.push('BMI ' + bmiV.toFixed(1));
 
-  /* recommendation set — the PRIMARY goal's protocol only (matrix: one goal → one box) */
-  var baseGoal = primaryGoal || S.goals[0];
-  var timeOf = {};
-  (GOAL_MATRIX[baseGoal] || []).forEach(function(pair){ timeOf[pair[0]] = pair[1]; });
-
-  /* ── condition-rules engine (silent): Enable → add, Block → remove/substitute, Reduce → dose override */
-  var doseOverride = {}, blocked = {}, enabledSet = {};
-  allConds.forEach(function(c){
-    (COND_ENABLE[c] || []).forEach(function(pair){ if(!(pair[0] in timeOf)){ timeOf[pair[0]] = pair[1]; enabledSet[pair[0]] = 1; } });
-  });
-  var planBeforeBlock = Object.keys(timeOf);
-  allConds.forEach(function(c){
-    (COND_BLOCK[c] || []).forEach(function(n){ blocked[n] = 1; delete timeOf[n]; delete enabledSet[n]; });
-    var m = COND_DOSE[c]; if(m) Object.keys(m).forEach(function(k){ doseOverride[k] = m[k]; });
+  /* ---- resolve the plan: engine.js + /data (single source of truth) ---- */
+  var goalLabels = S.goals.map(function(id){
+    var p = FORMULARY.protocols[id]; return p ? p.label : null;
+  }).filter(Boolean);
+  var R = WelmeEngine.resolve({
+    age: age, sex: (S.sex === 'male' ? 'male' : 'female'),
+    goals: goalLabels,
+    conditions: allConds,
+    taking: takingIds()
   });
 
-  /* Substitutions: for each blocked supplement that was in the plan, swap in its
-     in-list replacement — only if the user isn't also blocked from it and it isn't
-     already present; otherwise the protocol just shortens. */
-  var substitutions = [], substituteSet = {};
-  planBeforeBlock.forEach(function(n){
-    if(!blocked[n]) return;
-    var sub = SUBSTITUTE[n];
-    if(sub && !blocked[sub] && !(sub in timeOf)){
-      timeOf[sub] = SUPP_FOOD[sub] || 'a';
-      substituteSet[sub] = 1;
-      substitutions.push({ removed: n, added: sub });
+  // What we render: name, dose exactly as in ingredients.json, what it addresses,
+  // and one practical line when a PREFER_FORM / TIMING / REDUCE_DOSE rule applied.
+  var plan = R.sachet.map(function(x){
+    var practical = [];
+    if(x.formNote)   practical.push(x.formNote);
+    if(x.doseNote)   practical.push('dose ' + x.doseNote);
+    if(x.timingNote) practical.push(x.timingNote);
+    // Subtitle = the goals THIS user selected that this supplement serves.
+    // Never substitutions.json → role: that is engine-internal and not personal.
+    var matches = x.goalMatches || [];
+    if(!matches.length){
+      try{ console.warn('Welme: no selected-goal match for ' + x.id + ' — check upstream resolution'); }catch(e){}
     }
-  });
-
-  /* order by priority (foundation → substitutes → goal-specific → enabled) and cap at 7 per person */
-  var MAX_SUPP = 7;
-  var foundationNames = FOUNDATION.map(function(p){ return p[0]; });
-  var goalSpecNames = (GOAL_SPECIFIC[baseGoal] || []).map(function(p){ return p[0]; });
-  var ordered = [], seenActive = {};
-  var pushIf = function(n){
-    if(!(n in timeOf) || ordered.indexOf(n) !== -1) return;
-    var a = activeOf(n);
-    if(seenActive[a]) return;   // never two forms of the same active in one box
-    seenActive[a] = 1;
-    ordered.push(n);
-  };
-  foundationNames.forEach(pushIf);
-  Object.keys(substituteSet).forEach(pushIf);
-  goalSpecNames.forEach(pushIf);
-  Object.keys(enabledSet).forEach(pushIf);
-  Object.keys(timeOf).forEach(pushIf);
-  ordered = ordered.slice(0, MAX_SUPP);
-
-  /* build the box: one mixed pack, canonical order */
-  var protocol = ordered.map(function(n, index){
-    var info = SUPP_INFO[n] || { reason: '' };
     return {
-      name: n,
-      dosage: doseOverride[n] || DOSAGES[n] || 'To be confirmed during plan review',
-      reason: info.reason,
-      withFood: timeOf[n] === 'f',
-      priorityLabel: index < 2 ? 'High priority' : 'Core support'
+      id: x.id, name: x.name, dosage: x.dose, reason: matches.join(' · '),
+      // what it actually does, for this user's goals only (max 2 lines per card)
+      effects: (x.effects || []).slice(0, 2),
+      withFood: x.withFood, practical: practical.join(' · ')
     };
   });
-  var removed = S.removed || [];
-  var notRemoved = function(p){ return removed.indexOf(p.name) === -1 && !blocked[p.name]; };
-  var fullProtocol = protocol.filter(notRemoved);
+  var removedPlan = (S.removed || []);
+  plan = plan.filter(function(p){ return removedPlan.indexOf(p.name) === -1; });
 
-  /* substances the user already takes that overlap or interact with the box —
-     flagged only, never added (we offer everything the goals need). */
+  /* substances they take that are NOT on our shelf but still interact — flagged
+     only. Deduped shelf items are never re-surfaced (removals stay silent). */
   var subRestrictions = [];
-  var planActives = {}; ordered.forEach(function(n){ planActives[activeOf(n)] = n; });
   S.supps.forEach(function(l){
-    if(!SUB_NOTE[l] || subRestrictions.some(function(x){ return x.name === l; })) return;
-    var dupOf = planActives[activeOf(l)] || null;   // same active is already in the box
-    subRestrictions.push({ name: l, note: SUB_NOTE[l], duplicateOf: dupOf });
+    if(SUPP_ID_OF[l]) return;                 // on our shelf → silently deduped
+    if(!SUB_NOTE[l]) return;
+    if(subRestrictions.some(function(x){ return x.name === l; })) return;
+    subRestrictions.push({ name: l, note: SUB_NOTE[l], duplicateOf: null });
   });
 
   /* protocol direction (lifestyle "try this" tips per goal) */
   var directions = selGoals.map(function(g){
     var d = SUGG[g.id]; if(!d) return null;
-    return { goalTitle:g.title, text:d.text, hack:d.hack, tags:(GOAL_TAGS[g.id]||[]), icon:ic(g.paths, 23) };
+    return { goalTitle:g.title, text:d.text, hack:d.hack, tags:[], icon:ic(g.paths, 23) };
   }).filter(Boolean);
 
   /* small goal symbols for the header */
   var heroSymbols = selGoals.map(function(g){ return { title:g.title, icon:ic(g.paths, 18) }; });
 
-  var notes = allConds.map(function(c){ return NOTE[c]; }).filter(Boolean);
-  substitutions.forEach(function(s){
-    notes.push(s.added + ' takes the place of ' + s.removed + ', which isn’t suitable given what you told us – so you keep the benefit without the risk.');
-  });
+  /* Renderable practical notes only — never FLAG text, pharmacist markers,
+     substitution reasoning or the removed list. */
+  var notes = [];
+  plan.forEach(function(p){ if(p.practical) notes.push(p.name + ': ' + p.practical); });
+
+  /* advice for the sub-complaints they ticked, grouped in goal order */
+  var adviceGroups = S.goals.map(function(gid){
+    var proto = FORMULARY.protocols[gid]; if(!proto) return null;
+    var items = (ADVICE_BY_GOAL[gid] || []).filter(function(a){
+      return S.clarify.indexOf(gid + '::' + a.complaint) !== -1;
+    });
+    return items.length ? { goal: proto.label, items: items } : null;
+  }).filter(Boolean);
+
 
   /* ---- personalised, mechanism-led explanation (physician-style, no diagnoses) ---- */
   var joinList = function(a){ a = a.filter(Boolean); if(a.length <= 1) return a[0] || ''; if(a.length === 2) return a[0] + ' and ' + a[1]; return a.slice(0,-1).join(', ') + ' and ' + a[a.length-1]; };
   var B = function(t){ return '<b style="color:#14655B">' + esc(t) + '</b>'; }; // deep-green highlight (matches border colour)
   var GOAL_AREA = { sleep:'restful sleep', energy:'daytime energy', heart:'heart health', brain:'mental clarity', joints:'joint comfort', longevity:'healthy ageing', digestion:'comfortable digestion', stress:'a calmer stress response' };
-  // For each goal: two [ingredient, how it works in the body]
-  var GOAL_EXPL = {
-    sleep:[['Magnesium glycinate','calms the nervous system and relaxes tense muscles'],['glycine','gently lowers your core body temperature so sleep comes on faster and runs deeper']],
-    energy:[['CoQ10','helps your cells turn food into usable energy inside the mitochondria'],['B vitamins','keep that energy pathway running to steady you through the afternoon']],
-    heart:[['Omega-3','eases inflammation and supports healthy blood pressure and triglycerides'],['CoQ10','protects the heart muscle, one of the most energy-hungry tissues in the body']],
-    brain:[['Citicoline','supplies choline for acetylcholine and healthy brain-cell membranes'],['omega-3','provides DHA, a core structural fat behind clear, focused thinking']],
-    joints:[['UC-II collagen','works through the gut-immune interface to support joint comfort and cartilage'],['curcumin','helps quiet the low-grade inflammation behind stiffness']],
-    longevity:[['CoQ10','defends the mitochondria that power every cell as the years add up'],['omega-3','counters the chronic, low-level inflammation associated with ageing']],
-    digestion:[['Probiotics','help rebalance the gut microbiome that drives comfortable digestion'],['digestive enzymes','help break down meals so bloating and heaviness ease']],
-    stress:[['Ashwagandha','helps regulate cortisol so your body recovers from stress more smoothly'],['magnesium','settles an over-active nervous system and eases physical tension']]
-  };
 
   var areasBold = selGoals.map(function(g){ return B(GOAL_AREA[g.id]); });
 
@@ -784,8 +684,11 @@ function buildResults(){
     heightLabel: heightLabel, weightLabel: weightLabel,
     hasNutrition: kcal > 0,
     kcal: kcal || '–', protein: protein ? protein + 'g' : '–', fat: fat ? fat + 'g' : '–', carbs: carbs ? carbs + 'g' : '–',
-    plan: fullProtocol, recNew: fullProtocol, subRestrictions: subRestrictions,
-    directions: directions, notes: notes
+    plan: plan, recNew: plan, subRestrictions: subRestrictions,
+    directions: directions, notes: notes,
+    status: R.status, action: R.action, verdicts: R.verdicts,
+    viablePlans: R.viablePlans, deadPlans: R.deadPlans, deferReasons: R.deferReasons,
+    pillCap: R.pillCap, band: R.band, adviceGroups: adviceGroups
   };
 }
 
@@ -814,9 +717,11 @@ function chipHtml(label, on, act, arg){
 // Combined first question: pick goals and, for each one selected, tap the
 // specifics that apply — laid out like the old "What's going on specifically?".
 function goalsScreen(){
+  var atLimit = S.goals.length >= MAX_GOALS;
   var sections = GOALS.map(function(g){
     var on = S.goals.indexOf(g.id) !== -1;
-    var header = '<button data-act="toggle-goal" data-arg="' + g.id + '" style="width:100%;display:flex;align-items:center;gap:11px;background:' + (on ? '#EAF3EE' : '#fff') + ';border:1.5px solid ' + (on ? '#14655B' : 'rgba(20,101,91,.15)') + ';border-radius:14px;padding:13px 15px;cursor:pointer;text-align:left;font-family:inherit">'
+    var locked = atLimit && !on;   // can't add a fourth
+    var header = '<button data-act="toggle-goal" data-arg="' + g.id + '"' + (locked ? ' aria-disabled="true"' : '') + ' style="width:100%;display:flex;align-items:center;gap:11px;background:' + (on ? '#EAF3EE' : '#fff') + ';border:1.5px solid ' + (on ? '#14655B' : 'rgba(20,101,91,.15)') + ';border-radius:14px;padding:13px 15px;cursor:' + (locked ? 'default' : 'pointer') + ';text-align:left;font-family:inherit' + (locked ? ';opacity:.45' : '') + '">'
       + '<span class="goal-icon" style="flex:none">' + ic(g.paths, 20) + '</span>'
       + '<span style="flex:1;min-width:0;font-size:15px;font-weight:800;color:' + (on ? '#14655B' : '#1E3B34') + '">' + esc(g.title) + '</span>'
       + '<span class="goal-check" style="position:static;flex:none;border:2px solid ' + (on ? '#14655B' : '#C6CFC9') + ';background:' + (on ? '#14655B' : 'transparent') + '">' + (on ? '✓' : '') + '</span>'
@@ -834,7 +739,9 @@ function goalsScreen(){
   return '<div style="padding:28px 22px 0">'
     + '<div class="eyebrow">YOUR PERSONALISED PROTOCOL</div>'
     + '<h2 class="q-title">What would you like to improve?</h2>'
-    + '<p class="q-sub" style="margin-bottom:4px">Pick the areas that matter to you, then tap anything that sounds like you – skip whatever doesn’t apply.</p>'
+    + '<p class="q-sub" style="margin-bottom:4px">Choose up to three areas that matter most, then tap anything that sounds like you – skip whatever doesn’t apply.'
+    + (atLimit ? ' <span style="font-weight:700;color:#14655B">That’s three — deselect one to change your choices.</span>' : '')
+    + '</p>'
     + '<div style="display:flex;flex-direction:column;gap:14px;margin-top:20px">' + sections + '</div>'
     + '</div>';
 }
@@ -928,8 +835,13 @@ function syncNext(){
 function recCard(r){
   return '<div class="rec-card"><div class="rec-top">'
     + '<span class="rec-name">' + esc(r.name) + '</span>'
-    + (r.withFood ? '<span class="rec-time" style="color:#8A6D1F;background:#F0E7CF">WITH FOOD</span>' : '')
-    + '</div><p class="rec-reason">' + esc(r.reason) + '</p></div>';
+    + (r.dosage ? '<span class="rec-time" style="color:#3A4A42;background:#EFE7D6">' + esc(r.dosage) + '</span>' : '')
+    + '</div>'
+    + (r.reason ? '<p class="rec-reason" style="font-weight:700;color:#14655B">' + esc(r.reason) + '</p>' : '')
+    + ((r.effects || []).length
+        ? '<p class="rec-reason">' + r.effects.map(esc).join(' ') + '</p>' : '')
+    + (r.practical ? '<p class="rec-reason" style="color:#8A6D1F">' + esc(r.practical) + '</p>' : '')
+    + '</div>';
 }
 
 function planCol(items){
@@ -944,14 +856,90 @@ function secHead(title){
   return '<div class="sec-head"><span class="sec-dot"></span><h3>' + title + '</h3></div>';
 }
 
+/* Advice for ticked sub-complaints. Sits below the plan, separate from the
+   product content. Copy comes verbatim from data/complaint_advice.json. */
+function adviceSection(R){
+  if(!R.adviceGroups || !R.adviceGroups.length) return '';   // nothing ticked → omit entirely
+  return secHead('Things that may help day to day')
+    + '<div style="display:flex;flex-direction:column;gap:12px;margin-top:14px">'
+    + R.adviceGroups.map(function(g){
+        return '<div>'
+          + '<div style="font-size:13px;font-weight:800;letter-spacing:.06em;color:#A98E4E">' + esc(g.goal) + '</div>'
+          + g.items.map(function(a){
+              return '<div style="background:#FFFDF8;border:1px solid rgba(20,101,91,.12);border-radius:14px;padding:13px 15px;margin-top:8px">'
+                + '<div style="font-size:14.5px;font-weight:800;color:#1E3B34">' + esc(a.complaint) + '</div>'
+                + '<p style="margin:4px 0 0;font-size:13.5px;line-height:1.55;color:#4A574F">' + esc(a.advice) + '</p></div>';
+            }).join('')
+          + '</div>';
+      }).join('')
+    + '</div>';
+}
+
+/* PAUSE — nothing worth selling. No price, no buy button, no checkout path. */
+function pauseScreen(R){
+  var why = (R.deferReasons && R.deferReasons.length)
+    ? R.deferReasons.map(function(d){ return d.why; }).join(' ')
+    : (R.action || '');
+  var h = '<div>';
+  h += '<div style="padding:30px 20px 26px;background:#F7F2E9">'
+    + '<h2 style="font-family:\'Domine\',serif;font-weight:700;font-size:min(22px,5vw);line-height:1.2;margin:0;color:#1E3B34">Let’s pause here — please talk to your doctor first.</h2>'
+    + '<p style="margin:11px 0 0;font-size:15px;line-height:1.55;color:#5A655D">' + esc(why) + '</p>'
+    + '</div>';
+
+  h += '<div style="padding:0 20px">';
+
+  /* a real next action — email capture, no purchase path */
+  if(!S.sent){
+    var validEmail = /.+@.+\..+/.test(S.email);
+    h += '<div style="margin-top:26px;background:#F7F2E9;border-radius:20px;padding:24px 20px">'
+      + '<div style="font-family:\'Domine\',serif;font-weight:700;font-size:22px;color:#1E3B34">Email me when I’m ready</div>'
+      + '<p style="margin:6px 0 16px;font-size:14px;line-height:1.5;color:#4A574F">We’ll save your plan and get in touch once your doctor has given you the go-ahead.</p>'
+      + '<input type="email" id="inEmail" value="' + esc(S.email) + '" placeholder="you@example.com" style="width:100%;border:1.5px solid rgba(20,101,91,.25);border-radius:14px;padding:16px 18px;font-size:16px;background:#fff;color:#1E3B34">'
+      + '<button id="btnEmail" data-act="submit-email"' + (validEmail ? '' : ' disabled') + ' style="width:100%;margin-top:12px;border:none;background:' + (validEmail ? '#14655B' : '#A9BAB3') + ';color:#fff;border-radius:14px;padding:17px;font-size:17px;font-weight:800;cursor:pointer">Save My Plan →</button>'
+      + '</div>';
+  } else {
+    h += '<div style="margin-top:26px;background:#F7F2E9;border-radius:20px;padding:26px 20px;text-align:center">'
+      + '<div style="width:52px;height:52px;border-radius:50%;background:#14655B;color:#fff;display:flex;align-items:center;justify-content:center;font-size:25px;margin:0 auto">✓</div>'
+      + '<h3 style="font-family:\'Domine\',serif;font-weight:700;font-size:22px;margin:14px 0 6px;color:#1E3B34">Your plan is saved</h3>'
+      + '<p style="margin:0 auto;max-width:290px;font-size:15px;line-height:1.55;color:#4A574F">We’ll reach out at <span style="font-weight:800;color:#14655B">' + esc(S.email) + '</span> when you’re ready to start.</p>'
+      + '</div>';
+  }
+
+  /* their work isn't discarded — shown, de-emphasised, with no price */
+  if(R.plan.length){
+    h += secHead('What we’d put together for you')
+      + '<div style="opacity:.55;display:flex;flex-direction:column;gap:10px;margin-top:14px">'
+      + R.plan.map(recCard).join('')
+      + '</div>';
+  }
+
+  h += adviceSection(R);
+  h += pharmacistLine();
+  h += '</div></div>';
+  return h;
+}
+
+/* One plain line at the foot of the results page. */
+function pharmacistLine(){
+  return '<p style="margin:26px 0 30px;font-size:13px;line-height:1.6;color:#7A867E">'
+    + 'These are supplements rather than medicine. If you take prescription medication, '
+    + 'it’s worth running the list past your pharmacist.</p>';
+}
+
 function finishScreen(){
   var R = buildResults();
+  if(R.status === 'pause') return pauseScreen(R);
   var h = '<div>';
 
   /* protocol lead — frameless header, left-aligned, with the protocol-direction symbols */
   h += '<div style="padding:30px 20px 26px;background:#F7F2E9">'
     + '<h2 style="font-family:\'Domine\',serif;font-weight:700;font-size:min(22px,5vw);white-space:nowrap;line-height:1.15;margin:0;color:#1E3B34;animation:heroIn .5s cubic-bezier(.2,.8,.2,1) both">Your daily supplement protocol</h2>'
     + '<p style="margin:11px 0 0;font-size:15px;line-height:1.5;color:#5A655D">' + esc(R.heroSubtitle) + '</p>'
+    + (R.status === 'switch' && R.viablePlans.length && R.deadPlans.length
+        ? '<p style="margin:10px 0 0;font-size:14.5px;line-height:1.55;color:#5A655D">Based on what you told us, we’ve focused your box on '
+          + esc(R.viablePlans.join(' and ')) + ' — ' + esc(R.deadPlans.join(' and '))
+          + ' needs ingredients that aren’t right for you at the moment.</p>'
+        : '')
     + '<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:18px">'
     +   R.heroSymbols.map(function(s){
           return '<span style="flex:none;display:inline-flex;align-items:center;gap:8px;background:#EFE7D6;border-radius:999px;padding:6px 13px 6px 7px;max-width:100%">'
@@ -1010,7 +998,7 @@ function finishScreen(){
 
   /* your supplements */
   h += secHead('Your supplements')
-    + '<p style="margin:12px 0 0;padding-left:17px;font-size:15px;line-height:1.55;color:#33403A"><span style="font-weight:800;color:#14655B">' + R.plan.length + ' supplements</span> in one daily pack, chosen for your goals, symptoms and profile.</p>'
+    + '<p style="margin:12px 0 0;padding-left:17px;font-size:15px;line-height:1.55;color:#33403A"><span style="font-weight:800;color:#14655B">' + R.plan.length + ' supplements</span> in one daily pack, chosen for your goals and profile.</p>'
     + '<div style="display:flex;flex-direction:column;gap:10px;margin-top:14px">' + R.plan.map(recCard).join('') + '</div>';
 
   /* worth checking — user's own supplements that overlap or interact (flag only) */
@@ -1038,6 +1026,11 @@ function finishScreen(){
         }).join('')
       + '</div>';
   }
+
+  /* sub-complaint advice — below the plan, separate from the product content.
+     Never gates or delays the purchase. */
+  h += adviceSection(R);
+  h += pharmacistLine();
 
   h += '</div>';  /* close body-content inset wrapper */
   h += '</div>';
@@ -1196,6 +1189,7 @@ document.addEventListener('click', function(e){
   switch(act){
     case 'toggle-goal': {
       var goalOn = S.goals.indexOf(arg) !== -1;
+      if(!goalOn && S.goals.length >= MAX_GOALS) break;   // at the limit — ignore
       set({
         goals: goalOn ? S.goals.filter(function(x){ return x !== arg; }) : S.goals.concat(arg),
         clarify: goalOn ? S.clarify.filter(function(v){ return v.indexOf(arg + '::') !== 0; }) : S.clarify
@@ -1243,7 +1237,28 @@ document.addEventListener('click', function(e){
   }
 });
 
-render();
+/* ---------- boot: load the formulary data, then render ---------- */
+(function boot(){
+  var files = ['ingredients','protocols','conditions','substitutions','viability','age_tuning','engine_config','complaint_advice','ingredient_effects'];
+  Promise.all(files.map(function(f){
+    return fetch('data/' + f + '.json', { cache:'no-cache' }).then(function(r){
+      if(!r.ok) throw new Error('data/' + f + '.json ' + r.status);
+      return r.json();
+    });
+  })).then(function(loaded){
+    var d = {}; files.forEach(function(f,i){ d[f] = loaded[i]; });
+    applyFormularyData(d);
+    render();
+  }).catch(function(err){
+    // The quiz cannot build a plan without the formulary — fail visibly rather
+    // than silently serving a wrong box.
+    try{ console.error('Welme: could not load formulary data —', err); }catch(e){}
+    var scr = document.getElementById('screen');
+    if(scr) scr.innerHTML = '<div style="padding:28px 20px 0">'
+      + '<h2 class="q-title">We couldn’t load your plan</h2>'
+      + '<p class="q-sub">Please refresh the page. If it keeps happening, get in touch and we’ll sort it out.</p></div>';
+  });
+})();
 </script>
 </body>
 </html>

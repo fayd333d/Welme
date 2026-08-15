@@ -1,0 +1,83 @@
+{
+  "note": "n=104: mean 67.9, 84% are 60+. Under-55 out of segment.",
+  "bands": [
+    {
+      "range": "under_55",
+      "role": "out of segment",
+      "pill_cap": 18,
+      "emphasize": [],
+      "deprioritize": [],
+      "notes": "Marketing only."
+    },
+    {
+      "range": "55_59",
+      "role": "transition",
+      "pill_cap": 17,
+      "emphasize": [
+        "mag_glycinate",
+        "collagen_uc2",
+        "omega3"
+      ],
+      "deprioritize": [],
+      "notes": "Bone + sleep emphasis."
+    },
+    {
+      "range": "60_69",
+      "role": "CORE (default)",
+      "pill_cap": 16,
+      "emphasize": [
+        "coq10",
+        "creatine",
+        "omega3",
+        "b12"
+      ],
+      "deprioritize": [],
+      "notes": "Statin comedication common."
+    },
+    {
+      "range": "70_79",
+      "role": "core, higher frailty",
+      "pill_cap": 15,
+      "emphasize": [
+        "creatine",
+        "collagen_uc2",
+        "b12",
+        "taurine"
+      ],
+      "deprioritize": [],
+      "notes": "Sarcopenia + connective tissue."
+    },
+    {
+      "range": "80_plus",
+      "role": "frailty / polypharmacy",
+      "pill_cap": 13,
+      "emphasize": [
+        "creatine",
+        "collagen_uc2",
+        "b12",
+        "omega3"
+      ],
+      "deprioritize": [
+        "ashwagandha"
+      ],
+      "notes": "Simplify; easy-swallow forms; max interaction caution."
+    }
+  ],
+  "sex": {
+    "female": {
+      "share": 0.74,
+      "emphasize": [
+        "collagen_uc2",
+        "vit_d3",
+        "mag_glycinate"
+      ],
+      "notes": "Bone-loss emphasis."
+    },
+    "male": {
+      "share": 0.26,
+      "emphasize": [],
+      "notes": "No blanket iron."
+    }
+  },
+  "pill_note": "Caps below are PHYSICAL PILLS per day, not ingredient count."
+}

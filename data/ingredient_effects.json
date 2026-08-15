@@ -1,0 +1,84 @@
+{
+  "_note": "Per-ingredient, per-goal effect copy. Rendered only for goals the user actually selected. Structure/function language only — no disease claims.",
+  "omega3": {
+    "sleep": "The EPA and DHA support the brain-cell membranes involved in settled, steady sleep.",
+    "heart": "Supports healthy triglyceride levels and the flexibility of your blood vessels.",
+    "brain": "DHA is a core structural fat in brain-cell membranes, supporting memory and clear thinking.",
+    "joints": "Supports a healthy inflammatory response — what keeps joints feeling comfortable.",
+    "longevity": "Helps counter the low-grade inflammation that tends to build up with age.",
+    "digestion": "Supports a calm gut lining and healthy inflammatory balance in the digestive tract.",
+    "stress": "Supports the brain-cell membranes involved in steady, even mood.",
+    "energy": "Supports the cell membranes and circulation that steady, everyday energy depends on."
+  },
+  "mag_glycinate": {
+    "sleep": "Calms the nervous system and eases muscle tension so sleep comes on more easily.",
+    "stress": "Supports the nervous system's ability to settle after a demanding day.",
+    "heart": "Supports normal heart rhythm and healthy blood-pressure regulation.",
+    "digestion": "Supports the normal muscle movement through the gut that keeps digestion regular."
+  },
+  "vit_d3": {
+    "joints": "Supports bone and muscle strength, which is what keeps joints supported and stable.",
+    "longevity": "Supports bone density and immune resilience — both matter more as the years add up.",
+    "energy": "Low vitamin D is a common and easily missed reason for flat, low energy.",
+    "stress": "Supports the mood-related pathways vitamin D is involved in."
+  },
+  "b12": {
+    "energy": "Helps your cells release energy from food. Absorption falls with age, PPIs and metformin.",
+    "brain": "Supports nerve function and the mental clarity that depends on it.",
+    "stress": "Supports the nervous system and the neurotransmitters behind steady mood."
+  },
+  "creatine": {
+    "energy": "Recycles cellular energy in muscle, which is what makes physical effort feel easier.",
+    "brain": "The brain runs on the same energy system as muscle, so it supports mental stamina too.",
+    "longevity": "Supports muscle mass and strength — the clearest marker of staying capable with age.",
+    "joints": "Stronger muscle takes load off the joint itself, so movement feels steadier."
+  },
+  "coq10": {
+    "energy": "Works inside the mitochondria where food becomes usable energy; natural levels fall with age.",
+    "heart": "The heart is the most energy-hungry muscle in the body, and CoQ10 supports its output.",
+    "longevity": "Supports the mitochondrial function that underpins how energetic you feel over time.",
+    "brain": "Supports the cellular energy that sustained concentration depends on."
+  },
+  "taurine": {
+    "heart": "Supports heart-muscle function and healthy blood-pressure regulation.",
+    "energy": "Supports how cells handle minerals and fluid, which steadies energy through the day.",
+    "longevity": "One of the amino acids that declines with age and tracks with healthy-ageing markers.",
+    "sleep": "Calming without sedation, supporting an easier wind-down in the evening.",
+    "brain": "Supports calm, steady focus rather than stimulation."
+  },
+  "l_theanine": {
+    "sleep": "Supports a calm, unhurried mind at bedtime without leaving you groggy.",
+    "brain": "Supports calm, focused attention — alert rather than wired.",
+    "stress": "Supports relaxation without sedation, so you settle without feeling flat.",
+    "energy": "Takes the edge off caffeine, so daytime energy feels steadier."
+  },
+  "citicoline": {
+    "brain": "Supplies choline for acetylcholine, the neurotransmitter behind memory and focus."
+  },
+  "collagen_uc2": {
+    "joints": "A small daily dose that works through the gut's immune tolerance to support joint comfort.",
+    "longevity": "Supports the cartilage and connective tissue that keep you moving well."
+  },
+  "probiotic": {
+    "digestion": "Supports the balance of gut bacteria that comfortable, regular digestion depends on.",
+    "stress": "Supports the gut-brain connection involved in steady mood."
+  },
+  "dig_enzymes": {
+    "digestion": "Supplies lipase and other enzymes that help break food down, easing fullness after meals."
+  },
+  "curcumin": {
+    "joints": "Supports a healthy inflammatory response, which is what joint comfort rests on.",
+    "longevity": "Supports the inflammatory balance associated with healthy ageing.",
+    "digestion": "Supports a calm gut lining and comfortable digestion.",
+    "heart": "Supports healthy blood-vessel function and inflammatory balance."
+  },
+  "ashwagandha": {
+    "stress": "An adaptogen that supports the body's cortisol response under sustained pressure.",
+    "sleep": "Supports a calmer evening state — often what stands in the way of falling asleep."
+  },
+  "boswellia": {
+    "joints": "A gentler anti-inflammatory that supports joint comfort and everyday range of movement.",
+    "longevity": "Supports the inflammatory balance associated with ageing well, and is easy on the stomach.",
+    "digestion": "Supports a calm gut lining — often better tolerated than curcumin when digestion is sensitive."
+  }
+}

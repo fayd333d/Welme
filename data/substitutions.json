@@ -1,0 +1,77 @@
+{
+  "omega3": {
+    "role": "Anti-inflammatory base",
+    "sub": "curcumin",
+    "fallback": "shorten"
+  },
+  "mag_glycinate": {
+    "role": "Calm / sleep / gut",
+    "sub": "l_theanine",
+    "fallback": "shorten"
+  },
+  "vit_d3": {
+    "role": "Bone / immune",
+    "sub": null,
+    "fallback": "shorten — no equivalent in the 15"
+  },
+  "b12": {
+    "role": "Energy / nerves / cognition",
+    "sub": null,
+    "fallback": "shorten — no equivalent in the 15"
+  },
+  "coq10": {
+    "role": "Cellular energy / heart",
+    "sub": "taurine",
+    "fallback": "shorten"
+  },
+  "taurine": {
+    "role": "Heart / energy / calm (multi-role)",
+    "sub": "coq10",
+    "fallback": "shorten"
+  },
+  "l_theanine": {
+    "role": "Calm focus",
+    "sub": "glycine",
+    "fallback": "shorten"
+  },
+  "citicoline": {
+    "role": "Memory / focus",
+    "sub": null,
+    "fallback": "shorten — omega-3 + B12 still support cognition"
+  },
+  "collagen_uc2": {
+    "role": "Joint cartilage",
+    "sub": null,
+    "fallback": "shorten — curcumin & omega-3 still cover joints"
+  },
+  "probiotic": {
+    "role": "Gut microbiome",
+    "sub": "dig_enzymes",
+    "fallback": "shorten"
+  },
+  "dig_enzymes": {
+    "role": "Digestion / fat absorption",
+    "sub": "probiotic",
+    "fallback": "shorten"
+  },
+  "curcumin": {
+    "role": "Anti-inflammatory (joints/heart/gut)",
+    "sub": "boswellia",
+    "fallback": "shorten"
+  },
+  "ashwagandha": {
+    "role": "Stress / sleep adaptogen",
+    "sub": "l_theanine",
+    "fallback": "shorten"
+  },
+  "boswellia": {
+    "role": "Anti-inflammatory, gentler on gut",
+    "sub": "curcumin",
+    "fallback": "shorten"
+  },
+  "creatine": {
+    "role": "Muscle & strength / cognition",
+    "sub": "taurine",
+    "fallback": "shorten"
+  }
+}

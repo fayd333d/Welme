@@ -1,0 +1,180 @@
+{
+  "sleep": {
+    "id": "sleep",
+    "label": "Sleep quality",
+    "core": [
+      "mag_glycinate",
+      "l_theanine",
+      "ashwagandha",
+      "taurine",
+      "omega3"
+    ],
+    "extended": [],
+    "branches": {},
+    "foundation": [
+      "omega3"
+    ],
+    "target": [
+      "mag_glycinate",
+      "l_theanine",
+      "ashwagandha",
+      "taurine"
+    ]
+  },
+  "energy": {
+    "id": "energy",
+    "label": "Energy & vitality",
+    "core": [
+      "coq10",
+      "creatine",
+      "b12",
+      "taurine",
+      "omega3"
+    ],
+    "extended": [],
+    "branches": {},
+    "foundation": [
+      "omega3"
+    ],
+    "target": [
+      "coq10",
+      "creatine",
+      "b12",
+      "taurine"
+    ]
+  },
+  "heart": {
+    "id": "heart",
+    "label": "Heart health",
+    "core": [
+      "omega3",
+      "coq10",
+      "taurine",
+      "mag_glycinate",
+      "curcumin"
+    ],
+    "extended": [],
+    "branches": {},
+    "foundation": [
+      "omega3"
+    ],
+    "target": [
+      "coq10",
+      "taurine",
+      "mag_glycinate",
+      "curcumin"
+    ]
+  },
+  "brain": {
+    "id": "brain",
+    "label": "Brain & memory",
+    "core": [
+      "citicoline",
+      "omega3",
+      "b12",
+      "creatine",
+      "l_theanine"
+    ],
+    "extended": [],
+    "branches": {},
+    "foundation": [
+      "omega3"
+    ],
+    "target": [
+      "citicoline",
+      "b12",
+      "creatine",
+      "l_theanine"
+    ]
+  },
+  "joints": {
+    "id": "joints",
+    "label": "Joints & mobility",
+    "core": [
+      "curcumin",
+      "collagen_uc2",
+      "creatine",
+      "omega3",
+      "vit_d3"
+    ],
+    "extended": [],
+    "branches": {},
+    "foundation": [
+      "omega3"
+    ],
+    "target": [
+      "curcumin",
+      "collagen_uc2",
+      "creatine",
+      "vit_d3"
+    ]
+  },
+  "longevity": {
+    "id": "longevity",
+    "label": "Longevity",
+    "core": [
+      "creatine",
+      "coq10",
+      "taurine",
+      "omega3",
+      "vit_d3",
+      "curcumin"
+    ],
+    "extended": [],
+    "branches": {},
+    "foundation": [
+      "omega3"
+    ],
+    "target": [
+      "creatine",
+      "coq10",
+      "taurine",
+      "vit_d3",
+      "curcumin"
+    ]
+  },
+  "digestion": {
+    "id": "digestion",
+    "label": "Digestion & gut",
+    "core": [
+      "probiotic",
+      "dig_enzymes",
+      "boswellia",
+      "mag_glycinate",
+      "omega3"
+    ],
+    "extended": [],
+    "branches": {},
+    "foundation": [
+      "omega3"
+    ],
+    "target": [
+      "probiotic",
+      "dig_enzymes",
+      "boswellia",
+      "mag_glycinate"
+    ]
+  },
+  "stress": {
+    "id": "stress",
+    "label": "Stress & mood",
+    "core": [
+      "l_theanine",
+      "mag_glycinate",
+      "ashwagandha",
+      "b12",
+      "omega3"
+    ],
+    "extended": [],
+    "branches": {},
+    "foundation": [
+      "omega3"
+    ],
+    "target": [
+      "l_theanine",
+      "mag_glycinate",
+      "ashwagandha",
+      "b12"
+    ]
+  }
+}

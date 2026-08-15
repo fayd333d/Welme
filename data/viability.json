@@ -1,0 +1,109 @@
+{
+  "defer_conditions": {
+    "Pregnant or breastfeeding": "Out of segment and most actives lack safety data — do not sell any plan.",
+    "Recent surgery": "Anti-inflammatory and bleeding-risk actives are paused peri-operatively — do not sell until the surgeon clears it."
+  },
+  "protocols": {
+    "sleep": {
+      "label": "Sleep quality",
+      "essential": [
+        [
+          "mag_glycinate",
+          "l_theanine",
+          "taurine",
+          "ashwagandha"
+        ]
+      ],
+      "min": 2,
+      "why": "Needs at least two calming actives."
+    },
+    "energy": {
+      "label": "Energy & vitality",
+      "essential": [
+        [
+          "coq10",
+          "creatine",
+          "b12"
+        ]
+      ],
+      "min": 2,
+      "why": "Needs at least two energy-pathway actives."
+    },
+    "heart": {
+      "label": "Heart health",
+      "essential": [
+        [
+          "omega3",
+          "coq10",
+          "taurine"
+        ]
+      ],
+      "min": 2,
+      "why": "Omega-3 and CoQ10 are the mechanism; without two of these it is not a heart plan."
+    },
+    "brain": {
+      "label": "Brain & memory",
+      "essential": [
+        [
+          "citicoline",
+          "omega3",
+          "b12"
+        ]
+      ],
+      "min": 2,
+      "why": "Cognition rests on citicoline plus omega-3/B12."
+    },
+    "joints": {
+      "label": "Joints & mobility",
+      "essential": [
+        [
+          "curcumin",
+          "omega3"
+        ],
+        [
+          "collagen_uc2",
+          "creatine"
+        ]
+      ],
+      "min": 1,
+      "why": "Needs an anti-inflammatory AND a structural active."
+    },
+    "longevity": {
+      "label": "Longevity",
+      "essential": [
+        [
+          "creatine",
+          "coq10",
+          "taurine",
+          "omega3"
+        ]
+      ],
+      "min": 3,
+      "why": "Broad plan — needs most of its base intact."
+    },
+    "digestion": {
+      "label": "Digestion & gut",
+      "essential": [
+        [
+          "probiotic",
+          "dig_enzymes"
+        ]
+      ],
+      "min": 1,
+      "why": "Without a probiotic or enzymes it is not a digestion plan."
+    },
+    "stress": {
+      "label": "Stress & mood",
+      "essential": [
+        [
+          "l_theanine",
+          "mag_glycinate",
+          "ashwagandha",
+          "b12"
+        ]
+      ],
+      "min": 2,
+      "why": "Needs at least two calming actives."
+    }
+  }
+}
