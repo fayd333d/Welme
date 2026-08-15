@@ -581,8 +581,14 @@ function buildResults(){
     if(x.formNote)   practical.push(x.formNote);
     if(x.doseNote)   practical.push('dose ' + x.doseNote);
     if(x.timingNote) practical.push(x.timingNote);
+    // Subtitle = the goals THIS user selected that this supplement serves.
+    // Never substitutions.json → role: that is engine-internal and not personal.
+    var matches = x.goalMatches || [];
+    if(!matches.length){
+      try{ console.warn('Welme: no selected-goal match for ' + x.id + ' — check upstream resolution'); }catch(e){}
+    }
     return {
-      id: x.id, name: x.name, dosage: x.dose, reason: x.role,
+      id: x.id, name: x.name, dosage: x.dose, reason: matches.join(' · '),
       withFood: x.withFood, practical: practical.join(' · ')
     };
   });

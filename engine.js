@@ -204,7 +204,25 @@
     }
 
     // 5) one daily sachet (ranked; taken with a meal)
+    // The user-facing subtitle is the intersection of the ingredient's tags with
+    // the goals THIS user selected, in their goal order. substitutions.json →
+    // role is engine-internal and is deliberately never emitted here.
+    var selectedLabels = goals.map(function (g) {
+      var p = protoFor(g); return p ? p.label : null;
+    }).filter(Boolean);
+    var tagLabel = function (tag) {
+      if (tag === 'immune') return null;          // no goal — never display
+      if (tag === 'mood') tag = 'stress';         // both map to Stress & mood
+      return PROT[tag] ? PROT[tag].label : null;
+    };
+
     var sachet = list.map(function (c) {
+      var matches = [];
+      (ING[c.id].tags || []).forEach(function (t) {
+        var lab = tagLabel(t);
+        if (lab && selectedLabels.indexOf(lab) !== -1 && matches.indexOf(lab) === -1) matches.push(lab);
+      });
+      matches.sort(function (a, b) { return selectedLabels.indexOf(a) - selectedLabels.indexOf(b); });
       return {
         id: c.id,
         name: ING[c.id].name,
@@ -215,7 +233,7 @@
         timingNote: c.timingNote || '',
         form: ING[c.id].form,
         withFood: !!ING[c.id].take_with_food,
-        role: (SUBS[c.id] || {}).role || '',
+        goalMatches: matches,            // user-facing subtitle source
         flags: c.flags
       };
     });
