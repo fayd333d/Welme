@@ -284,12 +284,22 @@ var DEFAULT_STATE = {
   emailSubmitTracked: false
 };
 
+// Health goals a user may pick on the first question.
+var MAX_GOALS = 3;
+
 var S = (function(){
   var saved = {};
   try{ saved = JSON.parse(localStorage.getItem('welme-ad-funnel') || '{}'); }catch(e){}
   var s = Object.assign({}, DEFAULT_STATE, saved);
   // Flow was renumbered (goals + specifics merged); keep any stale saved step in range.
   if(typeof s.step !== 'number' || s.step < 0 || s.step > 4) s.step = 0;
+  // Saved sessions from before the limit may hold more than MAX_GOALS.
+  if(Array.isArray(s.goals) && s.goals.length > MAX_GOALS){
+    s.goals = s.goals.slice(0, MAX_GOALS);
+    s.clarify = (s.clarify || []).filter(function(v){
+      return s.goals.indexOf(String(v).split('::')[0]) !== -1;
+    });
+  }
   return s;
 })();
 
@@ -712,9 +722,11 @@ function chipHtml(label, on, act, arg){
 // Combined first question: pick goals and, for each one selected, tap the
 // specifics that apply — laid out like the old "What's going on specifically?".
 function goalsScreen(){
+  var atLimit = S.goals.length >= MAX_GOALS;
   var sections = GOALS.map(function(g){
     var on = S.goals.indexOf(g.id) !== -1;
-    var header = '<button data-act="toggle-goal" data-arg="' + g.id + '" style="width:100%;display:flex;align-items:center;gap:11px;background:' + (on ? '#EAF3EE' : '#fff') + ';border:1.5px solid ' + (on ? '#14655B' : 'rgba(20,101,91,.15)') + ';border-radius:14px;padding:13px 15px;cursor:pointer;text-align:left;font-family:inherit">'
+    var locked = atLimit && !on;   // can't add a fourth
+    var header = '<button data-act="toggle-goal" data-arg="' + g.id + '"' + (locked ? ' aria-disabled="true"' : '') + ' style="width:100%;display:flex;align-items:center;gap:11px;background:' + (on ? '#EAF3EE' : '#fff') + ';border:1.5px solid ' + (on ? '#14655B' : 'rgba(20,101,91,.15)') + ';border-radius:14px;padding:13px 15px;cursor:' + (locked ? 'default' : 'pointer') + ';text-align:left;font-family:inherit' + (locked ? ';opacity:.45' : '') + '">'
       + '<span class="goal-icon" style="flex:none">' + ic(g.paths, 20) + '</span>'
       + '<span style="flex:1;min-width:0;font-size:15px;font-weight:800;color:' + (on ? '#14655B' : '#1E3B34') + '">' + esc(g.title) + '</span>'
       + '<span class="goal-check" style="position:static;flex:none;border:2px solid ' + (on ? '#14655B' : '#C6CFC9') + ';background:' + (on ? '#14655B' : 'transparent') + '">' + (on ? '✓' : '') + '</span>'
@@ -732,7 +744,9 @@ function goalsScreen(){
   return '<div style="padding:28px 22px 0">'
     + '<div class="eyebrow">YOUR PERSONALISED PROTOCOL</div>'
     + '<h2 class="q-title">What would you like to improve?</h2>'
-    + '<p class="q-sub" style="margin-bottom:4px">Pick the areas that matter to you, then tap anything that sounds like you – skip whatever doesn’t apply.</p>'
+    + '<p class="q-sub" style="margin-bottom:4px">Choose up to three areas that matter most, then tap anything that sounds like you – skip whatever doesn’t apply.'
+    + (atLimit ? ' <span style="font-weight:700;color:#14655B">That’s three — deselect one to change your choices.</span>' : '')
+    + '</p>'
     + '<div style="display:flex;flex-direction:column;gap:14px;margin-top:20px">' + sections + '</div>'
     + '</div>';
 }
@@ -1178,6 +1192,7 @@ document.addEventListener('click', function(e){
   switch(act){
     case 'toggle-goal': {
       var goalOn = S.goals.indexOf(arg) !== -1;
+      if(!goalOn && S.goals.length >= MAX_GOALS) break;   // at the limit — ignore
       set({
         goals: goalOn ? S.goals.filter(function(x){ return x !== arg; }) : S.goals.concat(arg),
         clarify: goalOn ? S.clarify.filter(function(v){ return v.indexOf(arg + '::') !== 0; }) : S.clarify
