@@ -4,40 +4,21 @@
     "label": "Sleep quality",
     "core": [
       "mag_glycinate",
-      "glycine",
       "l_theanine",
+      "ashwagandha",
       "taurine",
-      "omega3",
-      "ashwagandha"
+      "omega3"
     ],
     "extended": [],
-    "branches": {
-      "Trouble falling asleep": [
-        "l_theanine",
-        "glycine"
-      ],
-      "Wake up during the night": [
-        "mag_glycinate",
-        "glycine"
-      ],
-      "Wake up feeling unrefreshed": [
-        "taurine",
-        "omega3"
-      ],
-      "Hard to get out of bed": [
-        "b12",
-        "taurine"
-      ]
-    },
+    "branches": {},
     "foundation": [
-      "omega3",
-      "mag_glycinate"
+      "omega3"
     ],
     "target": [
-      "glycine",
+      "mag_glycinate",
       "l_theanine",
-      "taurine",
-      "ashwagandha"
+      "ashwagandha",
+      "taurine"
     ]
   },
   "energy": {
@@ -48,38 +29,18 @@
       "creatine",
       "b12",
       "taurine",
-      "vit_d3",
       "omega3"
     ],
     "extended": [],
-    "branches": {
-      "Tired throughout the day": [
-        "coq10",
-        "b12"
-      ],
-      "Energy drops by afternoon": [
-        "coq10",
-        "taurine"
-      ],
-      "Low physical endurance": [
-        "creatine",
-        "taurine"
-      ],
-      "Rely on caffeine to stay alert": [
-        "b12",
-        "coq10"
-      ]
-    },
+    "branches": {},
     "foundation": [
-      "omega3",
-      "mag_glycinate"
+      "omega3"
     ],
     "target": [
       "coq10",
       "creatine",
       "b12",
-      "taurine",
-      "vit_d3"
+      "taurine"
     ]
   },
   "heart": {
@@ -90,37 +51,18 @@
       "coq10",
       "taurine",
       "mag_glycinate",
-      "curcumin",
-      "creatine"
+      "curcumin"
     ],
     "extended": [],
-    "branches": {
-      "Get tired more easily": [
-        "coq10",
-        "taurine"
-      ],
-      "Short of breath during activity": [
-        "coq10",
-        "omega3"
-      ],
-      "Want to stay heart healthy": [
-        "omega3",
-        "coq10"
-      ],
-      "Focus on prevention": [
-        "omega3",
-        "coq10"
-      ]
-    },
+    "branches": {},
     "foundation": [
-      "omega3",
-      "mag_glycinate"
+      "omega3"
     ],
     "target": [
       "coq10",
       "taurine",
-      "curcumin",
-      "creatine"
+      "mag_glycinate",
+      "curcumin"
     ]
   },
   "brain": {
@@ -131,40 +73,18 @@
       "omega3",
       "b12",
       "creatine",
-      "l_theanine",
-      "taurine",
-      "coq10"
+      "l_theanine"
     ],
     "extended": [],
-    "branches": {
-      "Brain fog": [
-        "citicoline",
-        "b12"
-      ],
-      "Forgetfulness": [
-        "citicoline",
-        "omega3"
-      ],
-      "Trouble concentrating": [
-        "citicoline",
-        "l_theanine"
-      ],
-      "Mental fatigue by afternoon": [
-        "coq10",
-        "taurine"
-      ]
-    },
+    "branches": {},
     "foundation": [
-      "omega3",
-      "mag_glycinate"
+      "omega3"
     ],
     "target": [
       "citicoline",
       "b12",
       "creatine",
-      "l_theanine",
-      "taurine",
-      "coq10"
+      "l_theanine"
     ]
   },
   "joints": {
@@ -173,84 +93,44 @@
     "core": [
       "curcumin",
       "collagen_uc2",
-      "omega3",
-      "vit_d3",
       "creatine",
-      "taurine"
+      "omega3",
+      "vit_d3"
     ],
     "extended": [],
-    "branches": {
-      "Stiff after sitting": [
-        "collagen_uc2",
-        "curcumin"
-      ],
-      "Joint discomfort during movement": [
-        "curcumin",
-        "omega3"
-      ],
-      "Slow recovery after activity": [
-        "creatine",
-        "omega3"
-      ],
-      "Want to stay active": [
-        "collagen_uc2",
-        "creatine"
-      ]
-    },
+    "branches": {},
     "foundation": [
-      "omega3",
-      "mag_glycinate"
+      "omega3"
     ],
     "target": [
       "curcumin",
       "collagen_uc2",
-      "vit_d3",
       "creatine",
-      "taurine"
+      "vit_d3"
     ]
   },
   "longevity": {
     "id": "longevity",
     "label": "Longevity",
     "core": [
+      "creatine",
       "coq10",
       "taurine",
-      "creatine",
       "omega3",
-      "glycine",
-      "collagen_uc2",
-      "vit_d3"
+      "vit_d3",
+      "curcumin"
     ],
     "extended": [],
-    "branches": {
-      "Want to age well": [
-        "omega3",
-        "taurine"
-      ],
-      "Stay active as I get older": [
-        "creatine",
-        "coq10"
-      ],
-      "Maintain strength with age": [
-        "creatine",
-        "vit_d3"
-      ],
-      "Focus on prevention": [
-        "omega3",
-        "coq10"
-      ]
-    },
+    "branches": {},
     "foundation": [
-      "omega3",
-      "mag_glycinate"
+      "omega3"
     ],
     "target": [
+      "creatine",
       "coq10",
       "taurine",
-      "creatine",
-      "glycine",
-      "collagen_uc2",
-      "vit_d3"
+      "vit_d3",
+      "curcumin"
     ]
   },
   "digestion": {
@@ -259,39 +139,20 @@
     "core": [
       "probiotic",
       "dig_enzymes",
+      "boswellia",
       "mag_glycinate",
-      "omega3",
-      "curcumin",
-      "glycine"
+      "omega3"
     ],
     "extended": [],
-    "branches": {
-      "Bloating": [
-        "dig_enzymes",
-        "probiotic"
-      ],
-      "Discomfort after meals": [
-        "dig_enzymes",
-        "curcumin"
-      ],
-      "Irregular digestion": [
-        "mag_glycinate",
-        "probiotic"
-      ],
-      "Sensitive stomach": [
-        "probiotic",
-        "glycine"
-      ]
-    },
+    "branches": {},
     "foundation": [
-      "omega3",
-      "mag_glycinate"
+      "omega3"
     ],
     "target": [
       "probiotic",
       "dig_enzymes",
-      "curcumin",
-      "glycine"
+      "boswellia",
+      "mag_glycinate"
     ]
   },
   "stress": {
@@ -300,41 +161,20 @@
     "core": [
       "l_theanine",
       "mag_glycinate",
-      "glycine",
-      "omega3",
+      "ashwagandha",
       "b12",
-      "taurine",
-      "ashwagandha"
+      "omega3"
     ],
     "extended": [],
-    "branches": {
-      "Feeling overwhelmed": [
-        "l_theanine",
-        "mag_glycinate"
-      ],
-      "Hard to relax": [
-        "l_theanine",
-        "glycine"
-      ],
-      "Feeling more irritable": [
-        "mag_glycinate",
-        "omega3"
-      ],
-      "Poor stress recovery": [
-        "b12",
-        "taurine"
-      ]
-    },
+    "branches": {},
     "foundation": [
-      "omega3",
-      "mag_glycinate"
+      "omega3"
     ],
     "target": [
       "l_theanine",
-      "glycine",
-      "b12",
-      "taurine",
-      "ashwagandha"
+      "mag_glycinate",
+      "ashwagandha",
+      "b12"
     ]
   }
 }

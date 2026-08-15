@@ -45,11 +45,6 @@
     "sleep": "Calming without sedation, supporting an easier wind-down in the evening.",
     "brain": "Supports calm, steady focus rather than stimulation."
   },
-  "glycine": {
-    "sleep": "Gently lowers core body temperature at night — part of how deep sleep gets going.",
-    "longevity": "A building block for collagen and glutathione, both of which the body makes less of with age.",
-    "stress": "A calming amino acid that supports a settled nervous system."
-  },
   "l_theanine": {
     "sleep": "Supports a calm, unhurried mind at bedtime without leaving you groggy.",
     "brain": "Supports calm, focused attention — alert rather than wired.",
@@ -79,5 +74,10 @@
   "ashwagandha": {
     "stress": "An adaptogen that supports the body's cortisol response under sustained pressure.",
     "sleep": "Supports a calmer evening state — often what stands in the way of falling asleep."
+  },
+  "boswellia": {
+    "joints": "A gentler anti-inflammatory that supports joint comfort and everyday range of movement.",
+    "longevity": "Supports the inflammatory balance associated with ageing well, and is easy on the stomach.",
+    "digestion": "Supports a calm gut lining — often better tolerated than curcumin when digestion is sensitive."
   }
 }

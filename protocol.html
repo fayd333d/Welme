@@ -128,7 +128,7 @@ src="https://www.facebook.com/tr?id=1028962489819655&ev=PageView&noscript=1"
 </div>
 
 <script src="welme-tracking.js"></script>
-<script src="engine.js?v=2"></script>
+<script src="engine.js?v=4"></script>
 <script>
 'use strict';
 
@@ -167,7 +167,7 @@ var RESTRICTED_SUBS = [
   {label:'Ginkgo', note:'Ginkgo adds to bleeding risk alongside omega-3 and blood thinners.'},
   {label:'Berberine', note:'Berberine lowers blood sugar — watch for additive effects with glucose-lowering medication.'},
   {label:'Green tea extract', note:'High-dose green tea extract can stress the liver — keep intake moderate.'},
-  {label:'Melatonin', note:'Melatonin adds to the calming effect of magnesium, glycine and L-theanine.'}
+  {label:'Melatonin', note:'Melatonin adds to the calming effect of magnesium, L-theanine and ashwagandha.'}
 ];
 // Medications worth accounting for when preparing the course (source: Restrictions sheet).
 var RESTRICTED_MEDS = [
@@ -176,7 +176,7 @@ var RESTRICTED_MEDS = [
   {label:'Thyroid medication', note:'We space vitamin D and magnesium ~4h from your thyroid tablet, and flag ashwagandha, which can shift thyroid hormone.'},
   {label:'Blood-pressure medication', note:'Magnesium, taurine, CoQ10 and L-theanine can gently lower blood pressure — a helpful direction, but worth monitoring.'},
   {label:'Diabetes / blood-sugar medication', note:'Ashwagandha, curcumin and CoQ10 can lower blood sugar — watch for additive effects and check with your clinician.'},
-  {label:'Sedatives / sleep medication', note:'L-theanine, glycine and ashwagandha add to a calming effect — start low if you already take a sedative or sleep aid.'},
+  {label:'Sedatives / sleep medication', note:'L-theanine, magnesium and ashwagandha add to a calming effect — start low if you already take a sedative or sleep aid.'},
   {label:'Levodopa (Parkinson’s)', note:'High-dose B6 and citicoline can affect levodopa — we keep B6 at label dose and flag citicoline for your neurologist.'}
 ];
 var SUPPS = [];   // rebuilt in applyFormularyData(): shelf items + the non-shelf list above
@@ -205,7 +205,7 @@ var PROTOCOL = {
 // resolved by engine.js. Nothing about the formulary is hardcoded here.
 
 var SUGG = {
-  sleep:{text:'Magnesium and glycine before bed are shown to shorten time-to-sleep and deepen sleep in clinical studies.',hack:'Keep the bedroom cool (18–19°C / 65°F) and stop screens 45 minutes before bed – light and temperature are the two biggest sleep levers.'},
+  sleep:{text:'Magnesium and L-theanine in the evening are studied for a calmer wind-down and easier sleep onset.',hack:'Keep the bedroom cool (18–19°C / 65°F) and stop screens 45 minutes before bed – light and temperature are the two biggest sleep levers.'},
   energy:{text:'CoQ10 and B-vitamins are linked to reduced fatigue, especially past 40 when natural CoQ10 production declines.',hack:'Get 10 minutes of daylight within an hour of waking and keep caffeine before noon – both measurably improve daytime energy.'},
   heart:{text:'Omega-3 (EPA/DHA) has some of the strongest evidence in nutrition for triglyceride and blood-pressure support.',hack:'A brisk 30-minute walk five days a week lowers blood pressure about as much as some first-line medications.'},
   brain:{text:'DHA and B12 status track with cognitive performance; supplementation helps most when dietary intake is low.',hack:'Two servings of oily fish weekly plus regular aerobic exercise is the best-evidenced combo for long-term brain health.'},
@@ -251,6 +251,9 @@ function applyFormularyData(d){
   // Health conditions come from conditions.json.
   CONDS = Object.keys(d.conditions);
 
+  // Goal limit is configured in engine_config.json.
+  if(d.engine_config && d.engine_config.max_goals) MAX_GOALS = d.engine_config.max_goals;
+
   // "Already taking" chips: every shelf item (so it can be deduped) + the
   // non-shelf interacting substances declared above (flagged only).
   SHELF_SUBS = d.ingredients.map(function(i){ return { label: i.name, id: i.id }; });
@@ -285,6 +288,7 @@ var DEFAULT_STATE = {
 };
 
 // Health goals a user may pick on the first question.
+// Overridden from data/engine_config.json (max_goals) once the formulary loads.
 var MAX_GOALS = 3;
 
 var S = (function(){
@@ -645,17 +649,6 @@ function buildResults(){
   var joinList = function(a){ a = a.filter(Boolean); if(a.length <= 1) return a[0] || ''; if(a.length === 2) return a[0] + ' and ' + a[1]; return a.slice(0,-1).join(', ') + ' and ' + a[a.length-1]; };
   var B = function(t){ return '<b style="color:#14655B">' + esc(t) + '</b>'; }; // deep-green highlight (matches border colour)
   var GOAL_AREA = { sleep:'restful sleep', energy:'daytime energy', heart:'heart health', brain:'mental clarity', joints:'joint comfort', longevity:'healthy ageing', digestion:'comfortable digestion', stress:'a calmer stress response' };
-  // For each goal: two [ingredient, how it works in the body]
-  var GOAL_EXPL = {
-    sleep:[['Magnesium glycinate','calms the nervous system and relaxes tense muscles'],['glycine','gently lowers your core body temperature so sleep comes on faster and runs deeper']],
-    energy:[['CoQ10','helps your cells turn food into usable energy inside the mitochondria'],['B vitamins','keep that energy pathway running to steady you through the afternoon']],
-    heart:[['Omega-3','eases inflammation and supports healthy blood pressure and triglycerides'],['CoQ10','protects the heart muscle, one of the most energy-hungry tissues in the body']],
-    brain:[['Citicoline','supplies choline for acetylcholine and healthy brain-cell membranes'],['omega-3','provides DHA, a core structural fat behind clear, focused thinking']],
-    joints:[['UC-II collagen','works through the gut-immune interface to support joint comfort and cartilage'],['curcumin','helps quiet the low-grade inflammation behind stiffness']],
-    longevity:[['CoQ10','defends the mitochondria that power every cell as the years add up'],['omega-3','counters the chronic, low-level inflammation associated with ageing']],
-    digestion:[['Probiotics','help rebalance the gut microbiome that drives comfortable digestion'],['digestive enzymes','help break down meals so bloating and heaviness ease']],
-    stress:[['Ashwagandha','helps regulate cortisol so your body recovers from stress more smoothly'],['magnesium','settles an over-active nervous system and eases physical tension']]
-  };
 
   var areasBold = selGoals.map(function(g){ return B(GOAL_AREA[g.id]); });
 

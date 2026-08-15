@@ -2,8 +2,8 @@
   {
     "id": "omega3",
     "name": "Omega-3 (EPA/DHA)",
-    "brand": "TG form, burp-free",
-    "dose": "1000-2000 mg",
+    "brand": "high-concentrate TG, burp-free",
+    "dose": "1000 mg EPA+DHA",
     "form": "softgel",
     "timing": "MEAL",
     "fat_soluble": true,
@@ -19,17 +19,18 @@
       "stress"
     ],
     "cost_tier": "commodity",
+    "units_per_day": 2,
     "restrictions": {
       "avoid": "None absolute; stop ~7 days before surgery.",
-      "caution": "Blood thinners (bleeding >3 g); fish allergy → algae form.",
-      "form": "With a meal; burp-free/enteric if reflux; emulsified if no gallbladder."
+      "caution": "Blood thinners (bleeding at high dose); fish allergy → algae form.",
+      "form": "Concentrated TG keeps it to 2 softgels. With a meal; enteric if reflux."
     }
   },
   {
     "id": "mag_glycinate",
     "name": "Magnesium Glycinate",
     "brand": "",
-    "dose": "300-400 mg elem.",
+    "dose": "300 mg elemental",
     "form": "capsule",
     "timing": "MEAL",
     "fat_soluble": false,
@@ -42,10 +43,35 @@
       "digestion"
     ],
     "cost_tier": "commodity",
+    "units_per_day": 3,
     "restrictions": {
       "avoid": "Advanced kidney disease.",
       "caution": "Loose stools at high dose; space 2-4h from thyroid meds & some antibiotics.",
-      "form": "Glycinate = gentle on the gut."
+      "form": "Full 300 mg elemental dose kept — 3 capsules."
+    }
+  },
+  {
+    "id": "creatine",
+    "name": "Creatine Monohydrate",
+    "brand": "Creapure",
+    "dose": "3 g",
+    "form": "tablet",
+    "timing": "MEAL",
+    "fat_soluble": false,
+    "take_with_food": false,
+    "gentle": true,
+    "tags": [
+      "energy",
+      "brain",
+      "longevity",
+      "joints"
+    ],
+    "cost_tier": "commodity",
+    "units_per_day": 3,
+    "restrictions": {
+      "avoid": "Kidney disease unless cleared by a nephrologist.",
+      "caution": "Raises serum creatinine (lab artefact, not damage); needs good hydration.",
+      "form": "Spec 1 g tablets — 3 g maintenance dose in 3 tablets."
     }
   },
   {
@@ -66,18 +92,19 @@
       "stress"
     ],
     "cost_tier": "commodity",
+    "units_per_day": 1,
     "restrictions": {
       "avoid": "Hypercalcemia, sarcoidosis, hyperparathyroidism.",
       "caution": "Thiazides, digoxin; don't exceed 4000 IU without labs.",
-      "form": "Fat-soluble — with a meal; emulsified if no gallbladder."
+      "form": "Fat-soluble — emulsified if no gallbladder."
     }
   },
   {
     "id": "b12",
     "name": "Vitamin B12 (methylcobalamin)",
     "brand": "sublingual option",
-    "dose": "500-1000 mcg",
-    "form": "capsule",
+    "dose": "1000 mcg",
+    "form": "tablet",
     "timing": "MEAL",
     "fat_soluble": false,
     "take_with_food": false,
@@ -88,33 +115,11 @@
       "stress"
     ],
     "cost_tier": "commodity",
+    "units_per_day": 1,
     "restrictions": {
       "avoid": "None.",
       "caution": "Absorption falls with age, PPIs and metformin — the reason it's here.",
       "form": "Sublingual bypasses stomach absorption issues."
-    }
-  },
-  {
-    "id": "creatine",
-    "name": "Creatine Monohydrate",
-    "brand": "Creapure",
-    "dose": "3-5 g",
-    "form": "tablet",
-    "timing": "MEAL",
-    "fat_soluble": false,
-    "take_with_food": false,
-    "gentle": true,
-    "tags": [
-      "energy",
-      "brain",
-      "longevity",
-      "joints"
-    ],
-    "cost_tier": "commodity",
-    "restrictions": {
-      "avoid": "Kidney disease unless cleared by a nephrologist.",
-      "caution": "Raises serum creatinine (lab artefact, not damage); needs hydration.",
-      "form": "Any time; split if GI upset."
     }
   },
   {
@@ -134,17 +139,18 @@
       "brain"
     ],
     "cost_tier": "branded",
+    "units_per_day": 1,
     "restrictions": {
       "avoid": "None.",
       "caution": "Lowers BP & glucose (additive); may reduce warfarin effect — monitor INR.",
-      "form": "Ubiquinol form if over 60; with a meal."
+      "form": "Ubiquinol form if over 60."
     }
   },
   {
     "id": "taurine",
     "name": "Taurine",
     "brand": "",
-    "dose": "1-2 g",
+    "dose": "1 g",
     "form": "capsule",
     "timing": "MEAL",
     "fat_soluble": false,
@@ -158,39 +164,18 @@
       "brain"
     ],
     "cost_tier": "commodity",
+    "units_per_day": 1,
     "restrictions": {
       "avoid": "None.",
       "caution": "Mild additive BP-lowering; theoretical caution in bipolar.",
-      "form": "Well tolerated; no stimulation."
-    }
-  },
-  {
-    "id": "glycine",
-    "name": "Glycine",
-    "brand": "",
-    "dose": "3 g",
-    "form": "capsule",
-    "timing": "MEAL",
-    "fat_soluble": false,
-    "take_with_food": false,
-    "gentle": true,
-    "tags": [
-      "sleep",
-      "longevity",
-      "stress"
-    ],
-    "cost_tier": "commodity",
-    "restrictions": {
-      "avoid": "None.",
-      "caution": "Clozapine (may reduce effect); mild drowsiness at high dose.",
-      "form": "Evening; supports sleep onset."
+      "form": "1 g in a single capsule; no stimulation."
     }
   },
   {
     "id": "l_theanine",
     "name": "L-Theanine",
     "brand": "Suntheanine",
-    "dose": "100-200 mg",
+    "dose": "200 mg",
     "form": "capsule",
     "timing": "MEAL",
     "fat_soluble": false,
@@ -203,17 +188,18 @@
       "energy"
     ],
     "cost_tier": "commodity",
+    "units_per_day": 1,
     "restrictions": {
       "avoid": "None.",
       "caution": "Additive with sedatives / BP meds (mild).",
-      "form": "Non-sedating calm; any time."
+      "form": "Non-sedating calm."
     }
   },
   {
     "id": "citicoline",
     "name": "Citicoline",
     "brand": "Cognizin",
-    "dose": "250-500 mg",
+    "dose": "250 mg",
     "form": "capsule",
     "timing": "MEAL",
     "fat_soluble": false,
@@ -223,10 +209,11 @@
       "brain"
     ],
     "cost_tier": "branded",
+    "units_per_day": 1,
     "restrictions": {
       "avoid": "None.",
       "caution": "Levodopa (may enhance — Parkinson's).",
-      "form": "Good human data in older adults; rare mild headache."
+      "form": "Good human data in older adults."
     }
   },
   {
@@ -244,6 +231,7 @@
       "longevity"
     ],
     "cost_tier": "branded",
+    "units_per_day": 1,
     "restrictions": {
       "avoid": "Bovine/chicken-source allergy.",
       "caution": "Minimal — works by oral tolerance, not dose loading.",
@@ -265,6 +253,7 @@
       "mood"
     ],
     "cost_tier": "branded",
+    "units_per_day": 1,
     "restrictions": {
       "avoid": "Severe immunocompromise / central venous line.",
       "caution": "Transient gas; SIBO caution.",
@@ -285,17 +274,18 @@
       "digestion"
     ],
     "cost_tier": "commodity",
+    "units_per_day": 1,
     "restrictions": {
       "avoid": "Active peptic ulcer/gastritis, acute pancreatitis, bile-duct obstruction.",
       "caution": "High-dose proteases — theoretical bleeding additivity.",
-      "form": "With meals; lipase essential if no gallbladder."
+      "form": "Lipase essential if no gallbladder."
     }
   },
   {
     "id": "curcumin",
     "name": "Curcumin (phytosome)",
     "brand": "Meriva",
-    "dose": "500-1000 mg",
+    "dose": "500 mg",
     "form": "capsule",
     "timing": "MEAL",
     "fat_soluble": true,
@@ -308,10 +298,34 @@
       "heart"
     ],
     "cost_tier": "branded",
+    "units_per_day": 1,
     "restrictions": {
       "avoid": "Gallstones/bile-duct obstruction; blood thinners; recent surgery; pregnancy.",
       "caution": "Reflux; lowers glucose; alters CYP-metabolised drug levels; iron chelation.",
-      "form": "Phytosome + meal; enteric if reflux."
+      "form": "Meriva 500 mg = single capsule."
+    }
+  },
+  {
+    "id": "boswellia",
+    "name": "Boswellia (AKBA)",
+    "brand": "AKBA-standardised",
+    "dose": "300-500 mg",
+    "form": "capsule",
+    "timing": "MEAL",
+    "fat_soluble": false,
+    "take_with_food": true,
+    "gentle": true,
+    "tags": [
+      "joints",
+      "longevity",
+      "digestion"
+    ],
+    "cost_tier": "branded",
+    "units_per_day": 1,
+    "restrictions": {
+      "avoid": "None.",
+      "caution": "Theoretical antiplatelet — review on blood thinners; occasional mild GI upset.",
+      "form": "Gentler anti-inflammatory alternative to curcumin for reflux/anticoagulant users."
     }
   },
   {
@@ -329,10 +343,11 @@
       "sleep"
     ],
     "cost_tier": "branded",
+    "units_per_day": 1,
     "restrictions": {
       "avoid": "Thyroid condition; autoimmune condition; liver condition; pregnancy/breastfeeding.",
       "caution": "Sedatives; lowers glucose & BP; nightshade allergy.",
-      "form": "Evening with food. Auto-excluded for the groups above."
+      "form": "Auto-excluded for the groups above."
     }
   }
 ]

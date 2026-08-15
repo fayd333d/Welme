@@ -12,6 +12,11 @@
         "action": "BLOCK",
         "target": "curcumin",
         "why": "antiplatelet effect — excluded on anticoagulants"
+      },
+      {
+        "action": "FLAG",
+        "target": "boswellia",
+        "why": "theoretical antiplatelet effect — pharmacist review"
       }
     ]
   },
@@ -21,12 +26,12 @@
       {
         "action": "BLOCK",
         "target": "creatine",
-        "why": "renal caution unless cleared by nephrologist"
+        "why": "renal caution unless cleared by a nephrologist"
       },
       {
         "action": "REDUCE_DOSE",
         "target": "mag_glycinate",
-        "to": "<=200 mg",
+        "to": "<=200 mg elemental",
         "why": "magnesium accumulates in CKD"
       },
       {
@@ -283,12 +288,6 @@
         "target": "*",
         "to": "no high-dose niacin",
         "why": "niacin raises uric acid"
-      },
-      {
-        "action": "FLAG",
-        "target": "creatine",
-        "to": "ensure hydration",
-        "why": "keep well hydrated"
       }
     ]
   },

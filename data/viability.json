@@ -9,23 +9,21 @@
       "essential": [
         [
           "mag_glycinate",
-          "glycine",
           "l_theanine",
           "taurine",
           "ashwagandha"
         ]
       ],
       "min": 2,
-      "why": "Needs at least two calming/sleep-active ingredients or the box does nothing for sleep."
+      "why": "Needs at least two calming actives."
     },
     "energy": {
       "label": "Energy & vitality",
       "essential": [
         [
           "coq10",
-          "b12",
           "creatine",
-          "taurine"
+          "b12"
         ]
       ],
       "min": 2,
@@ -68,20 +66,20 @@
         ]
       ],
       "min": 1,
-      "why": "Needs an anti-inflammatory (curcumin or omega-3) AND a structural active (collagen or creatine). Losing all anti-inflammatories makes it a joint box that cannot relieve joint pain."
+      "why": "Needs an anti-inflammatory AND a structural active."
     },
     "longevity": {
       "label": "Longevity",
       "essential": [
         [
-          "omega3",
+          "creatine",
           "coq10",
           "taurine",
-          "creatine"
+          "omega3"
         ]
       ],
       "min": 3,
-      "why": "Broad plan — needs most of its base intact to justify the price."
+      "why": "Broad plan — needs most of its base intact."
     },
     "digestion": {
       "label": "Digestion & gut",
@@ -100,7 +98,6 @@
         [
           "l_theanine",
           "mag_glycinate",
-          "glycine",
           "ashwagandha",
           "b12"
         ]

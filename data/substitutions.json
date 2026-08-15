@@ -6,7 +6,7 @@
   },
   "mag_glycinate": {
     "role": "Calm / sleep / gut",
-    "sub": "glycine",
+    "sub": "l_theanine",
     "fallback": "shorten"
   },
   "vit_d3": {
@@ -19,11 +19,6 @@
     "sub": null,
     "fallback": "shorten — no equivalent in the 15"
   },
-  "creatine": {
-    "role": "Muscle & strength / cognition",
-    "sub": "taurine",
-    "fallback": "shorten"
-  },
   "coq10": {
     "role": "Cellular energy / heart",
     "sub": "taurine",
@@ -32,11 +27,6 @@
   "taurine": {
     "role": "Heart / energy / calm (multi-role)",
     "sub": "coq10",
-    "fallback": "shorten"
-  },
-  "glycine": {
-    "role": "Sleep onset / calm",
-    "sub": "l_theanine",
     "fallback": "shorten"
   },
   "l_theanine": {
@@ -66,12 +56,22 @@
   },
   "curcumin": {
     "role": "Anti-inflammatory (joints/heart/gut)",
-    "sub": "omega3",
+    "sub": "boswellia",
     "fallback": "shorten"
   },
   "ashwagandha": {
     "role": "Stress / sleep adaptogen",
     "sub": "l_theanine",
+    "fallback": "shorten"
+  },
+  "boswellia": {
+    "role": "Anti-inflammatory, gentler on gut",
+    "sub": "curcumin",
+    "fallback": "shorten"
+  },
+  "creatine": {
+    "role": "Muscle & strength / cognition",
+    "sub": "taurine",
     "fallback": "shorten"
   }
 }

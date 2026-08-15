@@ -124,6 +124,9 @@
     Object.keys(cand).forEach(function (id) {
       if (!cand[id]._blocked) return;
       var s = (SUBS[id] || {}).sub;
+      // The substitute must exist on the current shelf — substitutions.json can
+      // name an ingredient that has since been removed. Fall back to shortening.
+      if (s && !ING[s]) s = null;
       if (s && !blockedBy[s]) {
         if (!cand[s]) {
           add(s, cand[id].weight || W.core, 'sub:' + id);
@@ -166,14 +169,18 @@
       list.filter(function (c) { return p.core.indexOf(c.id) !== -1; })
           .slice(0, 2).forEach(function (c) { protectedIds[c.id] = 1; });
     });
-    if (list.length > pillCap) {
-      var keep = list.filter(function (c) { return protectedIds[c.id]; });
-      var spare = list.filter(function (c) { return !protectedIds[c.id]; });
-      var room = Math.max(0, pillCap - keep.length);
-      spare.slice(room).forEach(function (c) { removed.push({ id: c.id, why: 'over pill cap' }); });
-      list = keep.concat(spare.slice(0, room))
-                 .sort(function (a, b) { return b.weight - a.weight || a.id.localeCompare(b.id); });
-    }
+    // cap by PHYSICAL PILLS per day (sum of units_per_day), not ingredient count
+    var units = function (id) { return ING[id].units_per_day || 1; };
+    var keepList = list.filter(function (c) { return protectedIds[c.id]; });
+    var spare = list.filter(function (c) { return !protectedIds[c.id]; });
+    var pills = keepList.reduce(function (s, c) { return s + units(c.id); }, 0);
+    var chosen = keepList.slice();
+    spare.forEach(function (c) {
+      if (pills + units(c.id) <= pillCap) { chosen.push(c); pills += units(c.id); }
+      else removed.push({ id: c.id, why: 'would exceed the daily pill limit (' + pillCap + ')' });
+    });
+    list = chosen.sort(function (a, b) { return b.weight - a.weight || a.id.localeCompare(b.id); });
+    var totalPills = list.reduce(function (s, c) { return s + units(c.id); }, 0);
 
     // 4b) viability: is each selected plan still worth selling?
     var kept = {}; list.forEach(function (c) { kept[c.id] = 1; });
@@ -247,6 +254,7 @@
         timingNote: c.timingNote || '',
         form: ING[c.id].form,
         withFood: !!ING[c.id].take_with_food,
+        units: ING[c.id].units_per_day || 1,
         goalMatches: matches,            // user-facing subtitle source
         effects: effects,                // personalised "what it does for you" copy
         flags: c.flags
@@ -254,7 +262,7 @@
     });
     return {
       status: status, action: action, verdicts: verdicts,
-      count: list.length, pillCap: pillCap, band: band.range,
+      count: list.length, pills: totalPills, pillCap: pillCap, band: band.range,
       sachet: sachet, removed: removed,
       notes: notes.filter(function (n, i) { return notes.indexOf(n) === i; }),
       deferReasons: deferReasons, viablePlans: viablePlans,

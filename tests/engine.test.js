@@ -87,14 +87,16 @@ function buildSuite(engine, DATA) {
     ok(JSON.stringify(ids(a)) === JSON.stringify(ids(c)), 'ticking sub-complaints changed the plan');
   });
 
-  // 8 — never exceed the age band pill cap
-  t('8. Plan never exceeds the age-band pill cap', function () {
+  // 8 — never exceed the age band pill cap (counted in PHYSICAL PILLS per day)
+  t('8. Plan never exceeds the age-band pill cap (physical pills)', function () {
     var all = Object.keys(PROT).map(function (k) { return PROT[k].label; });
     [50, 57, 65, 74, 84].forEach(function (age) {
       var band = AGE.bands.filter(function (b) { return b.range === engine.ageBand(age); })[0];
       var r = engine.resolve(mk({ age: age, goals: all }));
-      ok(r.count <= band.pill_cap, 'age ' + age + ': ' + r.count + ' > cap ' + band.pill_cap);
-      ok(r.count <= r.pillCap, 'age ' + age + ': exceeded resolved cap');
+      var pills = r.sachet.reduce(function (s, x) { return s + (x.units || 1); }, 0);
+      ok(pills === r.pills, 'age ' + age + ': reported pills ' + r.pills + ' != summed ' + pills);
+      ok(pills <= band.pill_cap, 'age ' + age + ': ' + pills + ' pills > cap ' + band.pill_cap);
+      ok(pills <= r.pillCap, 'age ' + age + ': exceeded resolved cap');
     });
   });
 
