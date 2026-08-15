@@ -20,7 +20,8 @@
       substitutions: load('substitutions.json'),
       viability: load('viability.json'),
       age_tuning: load('age_tuning.json'),
-      engine_config: load('engine_config.json')
+      engine_config: load('engine_config.json'),
+      ingredient_effects: load('ingredient_effects.json')
     });
     module.exports = api;
   } else {
@@ -28,7 +29,7 @@
   }
 }(typeof self !== 'undefined' ? self : this, function () {
 
-  var ING, SUBS, VIAB, PROT, COND, AGE, CFG;
+  var ING, SUBS, VIAB, PROT, COND, AGE, CFG, EFFECTS;
 
   function init(data) {
     ING = {};
@@ -39,6 +40,7 @@
     COND = data.conditions;
     AGE = data.age_tuning;
     CFG = data.engine_config;
+    EFFECTS = data.ingredient_effects || {};
     return api;
   }
 
@@ -210,11 +212,17 @@
     var selectedLabels = goals.map(function (g) {
       var p = protoFor(g); return p ? p.label : null;
     }).filter(Boolean);
-    var tagLabel = function (tag) {
+    var tagGoalId = function (tag) {
       if (tag === 'immune') return null;          // no goal — never display
       if (tag === 'mood') tag = 'stress';         // both map to Stress & mood
-      return PROT[tag] ? PROT[tag].label : null;
+      return PROT[tag] ? tag : null;
     };
+    var tagLabel = function (tag) {
+      var gid = tagGoalId(tag);
+      return gid ? PROT[gid].label : null;
+    };
+    var labelToGoalId = {};
+    Object.keys(PROT).forEach(function (k) { labelToGoalId[PROT[k].label] = PROT[k].id; });
 
     var sachet = list.map(function (c) {
       var matches = [];
@@ -223,6 +231,12 @@
         if (lab && selectedLabels.indexOf(lab) !== -1 && matches.indexOf(lab) === -1) matches.push(lab);
       });
       matches.sort(function (a, b) { return selectedLabels.indexOf(a) - selectedLabels.indexOf(b); });
+      // Effect copy for those same goals, in the same order — personalised, and
+      // never describing a goal this user didn't pick.
+      var effects = matches.map(function (lab) {
+        var gid = labelToGoalId[lab];
+        return (EFFECTS[c.id] || {})[gid] || '';
+      }).filter(Boolean);
       return {
         id: c.id,
         name: ING[c.id].name,
@@ -234,6 +248,7 @@
         form: ING[c.id].form,
         withFood: !!ING[c.id].take_with_food,
         goalMatches: matches,            // user-facing subtitle source
+        effects: effects,                // personalised "what it does for you" copy
         flags: c.flags
       };
     });

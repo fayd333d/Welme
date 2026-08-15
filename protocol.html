@@ -128,7 +128,7 @@ src="https://www.facebook.com/tr?id=1028962489819655&ev=PageView&noscript=1"
 </div>
 
 <script src="welme-tracking.js"></script>
-<script src="engine.js"></script>
+<script src="engine.js?v=2"></script>
 <script>
 'use strict';
 
@@ -599,6 +599,8 @@ function buildResults(){
     }
     return {
       id: x.id, name: x.name, dosage: x.dose, reason: matches.join(' · '),
+      // what it actually does, for this user's goals only (max 2 lines per card)
+      effects: (x.effects || []).slice(0, 2),
       withFood: x.withFood, practical: practical.join(' · ')
     };
   });
@@ -842,7 +844,9 @@ function recCard(r){
     + '<span class="rec-name">' + esc(r.name) + '</span>'
     + (r.dosage ? '<span class="rec-time" style="color:#3A4A42;background:#EFE7D6">' + esc(r.dosage) + '</span>' : '')
     + '</div>'
-    + (r.reason ? '<p class="rec-reason">' + esc(r.reason) + '</p>' : '')
+    + (r.reason ? '<p class="rec-reason" style="font-weight:700;color:#14655B">' + esc(r.reason) + '</p>' : '')
+    + ((r.effects || []).length
+        ? '<p class="rec-reason">' + r.effects.map(esc).join(' ') + '</p>' : '')
     + (r.practical ? '<p class="rec-reason" style="color:#8A6D1F">' + esc(r.practical) + '</p>' : '')
     + '</div>';
 }
@@ -1242,7 +1246,7 @@ document.addEventListener('click', function(e){
 
 /* ---------- boot: load the formulary data, then render ---------- */
 (function boot(){
-  var files = ['ingredients','protocols','conditions','substitutions','viability','age_tuning','engine_config','complaint_advice'];
+  var files = ['ingredients','protocols','conditions','substitutions','viability','age_tuning','engine_config','complaint_advice','ingredient_effects'];
   Promise.all(files.map(function(f){
     return fetch('data/' + f + '.json', { cache:'no-cache' }).then(function(r){
       if(!r.ok) throw new Error('data/' + f + '.json ' + r.status);
