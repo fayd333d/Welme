@@ -1051,7 +1051,7 @@ function finishScreen(){
     + '<div class="how-step" style="min-height:48px;align-items:center"><span class="how-num">1</span><p>Your box arrives with 28 daily packs – four weeks of your plan.</p></div>'
     + '<div class="how-step" style="min-height:48px;align-items:center"><span class="how-num">2</span><p>Take one pack a day with your main meal.</p></div>'
     + '<div class="how-step" style="min-height:48px;align-items:center"><span class="how-num">3</span><p>A fresh box arrives every month – free delivery, adjust any time.</p></div>'
-    + '<div class="how-step" style="min-height:48px;align-items:center"><span class="how-num">4</span><p>The price is set by the supplements in your plan – starting from $1 a day.</p></div>'
+    + '<div class="how-step" style="min-height:48px;align-items:center"><span class="how-num">4</span><p>The price is set by the supplements in your plan – starting from $39 a month.</p></div>'
     + '</div>'
 
     /* 3. your daily pack — the supplement list */
@@ -1124,6 +1124,12 @@ function submitEmail(){
       results:buildReadableResultsSummary(R)
     }, { keepalive:true });
   }
+  /* Anonymous per-campaign count, separate sheet, no id and no email. */
+  try{
+    if(window.WelmeTracking && window.WelmeTracking.trackAdConversion){
+      window.WelmeTracking.trackAdConversion();
+    }
+  }catch(e){}
   set({ sent: true });
 }
 
