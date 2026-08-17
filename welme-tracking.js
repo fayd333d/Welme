@@ -9,9 +9,8 @@
    * Counts email submissions per ad campaign, in its own sheet. Deliberately
    * carries no user id and no email address: the row is the count.
    *
-   * PASTE THE /exec URL OF THE AD-CONVERSION APPS SCRIPT HERE.
-   * Until it is filled in, the ad tracking quietly does nothing.           */
-  var AD_ENDPOINT = '';
+   * Separate Apps Script and separate sheet from ENDPOINT above.          */
+  var AD_ENDPOINT = 'https://script.google.com/macros/s/AKfycby2aWB07UmBWHaAF-oC3GNB4mT6m_EzHXsbJxQAQDsFbxlTk7-OMxLoqDbohQq7pyTa_Q/exec';
 
   var UTM_KEY = 'welme_utm';
   var EMAIL_COUNTED_KEY = 'welme_email_counted';
