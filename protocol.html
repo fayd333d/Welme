@@ -1124,6 +1124,12 @@ function submitEmail(){
       results:buildReadableResultsSummary(R)
     }, { keepalive:true });
   }
+  /* Anonymous per-campaign count, separate sheet, no id and no email. */
+  try{
+    if(window.WelmeTracking && window.WelmeTracking.trackAdConversion){
+      window.WelmeTracking.trackAdConversion();
+    }
+  }catch(e){}
   set({ sent: true });
 }
 
