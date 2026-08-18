@@ -2,6 +2,7 @@
   "shelf_size": 15,
   "budget_usd": 15000,
   "default_pill_cap": 16,
+  "max_supplements": 9,
   "foundation": [
     "omega3"
   ],
@@ -10,7 +11,7 @@
     "branch": 2,
     "extended": 1
   },
-  "model": "15 geriatric-appropriate actives. Differentiation comes from DEDUPE (removing what the user already takes), not from riskier ingredients. Two higher-risk botanicals are hard-gated (auto-excluded) for their risk groups, then substituted or the protocol shortens.",
+  "model": "15 geriatric-appropriate actives. The box is the user's whole protocol: an active they already take is KEPT in the box when it serves a goal they picked and is on our shelf, rather than deduped out. Differentiation comes from the condition rules, not from riskier ingredients. Two higher-risk botanicals are hard-gated (auto-excluded) for their risk groups, then substituted or the protocol shortens.",
   "product": {
     "format": "one mixed sachet per day (pills + capsules)",
     "take_with": "main meal",
@@ -18,6 +19,6 @@
     "sachets_per_box": 28,
     "box": "28-day supply"
   },
-  "cap_unit": "physical pills per day (sum of units_per_day), not ingredient count",
+  "cap_unit": "two ceilings apply, whichever binds first: max_supplements is the number of distinct actives in the box; default_pill_cap and the age-band pill_cap are PHYSICAL PILLS per day (sum of units_per_day)",
   "max_goals": 3
 }

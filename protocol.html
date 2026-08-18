@@ -154,7 +154,7 @@ var CLAR = {};
 // interaction/contraindication with it (source: Restrictions sheet). General
 // dietary supplements are left out — our boxes are fixed, predefined protocols.
 // Shelf items a user may already take are built from data/ingredients.json at load
-// (see applyFormularyData) so every one of the 15 can be deduped out of the box.
+// (see applyFormularyData) so the engine can keep any of the 15 in the box.
 // The entries below are substances that are NOT on our shelf but still interact —
 // they are flagged only and never deduped.
 var SHELF_SUBS = [];
@@ -263,7 +263,9 @@ function applyFormularyData(d){
             .concat(RESTRICTED_SUBS.map(function(x){ return x.label; }));
 }
 
-// Ingredient ids for everything the user said they already take → the dedupe step.
+// Ingredient ids for everything the user said they already take. Shelf items
+// that serve a selected goal are kept in the box by the engine (see engine.js
+// step 1b); the rest are only used for interaction flagging.
 function takingIds(){
   var out = [];
   (S.supps || []).forEach(function(l){
@@ -295,20 +297,47 @@ var DEFAULT_STATE = {
 // Overridden from data/engine_config.json (max_goals) once the formulary loads.
 var MAX_GOALS = 3;
 
-var S = (function(){
-  var saved = {};
-  try{ saved = JSON.parse(localStorage.getItem('welme-ad-funnel') || '{}'); }catch(e){}
-  var s = Object.assign({}, DEFAULT_STATE, saved);
+// Saved answers may have been written by an older version of the quiz, by a
+// half-finished session, or by nothing at all. Coerce every field to the shape
+// the rest of this file assumes, so one bad value can never blank the results
+// page. Anything unrecognisable falls back to the default rather than throwing.
+var LIST_KEYS = ['goals','clarify','supps','customSupps','conditions','customConditions','removed'];
+var TEXT_KEYS = ['age','sex','weight','hFt','hIn','hCm','email','suppDraft','condDraft','quizAttemptId'];
+var FLAG_KEYS = ['sent','editPlan','quizStartTracked','quizFinishTracked','emailSubmitTracked'];
+
+function normaliseState(s){
+  LIST_KEYS.forEach(function(k){
+    s[k] = Array.isArray(s[k])
+      ? s[k].filter(function(v){ return v != null && typeof v !== 'object'; }).map(String)
+      : [];
+  });
+  TEXT_KEYS.forEach(function(k){
+    s[k] = (s[k] == null || typeof s[k] === 'object') ? '' : String(s[k]);
+  });
+  FLAG_KEYS.forEach(function(k){ s[k] = !!s[k]; });
+  if(s.wUnit !== 'kg') s.wUnit = 'lb';
+  if(s.hUnit !== 'cm') s.hUnit = 'ft';
   // Flow was renumbered (goals + specifics merged); keep any stale saved step in range.
-  if(typeof s.step !== 'number' || s.step < 0 || s.step > 4) s.step = 0;
+  if(typeof s.step !== 'number' || !isFinite(s.step) || s.step < 0 || s.step > 4) s.step = 0;
+  s.step = Math.floor(s.step);
   // Saved sessions from before the limit may hold more than MAX_GOALS.
-  if(Array.isArray(s.goals) && s.goals.length > MAX_GOALS){
+  if(s.goals.length > MAX_GOALS){
     s.goals = s.goals.slice(0, MAX_GOALS);
-    s.clarify = (s.clarify || []).filter(function(v){
+    s.clarify = s.clarify.filter(function(v){
       return s.goals.indexOf(String(v).split('::')[0]) !== -1;
     });
   }
+  // Parked on the results page with nothing answered: there is no plan to build,
+  // so send them back to the first question rather than to an empty page.
+  if(s.step === 4 && !s.goals.length) s.step = 0;
   return s;
+}
+
+var S = (function(){
+  var saved = {};
+  try{ saved = JSON.parse(localStorage.getItem('welme-ad-funnel') || '{}'); }catch(e){}
+  if(!saved || typeof saved !== 'object' || Array.isArray(saved)) saved = {};
+  return normaliseState(Object.assign({}, DEFAULT_STATE, saved));
 })();
 
 function persist(){
@@ -444,7 +473,8 @@ function formatSupplementLine(item){
   return cleanParts([
     item.name,
     item.dosage,
-    item.withFood ? 'with food' : ''
+    item.withFood ? 'with food' : '',
+    item.alreadyTaking ? 'already taking' : ''
   ]).join(' — ');
 }
 
@@ -469,6 +499,59 @@ function buildReadableResultsSummary(resultData){
   }
 
   return lines.join('\n');
+}
+
+/* ---------- results instrumentation ----------
+   quiz_finish used to be the last thing we ever recorded, so a user who never
+   reached the plan looked exactly like a user who read it and left. These three
+   close that blind spot: results_view when the plan actually paints,
+   results_error when it doesn't, and the quiz_finish → results_view timing. */
+var quizFinishAt = null;          // performance clock at the final tap
+var resultsViewTracked = false;
+
+function nowMs(){
+  try{ return (window.performance && performance.now) ? performance.now() : Date.now(); }
+  catch(e){ return Date.now(); }
+}
+
+function sinceQuizFinish(){
+  return quizFinishAt == null ? '' : String(Math.round(nowMs() - quizFinishAt));
+}
+
+// The answers that produced this outcome, so a results_error can be replayed.
+function withInputs(payload){
+  try{
+    payload.age = S.age;
+    payload.gender = S.sex;
+    payload.goal = goalColumnValue();
+    payload.details = detailsColumnValue();
+    payload.weight = weightColumnValue();
+    payload.height = heightColumnValue();
+    payload.problems = problemsColumnValue();
+  }catch(e){}
+  return payload;
+}
+
+function trackResultsView(mode){
+  if(resultsViewTracked) return;
+  resultsViewTracked = true;
+  if(!trackingAvailable()) return;
+  try{
+    window.WelmeTracking.trackEvent(withInputs({
+      page:'results', event:'results_view', reason: mode || '', ms: sinceQuizFinish()
+    }));
+  }catch(e){}
+}
+
+function trackResultsError(reason){
+  if(!trackingAvailable()) return;
+  try{
+    window.WelmeTracking.trackEvent(withInputs({
+      page:'results', event:'results_error',
+      reason: String(reason == null ? 'unknown' : reason).slice(0, 300),
+      ms: sinceQuizFinish()
+    }));
+  }catch(e){}
 }
 
 function trackQuizFinish(){
@@ -630,6 +713,7 @@ function buildResults(){
       id: x.id, name: x.name, dosage: x.dose, reason: matches.join(' · '),
       // what it actually does, for this user's goals only (max 2 lines per card)
       effects: (x.effects || []).slice(0, 2),
+      alreadyTaking: !!x.alreadyTaking,   // they told us this one is already in their routine
       withFood: x.withFood, practical: practical.join(' · ')
     };
   });
@@ -637,10 +721,11 @@ function buildResults(){
   plan = plan.filter(function(p){ return removedPlan.indexOf(p.name) === -1; });
 
   /* substances they take that are NOT on our shelf but still interact — flagged
-     only. Deduped shelf items are never re-surfaced (removals stay silent). */
+     only. Shelf items they take are handled by the engine, which keeps the ones
+     that serve a selected goal in the box. */
   var subRestrictions = [];
   S.supps.forEach(function(l){
-    if(SUPP_ID_OF[l]) return;                 // on our shelf → silently deduped
+    if(SUPP_ID_OF[l]) return;                 // on our shelf → the engine decides
     if(!SUB_NOTE[l]) return;
     if(subRestrictions.some(function(x){ return x.name === l; })) return;
     subRestrictions.push({ name: l, note: SUB_NOTE[l], duplicateOf: null });
@@ -858,8 +943,13 @@ function syncNext(){
 
 /* ---------- render: finish screen ---------- */
 function recCard(r){
+  // Name and the "already taking" badge share the left half of .rec-top, so the
+  // row still has the two flex children its space-between layout expects.
   return '<div class="rec-card"><div class="rec-top">'
-    + '<span class="rec-name">' + esc(r.name) + '</span>'
+    + '<span style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;min-width:0">'
+    +   '<span class="rec-name">' + esc(r.name) + '</span>'
+    +   (r.alreadyTaking ? '<span class="plan-new">ALREADY TAKING</span>' : '')
+    + '</span>'
     + (r.dosage ? '<span class="rec-time" style="color:#3A4A42;background:#EFE7D6">' + esc(r.dosage) + '</span>' : '')
     + '</div>'
     + (r.reason ? '<p class="rec-reason" style="font-weight:700;color:#14655B">' + esc(r.reason) + '</p>' : '')
@@ -872,6 +962,7 @@ function recCard(r){
 function planCol(items){
   return items.map(function(p){
     return '<div class="plan-item"><span class="plan-dot"></span><span class="plan-name">' + esc(p.name) + '</span>'
+      + (p.alreadyTaking ? '<span class="plan-new">ALREADY TAKING</span>' : '')
       + (S.editPlan ? '<button data-act="remove-supp" data-arg="' + esc(p.name) + '" aria-label="Remove ' + esc(p.name) + '" style="margin-left:auto;flex:none;width:20px;height:20px;border:none;border-radius:50%;background:#E7D9D2;color:#9A5B4A;font-size:14px;font-weight:800;line-height:18px;text-align:center;cursor:pointer">×</button>' : '')
       + '</div>';
   }).join('');
@@ -951,8 +1042,8 @@ function pharmacistLine(){
     + 'it’s worth running the list past your pharmacist.</p>';
 }
 
-function finishScreen(){
-  var R = buildResults();
+function finishScreen(R){
+  R = R || buildResults();
   if(R.status === 'pause') return pauseScreen(R);
   var h = '<div>';
 
@@ -1095,22 +1186,16 @@ function finishScreen(){
 
   var noCharge = '<p style="margin:12px 0 0;font-size:12px;color:#7A867E">No payment is taken at this stage.</p>';
 
-  if(!S.sent){
-    var validEmail = /.+@.+\..+/.test(S.email);
-    h += '<div style="margin-top:30px;background:#F7F2E9;border-radius:20px;padding:24px 20px;text-align:center">'
-      + offer
-      + '<p style="margin:18px 0 12px;font-size:14.5px;line-height:1.5;font-weight:700;color:#1E3B34">Enter your email to unlock the purchase link.</p>'
-      + '<input type="email" id="inEmail" value="' + esc(S.email) + '" placeholder="Email address" style="width:100%;border:1.5px solid rgba(20,101,91,.25);border-radius:14px;padding:16px 18px;font-size:16px;background:#fff;color:#1E3B34;text-align:center">'
-      + '<button id="btnEmail" data-act="submit-email"' + (validEmail ? '' : ' disabled') + ' style="width:100%;margin-top:12px;border:none;background:' + (validEmail ? '#14655B' : '#A9BAB3') + ';color:#fff;border-radius:14px;padding:17px;font-size:17px;font-weight:800;cursor:pointer">Unlock my purchase link</button>'
-      + noCharge
-      + '</div>';
-  } else {
-    h += '<div style="margin-top:30px;background:#F7F2E9;border-radius:20px;padding:24px 20px;text-align:center">'
-      + offer
-      + '<button data-act="purchase" style="width:100%;margin-top:20px;border:none;background:#14655B;color:#fff;border-radius:14px;padding:17px;font-size:17px;font-weight:800;cursor:pointer">Open purchase link</button>'
-      + noCharge
-      + '</div>';
-  }
+  /* One step: the email and the purchase hand-off are the same action, so
+     the button stays inert until the address is usable. */
+  var validEmail = /.+@.+\..+/.test(S.email);
+  h += '<div style="margin-top:30px;background:#F7F2E9;border-radius:20px;padding:24px 20px;text-align:center">'
+    + offer
+    + '<p style="margin:18px 0 10px;font-size:14.5px;line-height:1.5;font-weight:700;color:#1E3B34">Enter your email</p>'
+    + '<input type="email" id="inEmail" value="' + esc(S.email) + '" placeholder="your@email.com" style="width:100%;border:1.5px solid rgba(20,101,91,.25);border-radius:14px;padding:16px 18px;font-size:16px;background:#fff;color:#1E3B34;text-align:center">'
+    + '<button id="btnEmail" data-act="continue-purchase"' + (validEmail ? '' : ' disabled') + ' style="width:100%;margin-top:12px;border:none;background:' + (validEmail ? '#14655B' : '#A9BAB3') + ';color:#fff;border-radius:14px;padding:17px;font-size:17px;font-weight:800;cursor:' + (validEmail ? 'pointer' : 'not-allowed') + '">Continue to purchase</button>'
+    + noCharge
+    + '</div>';
 
   h += '<div style="text-align:center;margin-top:26px">'
     + '<a href="home.html" data-act="landing-click" style="font-size:15px;font-weight:700;color:#C4D2CA;text-decoration:underline;text-underline-offset:3px">Learn more about Welme</a>'
@@ -1133,11 +1218,211 @@ function finishScreen(){
   return h;
 }
 
+/* ---------- the quiz → results transition ----------
+   The rule: once the last question is answered the user always ends up
+   somewhere. The step is persisted before anything that can fail runs, and
+   every failure below routes forward — full plan, degraded plan, or an error
+   screen with a retry. Being left on the last question is not a possible
+   outcome any more. */
+
+var RESULTS_INTERIM_MS = 500;     // show an interim state past this, not before
+var formularyPromise = null;      // in-flight (or settled) /data load
+
+function loadFormulary(){
+  var files = ['ingredients','protocols','conditions','substitutions','viability','age_tuning','engine_config','complaint_advice','ingredient_effects'];
+  return Promise.all(files.map(function(f){
+    return fetch('data/' + f + '.json', { cache:'no-cache' }).then(function(r){
+      if(!r.ok) throw new Error('data/' + f + '.json ' + r.status);
+      return r.json();
+    });
+  })).then(function(loaded){
+    var d = {}; files.forEach(function(f,i){ d[f] = loaded[i]; });
+    applyFormularyData(d);
+    return d;
+  });
+}
+
+// Always asynchronous, so the interim timer below can fire on a slow phone —
+// and so a fast device finishes well inside RESULTS_INTERIM_MS and never
+// flashes a loading state. A failed load is not cached: a retry re-fetches.
+function whenFormularyReady(cb){
+  if(FORMULARY){ window.setTimeout(function(){ cb(null); }, 0); return; }
+  if(!formularyPromise) formularyPromise = loadFormulary();
+  formularyPromise.then(function(){ cb(null); }, function(err){
+    formularyPromise = null;
+    cb(err || new Error('formulary unavailable'));
+  });
+}
+
+/* Interim and failure states, built from the classes already in this file —
+   no new CSS, no new layout components.
+
+   One place for the waiting copy so the three screens that use it can't drift:
+   it says what is happening (their answers, being worked through) and roughly
+   how long it takes, so a slow phone reads as "working", not "broken". */
+var BUILDING_TITLE = 'Building your plan…';
+var BUILDING_SUB   = 'We’re working through your answers — this takes a few seconds.';
+var STARTING_TITLE = 'Getting your questions ready…';
+var STARTING_SUB   = 'Just a moment.';
+
+function buildingScreen(){ return interimScreen(BUILDING_TITLE, BUILDING_SUB); }
+
+function interimScreen(title, sub){
+  return '<div style="padding:28px 22px 0">'
+    + '<div class="eyebrow">YOUR PERSONALISED PROTOCOL</div>'
+    + '<h2 class="q-title">' + esc(title) + '</h2>'
+    + '<p class="q-sub">' + esc(sub) + '</p>'
+    + '</div>';
+}
+
+function retryScreen(title, sub){
+  return '<div style="padding:28px 22px 0">'
+    + '<div class="eyebrow">YOUR PERSONALISED PROTOCOL</div>'
+    + '<h2 class="q-title">' + esc(title) + '</h2>'
+    + '<p class="q-sub">' + esc(sub) + '</p>'
+    + '<div class="nav"><div class="nav-row">'
+    +   '<button class="next-btn" data-act="retry-results" style="background:#14655B">Try again</button>'
+    + '</div></div>'
+    + '</div>';
+}
+
+/* Degraded plan: when the full results page can't be built we still show the
+   supplements we resolved, rather than an apology. Every field is guarded —
+   one bad entry drops that row, not the page. */
+function degradedScreen(R){
+  var items = [];
+  (R && R.plan ? R.plan : []).forEach(function(p){
+    try{
+      if(!p || !p.name) return;
+      items.push('<div class="rec-card"><div class="rec-top">'
+        + '<span style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;min-width:0">'
+        +   '<span class="rec-name">' + esc(p.name) + '</span>'
+        +   (p.alreadyTaking ? '<span class="plan-new">ALREADY TAKING</span>' : '')
+        + '</span>'
+        + (p.dosage ? '<span class="rec-time" style="color:#3A4A42;background:#EFE7D6">' + esc(p.dosage) + '</span>' : '')
+        + '</div></div>');
+    }catch(e){}
+  });
+  return '<div><div style="padding:30px 20px 26px;background:#F7F2E9">'
+    + '<h2 style="font-family:\'Domine\',serif;font-weight:700;font-size:min(22px,5vw);line-height:1.2;margin:0;color:#1E3B34">Your daily supplement protocol</h2>'
+    + '<p style="margin:11px 0 0;font-size:15px;line-height:1.55;color:#5A655D">Here is your daily pack. We couldn’t load the rest of your protocol just now — try again for the full version.</p>'
+    + '</div><div style="padding:0 20px">'
+    + (items.length
+        ? secHead('Your supplements') + '<div style="display:flex;flex-direction:column;gap:10px;margin-top:14px">' + items.join('') + '</div>'
+        : '')
+    + '<div class="nav"><div class="nav-row">'
+    +   '<button class="next-btn" data-act="retry-results" style="background:#14655B">Load the full protocol</button>'
+    + '</div></div>'
+    + pharmacistLine()
+    + '</div></div>';
+}
+
+function paintScreen(html){
+  var scr = document.getElementById('screen');
+  if(!scr) return false;
+  try{ renderHeader(); }catch(e){}
+  scr.innerHTML = html;
+  try{ bindScreenInputs(); }catch(e){}
+  return true;
+}
+
+function paintResultsError(reason, err){
+  try{ console.error('Welme: the results page did not render —', reason, err || ''); }catch(e){}
+  trackResultsError(reason);
+  paintScreen(retryScreen('We couldn’t finish your plan',
+    'Your answers are saved. Try again — and if it keeps happening, get in touch and we’ll sort it out.'));
+}
+
+function paintDataError(err){
+  try{ console.error('Welme: could not load the formulary —', err || ''); }catch(e){}
+  trackResultsError('formulary_unavailable:' + ((err && err.message) || 'unknown'));
+  paintScreen(retryScreen('We couldn’t load your plan',
+    'Your answers are saved. Check your connection and try again.'));
+}
+
+/* The single entry point for the results page. Never throws. */
+function renderResults(){
+  var interim = window.setTimeout(function(){
+    interim = null;
+    paintScreen(buildingScreen());
+  }, RESULTS_INTERIM_MS);
+
+  var done = function(){ if(interim){ window.clearTimeout(interim); interim = null; } };
+
+  try{
+    whenFormularyReady(function(err){
+      done();
+      try{
+        if(err){ paintDataError(err); return; }
+
+        // Goals saved by a version of the quiz whose goal ids no longer exist:
+        // there is nothing to resolve, so restart at the first question rather
+        // than render an empty plan.
+        var known = S.goals.filter(function(id){ return FORMULARY.protocols[id]; });
+        if(S.goals.length && !known.length){
+          trackResultsError('stale_goals:' + S.goals.join(','));
+          set({ step: 0 });
+          return;
+        }
+
+        var R = null, html = null, reason = '';
+        try{ R = buildResults(); }
+        catch(e){ reason = 'build:' + (e && e.message); }
+        if(R){
+          try{ html = finishScreen(R); }
+          catch(e){ reason = 'render:' + (e && e.message); }
+        }
+        if(html && paintScreen(html)){ trackResultsView(''); return; }
+
+        // The plan resolved but the page didn't: show the plan anyway.
+        if(R){
+          try{
+            if(paintScreen(degradedScreen(R))){
+              trackResultsError(reason);
+              trackResultsView('degraded');
+              return;
+            }
+          }catch(e){ reason = 'degraded:' + (e && e.message); }
+        }
+        paintResultsError(reason || 'unknown', null);
+      }catch(e){
+        paintResultsError('transition:' + (e && e.message), e);
+      }
+    });
+  }catch(e){
+    done();
+    paintResultsError('transition_start:' + (e && e.message), e);
+  }
+}
+
+// Called when the user answers the last question.
+function goToResults(){
+  quizFinishAt = nowMs();
+  resultsViewTracked = false;
+  try{ trackQuizFinish(); }catch(e){}
+  setQuiet({ step: 4 });            // past the questions, whatever happens next
+  try{ window.scrollTo(0,0); }catch(e){}
+  renderResults();
+}
+
+function retryResults(){
+  resultsViewTracked = false;
+  paintScreen(buildingScreen());
+  whenFormularyReady(function(err){
+    if(err){ paintDataError(err); return; }
+    try{ render(); }
+    catch(e){ paintResultsError('retry:' + (e && e.message), e); }
+  });
+}
+
 /* ---------- email submit ---------- */
-function submitEmail(){
-  if(S.emailSubmitTracked) return;
+/* Records the lead. Two different buttons reach this — the pause screen's
+   "email me when I'm ready" and the results page's "continue to purchase" —
+   so it is guarded to fire once. Returns whether it recorded anything. */
+function recordLead(){
+  if(S.emailSubmitTracked) return false;
   var validEmail = /.+@.+\..+/.test(S.email);
-  if(!validEmail) return;
+  if(!validEmail) return false;
   try{ localStorage.setItem('welmeUserEmail', S.email); }catch(e){}
   var R = buildResults();
   try{ if(window.fbq) fbq('track', 'Lead'); }catch(e){}
@@ -1158,7 +1443,22 @@ function submitEmail(){
       window.WelmeTracking.trackAdConversion();
     }
   }catch(e){}
+  return true;
+}
+
+/* Pause screen: capture the email and switch to the confirmation state. */
+function submitEmail(){
+  if(!recordLead()) return;
   set({ sent: true });
+}
+
+/* Results page: one button does both — record the lead, then hand off to
+   the order page. Still fires the purchase step if the lead was already
+   recorded (e.g. they came back and clicked again). */
+function submitEmailAndPurchase(){
+  if(!/.+@.+\..+/.test(S.email)) return;
+  recordLead();
+  purchaseAndGo();
 }
 
 /* ---------- render root ---------- */
@@ -1174,7 +1474,17 @@ function bindInput(id, key, filter, after){
 }
 
 var lastRenderedStep = null;
+
+// Every screen routes through here. Questions render synchronously as before;
+// the results page goes through renderResults(), which cannot leave the user
+// with nothing on screen.
 function render(){
+  if(S.step === 4){ renderResults(); return; }
+  try{ renderQuestions(); }
+  catch(e){ paintResultsError('question_render:' + (e && e.message), e); }
+}
+
+function renderQuestions(){
   renderHeader();
   ensureQuizStarted();
   var screen = document.getElementById('screen');
@@ -1182,9 +1492,8 @@ function render(){
   if(S.step === 0) html = goalsScreen();
   else if(S.step === 1) html = aboutScreen();
   else if(S.step === 2) html = suppsScreen();
-  else if(S.step === 3) html = condScreen();
-  else html = finishScreen();
-  if(S.step < 4) html += navHtml();
+  else html = condScreen();
+  html += navHtml();
   screen.innerHTML = html;
   /* replay the enter animation only when the step changes */
   if(lastRenderedStep !== S.step){
@@ -1193,7 +1502,10 @@ function render(){
     void screen.offsetWidth;
     screen.style.animation = '';
   }
+  bindScreenInputs();
+}
 
+function bindScreenInputs(){
   bindInput('inAge', 'age', num, syncNext);
   bindInput('inWeight', 'weight', num, syncNext);
   bindInput('inHFt', 'hFt', num, syncNext);
@@ -1207,6 +1519,8 @@ function render(){
     var ok = /.+@.+\..+/.test(S.email);
     btn.disabled = !ok;
     btn.style.background = ok ? '#14655B' : '#A9BAB3';
+    // the purchase button also carries a cursor state — keep it in step
+    btn.style.cursor = ok ? 'pointer' : 'not-allowed';
   });
 
   var suppDraft = document.getElementById('inSuppDraft');
@@ -1220,6 +1534,16 @@ document.addEventListener('click', function(e){
   if(!t) return;
   var act = t.getAttribute('data-act');
   var arg = t.getAttribute('data-arg');
+  // No tap may end in a dead screen: if handling one throws, the user is still
+  // routed somewhere they can act from.
+  try{ handleAction(act, arg, e); }
+  catch(err){
+    try{ console.error('Welme: action failed —', act, err); }catch(e2){}
+    if(act === 'next' || S.step === 4) paintResultsError('action:' + act + ':' + (err && err.message), err);
+  }
+});
+
+function handleAction(act, arg, e){
   switch(act){
     case 'toggle-goal': {
       var goalOn = S.goals.indexOf(arg) !== -1;
@@ -1248,16 +1572,17 @@ document.addEventListener('click', function(e){
     case 'next':
       if(stepValid()){
         var next = S.step + 1;
-        if(next === 4) trackQuizFinish();
+        if(next === 4){ goToResults(); break; }
         set({step: next});
         window.scrollTo(0,0);
       }
       break;
+    case 'retry-results': retryResults(); break;
     case 'toggle-edit-plan': set({ editPlan: !S.editPlan }); break;
     case 'remove-supp': if(arg) set({ removed: (S.removed || []).concat(arg) }); break;
     case 'restore-plan': set({ removed: [] }); break;
     case 'submit-email': submitEmail(); break;
-    case 'purchase': purchaseAndGo(); break;
+    case 'continue-purchase': submitEmailAndPurchase(); break;
     case 'landing-click':
       e.preventDefault();
       trackLandingClickAndGo();
@@ -1270,28 +1595,25 @@ document.addEventListener('click', function(e){
       window.scrollTo(0,0);
       break;
   }
-});
+}
 
 /* ---------- boot: load the formulary data, then render ---------- */
 (function boot(){
-  var files = ['ingredients','protocols','conditions','substitutions','viability','age_tuning','engine_config','complaint_advice','ingredient_effects'];
-  Promise.all(files.map(function(f){
-    return fetch('data/' + f + '.json', { cache:'no-cache' }).then(function(r){
-      if(!r.ok) throw new Error('data/' + f + '.json ' + r.status);
-      return r.json();
-    });
-  })).then(function(loaded){
-    var d = {}; files.forEach(function(f,i){ d[f] = loaded[i]; });
-    applyFormularyData(d);
-    render();
-  }).catch(function(err){
-    // The quiz cannot build a plan without the formulary — fail visibly rather
-    // than silently serving a wrong box.
-    try{ console.error('Welme: could not load formulary data —', err); }catch(e){}
-    var scr = document.getElementById('screen');
-    if(scr) scr.innerHTML = '<div style="padding:28px 20px 0">'
-      + '<h2 class="q-title">We couldn’t load your plan</h2>'
-      + '<p class="q-sub">Please refresh the page. If it keeps happening, get in touch and we’ll sort it out.</p></div>';
+  // Paint something before the first byte of /data arrives — on a slow phone
+  // this used to be a blank page for the whole load, and for anyone returning
+  // to a finished quiz that blank page *was* the missing results page.
+  var scr = document.getElementById('screen');
+  if(scr && !scr.innerHTML){
+    scr.innerHTML = S.step === 4
+      ? buildingScreen()
+      : interimScreen(STARTING_TITLE, STARTING_SUB);
+  }
+  whenFormularyReady(function(err){
+    // A data-load failure and a render failure are different problems and no
+    // longer share one misleading message.
+    if(err){ paintDataError(err); return; }
+    try{ render(); }
+    catch(e){ paintResultsError('boot_render:' + (e && e.message), e); }
   });
 })();
 </script>
