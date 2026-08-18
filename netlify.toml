@@ -17,10 +17,13 @@
   to = "/protocol.html"
   status = 200
 
+# Canonical order URL. Netlify already serves order00014012.html for the
+# extensionless path, so this only needs to send the .html form to it —
+# otherwise whichever URL was clicked is the one that stays in the address bar.
 [[redirects]]
-  from = "/order00014012"
-  to = "/order00014012.html"
-  status = 200
+  from = "/order00014012.html"
+  to = "/order00014012"
+  status = 301
 
 # Legacy paths → new ones (301 permanent)
 [[redirects]]
