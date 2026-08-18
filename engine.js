@@ -57,6 +57,14 @@
     return null;
   };
 
+  // An ingredient tag maps to the goal it serves. Shared by the "already
+  // taking" step and by the user-facing subtitle further down.
+  var tagGoalId = function (tag) {
+    if (tag === 'immune') return null;          // no goal — never display
+    if (tag === 'mood') tag = 'stress';         // both map to Stress & mood
+    return PROT[tag] ? tag : null;
+  };
+
   function resolve(input) {
     var age = input.age, sex = input.sex || 'female';
     var goals = input.goals || [], conditions = input.conditions || [], taking = input.taking || [];
@@ -77,6 +85,29 @@
       var p = protoFor(g);
       if (!p) return;
       p.core.forEach(function (id) { add(id, W.core, p.id); });
+    });
+
+    // 1b) what they already take.
+    // If it is on our shelf AND it serves one of the goals they picked, it
+    // belongs in the box: the box is their whole protocol, not the gap between
+    // their shelf and their protocol. An active already in the plan keeps its
+    // protocol weight; one that only serves a selected goal by tag joins at the
+    // extended weight. Runs before the condition rules on purpose, so a blocked
+    // active is still blocked — safety outranks "I already take it".
+    // Anything not on our shelf is never added here; it is flagged for
+    // interactions by the quiz instead.
+    var selectedGoalIds = {};
+    goals.forEach(function (g) { var p = protoFor(g); if (p) selectedGoalIds[p.id] = 1; });
+    var servesSelectedGoal = function (id) {
+      return (ING[id].tags || []).some(function (t) {
+        var gid = tagGoalId(t);
+        return gid && selectedGoalIds[gid];
+      });
+    };
+    taking.forEach(function (id) {
+      if (!ING[id] || !servesSelectedGoal(id)) return;
+      add(id, cand[id] ? 0 : W.extended, 'already taking');
+      cand[id].alreadyTaking = true;
     });
 
     // 2) condition rules
@@ -148,11 +179,10 @@
     });
     ((AGE.sex[sex] || {}).emphasize || []).forEach(function (id) { if (cand[id]) cand[id].weight += 1; });
 
-    // 4) drop what they already take + blocked, rank, cap — guarantee >=2 actives per goal
+    // 4) drop what a condition blocks, rank, cap — guarantee >=2 actives per goal.
+    // What the user already takes is NOT dropped here any more (see 1b).
     var removed = [];
-    var takingSet = {}; taking.forEach(function (t) { takingSet[t] = 1; });
     var list = Object.keys(cand).map(function (k) { return cand[k]; }).filter(function (c) {
-      if (takingSet[c.id]) { removed.push({ id: c.id, why: 'already taking — not duplicated' }); return false; }
       if (c._blocked) {
         removed.push({ id: c.id, why: c._subbed
           ? 'blocked by ' + c._blocked + ' → replaced with ' + c._subbed
@@ -169,15 +199,28 @@
       list.filter(function (c) { return p.core.indexOf(c.id) !== -1; })
           .slice(0, 2).forEach(function (c) { protectedIds[c.id] = 1; });
     });
-    // cap by PHYSICAL PILLS per day (sum of units_per_day), not ingredient count
+    // Two ceilings, whichever binds first:
+    //   suppCap  — how many distinct actives may be in the box
+    //   pillCap  — PHYSICAL PILLS per day (sum of units_per_day), not ingredient count
+    // suppCap is enforced on the spare actives; the >=2-per-goal protected set
+    // is never trimmed, because dropping one would break that guarantee. The two
+    // hold together as long as 2 x max_goals <= max_supplements (6 <= 9 today,
+    // and in practice lower because goals share actives). Raise max_goals past 4
+    // and they can conflict — revisit this line if you do.
+    var suppCap = CFG.max_supplements || 9;
     var units = function (id) { return ING[id].units_per_day || 1; };
     var keepList = list.filter(function (c) { return protectedIds[c.id]; });
     var spare = list.filter(function (c) { return !protectedIds[c.id]; });
     var pills = keepList.reduce(function (s, c) { return s + units(c.id); }, 0);
     var chosen = keepList.slice();
     spare.forEach(function (c) {
-      if (pills + units(c.id) <= pillCap) { chosen.push(c); pills += units(c.id); }
-      else removed.push({ id: c.id, why: 'would exceed the daily pill limit (' + pillCap + ')' });
+      if (chosen.length >= suppCap) {
+        removed.push({ id: c.id, why: 'would exceed the supplements-per-box limit (' + suppCap + ')' });
+      } else if (pills + units(c.id) <= pillCap) {
+        chosen.push(c); pills += units(c.id);
+      } else {
+        removed.push({ id: c.id, why: 'would exceed the daily pill limit (' + pillCap + ')' });
+      }
     });
     list = chosen.sort(function (a, b) { return b.weight - a.weight || a.id.localeCompare(b.id); });
     var totalPills = list.reduce(function (s, c) { return s + units(c.id); }, 0);
@@ -219,11 +262,6 @@
     var selectedLabels = goals.map(function (g) {
       var p = protoFor(g); return p ? p.label : null;
     }).filter(Boolean);
-    var tagGoalId = function (tag) {
-      if (tag === 'immune') return null;          // no goal — never display
-      if (tag === 'mood') tag = 'stress';         // both map to Stress & mood
-      return PROT[tag] ? tag : null;
-    };
     var tagLabel = function (tag) {
       var gid = tagGoalId(tag);
       return gid ? PROT[gid].label : null;
@@ -257,12 +295,13 @@
         units: ING[c.id].units_per_day || 1,
         goalMatches: matches,            // user-facing subtitle source
         effects: effects,                // personalised "what it does for you" copy
+        alreadyTaking: !!c.alreadyTaking, // they told us they already take this
         flags: c.flags
       };
     });
     return {
       status: status, action: action, verdicts: verdicts,
-      count: list.length, pills: totalPills, pillCap: pillCap, band: band.range,
+      count: list.length, pills: totalPills, pillCap: pillCap, suppCap: suppCap, band: band.range,
       sachet: sachet, removed: removed,
       notes: notes.filter(function (n, i) { return notes.indexOf(n) === i; }),
       deferReasons: deferReasons, viablePlans: viablePlans,

@@ -19,7 +19,22 @@
   var ALLOWED_EVENTS = {
     landing: { page_view: true },
     quiz: { quiz_start: true, quiz_finish: true },
-    results: { landing_click: true, email_submit: true, purchase_click: true }
+    // results_view / results_error close the blind spot after quiz_finish:
+    // without them a user stranded on the last question and a user who read
+    // their plan and left look identical in the export. plan_pause and
+    // plan_switch were already being sent and silently dropped here.
+    results: {
+      results_view: true, results_error: true,
+      plan_pause: true, plan_switch: true,
+      landing_click: true, email_submit: true, purchase_click: true
+    }
+  };
+
+  // Events that describe a specific user's answers, so the outcome can be
+  // traced back to (and replayed from) the inputs that produced it.
+  var PROFILE_EVENTS = {
+    quiz_finish: true, results_view: true, results_error: true,
+    plan_pause: true, plan_switch: true
   };
 
   function makeId(){
@@ -70,7 +85,7 @@
     var height = '';
     var problems = '';
 
-    if(page === 'quiz' && event === 'quiz_finish'){
+    if(PROFILE_EVENTS[event]){
       age = safeCell(input.age || '');
       gender = safeCell(input.gender || '');
       goal = safeCell(input.goal || '');
@@ -80,6 +95,9 @@
       problems = safeCell(input.problems || '');
     }
 
+    // `reason` and `ms` are appended after the existing columns so the shape of
+    // the export doesn't shift for anything already reading it. `ms` is the
+    // quiz_finish → results_view transition time.
     return {
       timestamp: new Date().toISOString(),
       id: safeCell(userId),
@@ -93,7 +111,9 @@
       height: height,
       problems: problems,
       email: event === 'email_submit' ? safeCell(input.email || '') : '',
-      results: event === 'email_submit' ? safeCell(input.results || '') : ''
+      results: event === 'email_submit' ? safeCell(input.results || '') : '',
+      reason: safeCell(input.reason || ''),
+      ms: safeCell(input.ms == null ? '' : input.ms)
     };
   }
 
