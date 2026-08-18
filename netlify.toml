@@ -18,8 +18,8 @@
   status = 200
 
 [[redirects]]
-  from = "/order.00014012"
-  to = "/order.00014012.html"
+  from = "/order00014012"
+  to = "/order00014012.html"
   status = 200
 
 # Legacy paths → new ones (301 permanent)
