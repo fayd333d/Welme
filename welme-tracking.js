@@ -19,7 +19,7 @@
   var ALLOWED_EVENTS = {
     landing: { page_view: true },
     quiz: { quiz_start: true, quiz_finish: true },
-    results: { landing_click: true, email_submit: true }
+    results: { landing_click: true, email_submit: true, purchase_click: true }
   };
 
   function makeId(){

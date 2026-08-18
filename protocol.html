@@ -273,6 +273,10 @@ function takingIds(){
   return out;
 }
 
+/* Monthly price of the box, shown on the results page. Single source of
+   truth — the results copy and the purchase button both read it. */
+var BOX_PRICE = 54;
+
 /* ---------- state ---------- */
 var DEFAULT_STATE = {
   step: 0,
@@ -500,6 +504,26 @@ function trackQuizFinish(){
   }catch(e){}
   S.quizFinishTracked = true;
   persist();
+}
+
+/* Purchase button: record the click, then hand off to the order page.
+   The id travels in the URL so the order page's own tracking can fire and
+   so the sheet can join this click to the email row already stored for
+   this user — the email itself never goes in the URL. */
+function purchaseAndGo(){
+  var id = '';
+  try{
+    if(window.WelmeTracking && window.WelmeTracking.getUserId){
+      id = window.WelmeTracking.getUserId();
+    }
+  }catch(e){}
+  if(trackingAvailable()){
+    window.WelmeTracking.trackEvent({ page:'results', event:'purchase_click' }, { keepalive:true });
+  }
+  try{ if(window.fbq) fbq('track', 'InitiateCheckout'); }catch(e){}
+  try{ if(window.gtag) gtag('event', 'begin_checkout'); }catch(e){}
+  var target = 'order.html' + (id ? '?id=' + encodeURIComponent(id) : '');
+  window.setTimeout(function(){ window.location.href = target; }, 0);
 }
 
 function trackLandingClickAndGo(){
@@ -1066,21 +1090,28 @@ function finishScreen(){
     + '<p style="margin:8px 0 0;font-size:13.5px;line-height:1.6;color:#C4D2CA">Take your pack with your main meal and a full glass of water. Keep it away from coffee and tea – caffeine and tannins can block minerals like magnesium, so leave an hour either side. The fat-soluble parts (D3 and omega-3) absorb best with some fat in the meal.</p>'
     + '</div>';
 
-  /* email capture */
+  /* email gate → purchase link. The email is what unlocks the button, so the
+     two states share one card and only the lower half swaps. */
+  var priceTag = '<div style="font-family:\'Domine\',serif;font-weight:700;font-size:34px;line-height:1;color:#1E3B34;margin:16px 0 0">$' + BOX_PRICE
+    + '<span style="font-family:\'Hanken Grotesk\',sans-serif;font-size:15px;font-weight:600;color:#5A655D"> / month</span></div>';
+
   if(!S.sent){
     var validEmail = /.+@.+\..+/.test(S.email);
-    h += '<div style="margin-top:30px;background:#F7F2E9;border-radius:20px;padding:24px 20px">'
-      + '<div style="font-family:\'Domine\',serif;font-weight:700;font-size:22px;color:#1E3B34">Get your box</div>'
-      + '<p style="margin:6px 0 16px;font-size:14px;line-height:1.5;color:#4A574F">Enter your email – we’ll finalise doses, check interactions and arrange your first box.</p>'
-      + '<input type="email" id="inEmail" value="' + esc(S.email) + '" placeholder="you@example.com" style="width:100%;border:1.5px solid rgba(20,101,91,.25);border-radius:14px;padding:16px 18px;font-size:16px;background:#fff;color:#1E3B34">'
-      + '<button id="btnEmail" data-act="submit-email"' + (validEmail ? '' : ' disabled') + ' style="width:100%;margin-top:12px;border:none;background:' + (validEmail ? '#14655B' : '#A9BAB3') + ';color:#fff;border-radius:14px;padding:17px;font-size:17px;font-weight:800;cursor:pointer">Get My Box →</button>'
-      + '<p style="margin:12px 0 0;text-align:center;font-size:12px;color:#7A867E">No spam – one email from our team, that’s it.</p>'
+    h += '<div style="margin-top:30px;background:#F7F2E9;border-radius:20px;padding:24px 20px;text-align:center">'
+      + '<h3 style="font-family:\'Domine\',serif;font-weight:700;font-size:23px;line-height:1.2;margin:0;color:#1E3B34;text-wrap:balance">Your personalised Welme box is ready</h3>'
+      + '<p style="margin:9px auto 0;max-width:300px;font-size:14.5px;line-height:1.55;color:#4A574F">Your recommended supplements, organised into simple daily packs and delivered to your door.</p>'
+      + priceTag
+      + '<p style="margin:18px 0 12px;font-size:14.5px;line-height:1.5;font-weight:700;color:#1E3B34">Enter your email to unlock your purchase link.</p>'
+      + '<input type="email" id="inEmail" value="' + esc(S.email) + '" placeholder="Email address" style="width:100%;border:1.5px solid rgba(20,101,91,.25);border-radius:14px;padding:16px 18px;font-size:16px;background:#fff;color:#1E3B34;text-align:center">'
+      + '<button id="btnEmail" data-act="submit-email"' + (validEmail ? '' : ' disabled') + ' style="width:100%;margin-top:12px;border:none;background:' + (validEmail ? '#14655B' : '#A9BAB3') + ';color:#fff;border-radius:14px;padding:17px;font-size:17px;font-weight:800;cursor:pointer">Unlock my purchase link</button>'
+      + '<p style="margin:12px 0 0;font-size:12px;color:#7A867E">No payment is taken at this stage.</p>'
       + '</div>';
   } else {
     h += '<div style="margin-top:30px;background:#F7F2E9;border-radius:20px;padding:26px 20px;text-align:center">'
-      + '<div style="width:52px;height:52px;border-radius:50%;background:#14655B;color:#fff;display:flex;align-items:center;justify-content:center;font-size:25px;margin:0 auto">✓</div>'
-      + '<h3 style="font-family:\'Domine\',serif;font-weight:700;font-size:22px;margin:14px 0 6px;color:#1E3B34">Your protocol is on its way</h3>'
-      + '<p style="margin:0 auto;max-width:290px;font-size:15px;line-height:1.55;color:#4A574F">We’ll reach out at <span style="font-weight:800;color:#14655B">' + esc(S.email) + '</span> with your personalised plan and first box.</p>'
+      + '<h3 style="font-family:\'Domine\',serif;font-weight:700;font-size:23px;line-height:1.2;margin:0;color:#1E3B34;text-wrap:balance">Your purchase link is ready</h3>'
+      + '<p style="margin:9px auto 0;max-width:300px;font-size:14.5px;line-height:1.55;color:#4A574F">Your personalised Welme box is $' + BOX_PRICE + '/month, including your supplements, daily packs and delivery.</p>'
+      + priceTag
+      + '<button data-act="purchase" style="width:100%;margin-top:18px;border:none;background:#14655B;color:#fff;border-radius:14px;padding:17px;font-size:17px;font-weight:800;cursor:pointer">Get my Welme box — $' + BOX_PRICE + '</button>'
       + '</div>';
   }
 
@@ -1229,6 +1260,7 @@ document.addEventListener('click', function(e){
     case 'remove-supp': if(arg) set({ removed: (S.removed || []).concat(arg) }); break;
     case 'restore-plan': set({ removed: [] }); break;
     case 'submit-email': submitEmail(); break;
+    case 'purchase': purchaseAndGo(); break;
     case 'landing-click':
       e.preventDefault();
       trackLandingClickAndGo();
