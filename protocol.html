@@ -1098,7 +1098,7 @@ function finishScreen(){
     var validEmail = /.+@.+\..+/.test(S.email);
     h += '<div style="margin-top:30px;background:#F7F2E9;border-radius:20px;padding:24px 20px;text-align:center">'
       + offer
-      + '<p style="margin:18px 0 12px;font-size:14.5px;line-height:1.5;font-weight:700;color:#1E3B34">Enter your email to unlock your purchase link.</p>'
+      + '<p style="margin:18px 0 12px;font-size:14.5px;line-height:1.5;font-weight:700;color:#1E3B34">Enter your email to unlock the purchase link.</p>'
       + '<input type="email" id="inEmail" value="' + esc(S.email) + '" placeholder="Email address" style="width:100%;border:1.5px solid rgba(20,101,91,.25);border-radius:14px;padding:16px 18px;font-size:16px;background:#fff;color:#1E3B34;text-align:center">'
       + '<button id="btnEmail" data-act="submit-email"' + (validEmail ? '' : ' disabled') + ' style="width:100%;margin-top:12px;border:none;background:' + (validEmail ? '#14655B' : '#A9BAB3') + ';color:#fff;border-radius:14px;padding:17px;font-size:17px;font-weight:800;cursor:pointer">Unlock my purchase link</button>'
       + noCharge
