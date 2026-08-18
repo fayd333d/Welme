@@ -1062,7 +1062,7 @@ function finishScreen(){
   /* all your supplements in one box */
   h += '<div style="margin-top:38px;background:#1E3B34;padding:40px 22px 44px">'
     + '<div style="text-align:center">'
-    + '<h3 style="font-family:\'Domine\',serif;font-weight:700;font-size:27px;line-height:1.15;margin:0;color:#F7F2E9;text-wrap:balance">All your supplements in one box</h3>'
+    + '<h3 style="font-family:\'Domine\',serif;font-weight:700;font-size:27px;line-height:1.15;margin:0;color:#F7F2E9;text-wrap:balance">Your Welme box is ready</h3>'
     + '</div>'
 
     /* 1. the box picture */
@@ -1070,48 +1070,44 @@ function finishScreen(){
     + '<img src="assets/opt/box-closed.png" alt="Sealed Welme box with 28 daily packs" style="display:block;width:44%;max-width:172px;height:auto;margin:0 auto">'
     + '</div>'
 
-    /* 2. numbered steps — evenly spaced */
-    + '<div style="display:flex;flex-direction:column;gap:10px;margin-top:30px">'
-    + '<div class="how-step" style="min-height:48px;align-items:center"><span class="how-num">1</span><p>Your box arrives with 28 daily packs – four weeks of your plan.</p></div>'
-    + '<div class="how-step" style="min-height:48px;align-items:center"><span class="how-num">2</span><p>Take one pack a day with your main meal.</p></div>'
-    + '<div class="how-step" style="min-height:48px;align-items:center"><span class="how-num">3</span><p>A fresh box arrives every month – free delivery, adjust any time.</p></div>'
-    + '<div class="how-step" style="min-height:48px;align-items:center"><span class="how-num">4</span><p>The price is set by the supplements in your plan – starting from $39 a month.</p></div>'
-    + '</div>'
-
-    /* 3. your daily pack — the supplement list */
-    + '<div style="margin:30px auto 0;max-width:290px;background:#F7F2E9;border-radius:20px;padding:22px 18px">'
+    /* 2. what is in the pack — sits directly under the box it comes in */
+    + '<div style="margin:26px auto 0;max-width:290px;background:#F7F2E9;border-radius:20px;padding:22px 18px">'
     + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px"><span style="font-size:11px;font-weight:800;letter-spacing:.14em;color:#A98E4E">YOUR DAILY PACK</span>'
     + '<button data-act="toggle-edit-plan" style="border:1.5px solid rgba(20,101,91,.3);background:#fff;color:#14655B;border-radius:999px;padding:5px 13px;font-size:11.5px;font-weight:800;cursor:pointer">' + (S.editPlan ? 'Done' : 'Edit') + '</button></div>'
     + '<div style="display:flex;flex-direction:column;gap:8px">' + planCol(R.plan) + '</div>'
     + (S.editPlan ? '<p style="margin:14px 0 0;text-align:center;font-size:11.5px;line-height:1.45;color:#7A867E">Tap × to remove a supplement.' + ((S.removed && S.removed.length) ? ' <button data-act="restore-plan" style="border:none;background:none;color:#14655B;font-weight:800;text-decoration:underline;text-underline-offset:2px;cursor:pointer;font-size:11.5px;padding:0">Restore all</button>' : '') + '</p>' : '')
     + '</div>'
-    + '<div style="margin-top:22px;background:rgba(247,242,233,.08);border:1px solid rgba(196,210,202,.16);border-radius:16px;padding:16px 18px">'
-    + '<div style="font-size:11px;font-weight:800;letter-spacing:.14em;color:#C9A542">HOW TO TAKE IT</div>'
-    + '<p style="margin:8px 0 0;font-size:13.5px;line-height:1.6;color:#C4D2CA">Take your pack with your main meal and a full glass of water. Keep it away from coffee and tea – caffeine and tannins can block minerals like magnesium, so leave an hour either side. The fat-soluble parts (D3 and omega-3) absorb best with some fat in the meal.</p>'
+
+    /* 3. then how it works, under the pack it describes */
+    + '<div style="display:flex;flex-direction:column;gap:10px;margin-top:28px">'
+    + '<div class="how-step" style="min-height:48px;align-items:center"><span class="how-num">1</span><p>Your box arrives with 28 daily packs – four weeks of your plan.</p></div>'
+    + '<div class="how-step" style="min-height:48px;align-items:center"><span class="how-num">2</span><p>Take one pack a day with your main meal.</p></div>'
+    + '<div class="how-step" style="min-height:48px;align-items:center"><span class="how-num">3</span><p>A fresh box arrives every month – free delivery, adjust any time.</p></div>'
     + '</div>';
 
-  /* email gate → purchase link. The email is what unlocks the button, so the
-     two states share one card and only the lower half swaps. */
-  var priceTag = '<div style="font-family:\'Domine\',serif;font-weight:700;font-size:34px;line-height:1;color:#1E3B34;margin:16px 0 0">$' + BOX_PRICE
-    + '<span style="font-family:\'Hanken Grotesk\',sans-serif;font-size:15px;font-weight:600;color:#5A655D"> / month</span></div>';
+  /* email gate → purchase link. Both states show the same offer; only the
+     action under it swaps, so the offer copy is built once. */
+  var offer = '<h3 style="font-family:\'Domine\',serif;font-weight:700;font-size:23px;line-height:1.2;margin:0;color:#1E3B34;text-wrap:balance">Get your Welme box</h3>'
+    + '<p style="margin:9px auto 0;max-width:300px;font-size:14.5px;line-height:1.55;color:#4A574F">Based on your personalised plan and recommended doses, your box comes to</p>'
+    + '<div style="font-family:\'Domine\',serif;font-weight:700;font-size:36px;line-height:1;color:#14655B;margin:12px 0 0">$' + BOX_PRICE
+    + '<span style="font-family:\'Hanken Grotesk\',sans-serif;font-size:16px;font-weight:700;color:#5A655D">/month</span></div>';
+
+  var noCharge = '<p style="margin:12px 0 0;font-size:12px;color:#7A867E">No payment is taken at this stage.</p>';
 
   if(!S.sent){
     var validEmail = /.+@.+\..+/.test(S.email);
     h += '<div style="margin-top:30px;background:#F7F2E9;border-radius:20px;padding:24px 20px;text-align:center">'
-      + '<h3 style="font-family:\'Domine\',serif;font-weight:700;font-size:23px;line-height:1.2;margin:0;color:#1E3B34;text-wrap:balance">Your personalised Welme box is ready</h3>'
-      + '<p style="margin:9px auto 0;max-width:300px;font-size:14.5px;line-height:1.55;color:#4A574F">Your recommended supplements, organised into simple daily packs and delivered to your door.</p>'
-      + priceTag
+      + offer
       + '<p style="margin:18px 0 12px;font-size:14.5px;line-height:1.5;font-weight:700;color:#1E3B34">Enter your email to unlock your purchase link.</p>'
       + '<input type="email" id="inEmail" value="' + esc(S.email) + '" placeholder="Email address" style="width:100%;border:1.5px solid rgba(20,101,91,.25);border-radius:14px;padding:16px 18px;font-size:16px;background:#fff;color:#1E3B34;text-align:center">'
       + '<button id="btnEmail" data-act="submit-email"' + (validEmail ? '' : ' disabled') + ' style="width:100%;margin-top:12px;border:none;background:' + (validEmail ? '#14655B' : '#A9BAB3') + ';color:#fff;border-radius:14px;padding:17px;font-size:17px;font-weight:800;cursor:pointer">Unlock my purchase link</button>'
-      + '<p style="margin:12px 0 0;font-size:12px;color:#7A867E">No payment is taken at this stage.</p>'
+      + noCharge
       + '</div>';
   } else {
-    h += '<div style="margin-top:30px;background:#F7F2E9;border-radius:20px;padding:26px 20px;text-align:center">'
-      + '<h3 style="font-family:\'Domine\',serif;font-weight:700;font-size:23px;line-height:1.2;margin:0;color:#1E3B34;text-wrap:balance">Your purchase link is ready</h3>'
-      + '<p style="margin:9px auto 0;max-width:300px;font-size:14.5px;line-height:1.55;color:#4A574F">Your personalised Welme box is $' + BOX_PRICE + '/month, including your supplements, daily packs and delivery.</p>'
-      + priceTag
-      + '<button data-act="purchase" style="width:100%;margin-top:18px;border:none;background:#14655B;color:#fff;border-radius:14px;padding:17px;font-size:17px;font-weight:800;cursor:pointer">Get my Welme box — $' + BOX_PRICE + '</button>'
+    h += '<div style="margin-top:30px;background:#F7F2E9;border-radius:20px;padding:24px 20px;text-align:center">'
+      + offer
+      + '<button data-act="purchase" style="width:100%;margin-top:20px;border:none;background:#14655B;color:#fff;border-radius:14px;padding:17px;font-size:17px;font-weight:800;cursor:pointer">Open purchase link</button>'
+      + noCharge
       + '</div>';
   }
 
