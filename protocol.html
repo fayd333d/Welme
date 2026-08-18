@@ -1072,7 +1072,7 @@ function finishScreen(){
 
     /* 2. what is in the pack — sits directly under the box it comes in */
     + '<div style="margin:26px auto 0;max-width:290px;background:#F7F2E9;border-radius:20px;padding:22px 18px">'
-    + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px"><span style="font-size:11px;font-weight:800;letter-spacing:.14em;color:#A98E4E">YOUR DAILY PACK</span>'
+    + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px"><span style="font-size:11px;font-weight:800;letter-spacing:.14em;color:#A98E4E">WHAT’S INSIDE</span>'
     + '<button data-act="toggle-edit-plan" style="border:1.5px solid rgba(20,101,91,.3);background:#fff;color:#14655B;border-radius:999px;padding:5px 13px;font-size:11.5px;font-weight:800;cursor:pointer">' + (S.editPlan ? 'Done' : 'Edit') + '</button></div>'
     + '<div style="display:flex;flex-direction:column;gap:8px">' + planCol(R.plan) + '</div>'
     + (S.editPlan ? '<p style="margin:14px 0 0;text-align:center;font-size:11.5px;line-height:1.45;color:#7A867E">Tap × to remove a supplement.' + ((S.removed && S.removed.length) ? ' <button data-act="restore-plan" style="border:none;background:none;color:#14655B;font-weight:800;text-decoration:underline;text-underline-offset:2px;cursor:pointer;font-size:11.5px;padding:0">Restore all</button>' : '') + '</p>' : '')
@@ -1080,15 +1080,15 @@ function finishScreen(){
 
     /* 3. then how it works, under the pack it describes */
     + '<div style="display:flex;flex-direction:column;gap:10px;margin-top:28px">'
-    + '<div class="how-step" style="min-height:48px;align-items:center"><span class="how-num">1</span><p>Your box arrives with 28 daily packs – four weeks of your plan.</p></div>'
-    + '<div class="how-step" style="min-height:48px;align-items:center"><span class="how-num">2</span><p>Take one pack a day with your main meal.</p></div>'
+    + '<div class="how-step" style="min-height:48px;align-items:center"><span class="how-num">1</span><p>The box arrives with 28 daily packs – four weeks of your plan.</p></div>'
+    + '<div class="how-step" style="min-height:48px;align-items:center"><span class="how-num">2</span><p>Take one pack a day during main meal.</p></div>'
     + '<div class="how-step" style="min-height:48px;align-items:center"><span class="how-num">3</span><p>A fresh box arrives every month – free delivery, adjust any time.</p></div>'
     + '</div>';
 
   /* email gate → purchase link. Both states show the same offer; only the
      action under it swaps, so the offer copy is built once. */
   var offer = '<h3 style="font-family:\'Domine\',serif;font-weight:700;font-size:23px;line-height:1.2;margin:0;color:#1E3B34;text-wrap:balance">Get your Welme box</h3>'
-    + '<p style="margin:9px auto 0;max-width:300px;font-size:14.5px;line-height:1.55;color:#4A574F">Based on your personalised plan and recommended doses, your box comes to</p>'
+    + '<p style="margin:9px auto 0;max-width:300px;font-size:14.5px;line-height:1.55;color:#4A574F">Based on your personalised plan and recommended doses, the box comes to</p>'
     + '<div style="font-family:\'Domine\',serif;font-weight:700;font-size:36px;line-height:1;color:#14655B;margin:12px 0 0">$' + BOX_PRICE
     + '<span style="font-family:\'Hanken Grotesk\',sans-serif;font-size:16px;font-weight:700;color:#5A655D">/month</span></div>';
 
