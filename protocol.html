@@ -522,7 +522,8 @@ function purchaseAndGo(){
   }
   try{ if(window.fbq) fbq('track', 'InitiateCheckout'); }catch(e){}
   try{ if(window.gtag) gtag('event', 'begin_checkout'); }catch(e){}
-  var target = 'order00014012.html' + (id ? '?id=' + encodeURIComponent(id) : '');
+  /* clean path, not the .html file, so the customer never sees the extension */
+  var target = '/order00014012' + (id ? '?id=' + encodeURIComponent(id) : '');
   window.setTimeout(function(){ window.location.href = target; }, 0);
 }
 
