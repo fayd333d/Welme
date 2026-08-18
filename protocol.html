@@ -522,7 +522,7 @@ function purchaseAndGo(){
   }
   try{ if(window.fbq) fbq('track', 'InitiateCheckout'); }catch(e){}
   try{ if(window.gtag) gtag('event', 'begin_checkout'); }catch(e){}
-  var target = 'order.html' + (id ? '?id=' + encodeURIComponent(id) : '');
+  var target = 'order00014012.html' + (id ? '?id=' + encodeURIComponent(id) : '');
   window.setTimeout(function(){ window.location.href = target; }, 0);
 }
 
