@@ -1095,22 +1095,16 @@ function finishScreen(){
 
   var noCharge = '<p style="margin:12px 0 0;font-size:12px;color:#7A867E">No payment is taken at this stage.</p>';
 
-  if(!S.sent){
-    var validEmail = /.+@.+\..+/.test(S.email);
-    h += '<div style="margin-top:30px;background:#F7F2E9;border-radius:20px;padding:24px 20px;text-align:center">'
-      + offer
-      + '<p style="margin:18px 0 12px;font-size:14.5px;line-height:1.5;font-weight:700;color:#1E3B34">Enter your email to unlock the purchase link.</p>'
-      + '<input type="email" id="inEmail" value="' + esc(S.email) + '" placeholder="Email address" style="width:100%;border:1.5px solid rgba(20,101,91,.25);border-radius:14px;padding:16px 18px;font-size:16px;background:#fff;color:#1E3B34;text-align:center">'
-      + '<button id="btnEmail" data-act="submit-email"' + (validEmail ? '' : ' disabled') + ' style="width:100%;margin-top:12px;border:none;background:' + (validEmail ? '#14655B' : '#A9BAB3') + ';color:#fff;border-radius:14px;padding:17px;font-size:17px;font-weight:800;cursor:pointer">Unlock my purchase link</button>'
-      + noCharge
-      + '</div>';
-  } else {
-    h += '<div style="margin-top:30px;background:#F7F2E9;border-radius:20px;padding:24px 20px;text-align:center">'
-      + offer
-      + '<button data-act="purchase" style="width:100%;margin-top:20px;border:none;background:#14655B;color:#fff;border-radius:14px;padding:17px;font-size:17px;font-weight:800;cursor:pointer">Open purchase link</button>'
-      + noCharge
-      + '</div>';
-  }
+  /* One step: the email and the purchase hand-off are the same action, so
+     the button stays inert until the address is usable. */
+  var validEmail = /.+@.+\..+/.test(S.email);
+  h += '<div style="margin-top:30px;background:#F7F2E9;border-radius:20px;padding:24px 20px;text-align:center">'
+    + offer
+    + '<p style="margin:18px 0 10px;font-size:14.5px;line-height:1.5;font-weight:700;color:#1E3B34">Enter your email</p>'
+    + '<input type="email" id="inEmail" value="' + esc(S.email) + '" placeholder="your@email.com" style="width:100%;border:1.5px solid rgba(20,101,91,.25);border-radius:14px;padding:16px 18px;font-size:16px;background:#fff;color:#1E3B34;text-align:center">'
+    + '<button id="btnEmail" data-act="continue-purchase"' + (validEmail ? '' : ' disabled') + ' style="width:100%;margin-top:12px;border:none;background:' + (validEmail ? '#14655B' : '#A9BAB3') + ';color:#fff;border-radius:14px;padding:17px;font-size:17px;font-weight:800;cursor:' + (validEmail ? 'pointer' : 'not-allowed') + '">Continue to purchase</button>'
+    + noCharge
+    + '</div>';
 
   h += '<div style="text-align:center;margin-top:26px">'
     + '<a href="home.html" data-act="landing-click" style="font-size:15px;font-weight:700;color:#C4D2CA;text-decoration:underline;text-underline-offset:3px">Learn more about Welme</a>'
@@ -1134,10 +1128,13 @@ function finishScreen(){
 }
 
 /* ---------- email submit ---------- */
-function submitEmail(){
-  if(S.emailSubmitTracked) return;
+/* Records the lead. Two different buttons reach this — the pause screen's
+   "email me when I'm ready" and the results page's "continue to purchase" —
+   so it is guarded to fire once. Returns whether it recorded anything. */
+function recordLead(){
+  if(S.emailSubmitTracked) return false;
   var validEmail = /.+@.+\..+/.test(S.email);
-  if(!validEmail) return;
+  if(!validEmail) return false;
   try{ localStorage.setItem('welmeUserEmail', S.email); }catch(e){}
   var R = buildResults();
   try{ if(window.fbq) fbq('track', 'Lead'); }catch(e){}
@@ -1158,7 +1155,22 @@ function submitEmail(){
       window.WelmeTracking.trackAdConversion();
     }
   }catch(e){}
+  return true;
+}
+
+/* Pause screen: capture the email and switch to the confirmation state. */
+function submitEmail(){
+  if(!recordLead()) return;
   set({ sent: true });
+}
+
+/* Results page: one button does both — record the lead, then hand off to
+   the order page. Still fires the purchase step if the lead was already
+   recorded (e.g. they came back and clicked again). */
+function submitEmailAndPurchase(){
+  if(!/.+@.+\..+/.test(S.email)) return;
+  recordLead();
+  purchaseAndGo();
 }
 
 /* ---------- render root ---------- */
@@ -1257,7 +1269,7 @@ document.addEventListener('click', function(e){
     case 'remove-supp': if(arg) set({ removed: (S.removed || []).concat(arg) }); break;
     case 'restore-plan': set({ removed: [] }); break;
     case 'submit-email': submitEmail(); break;
-    case 'purchase': purchaseAndGo(); break;
+    case 'continue-purchase': submitEmailAndPurchase(); break;
     case 'landing-click':
       e.preventDefault();
       trackLandingClickAndGo();
