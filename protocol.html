@@ -287,7 +287,7 @@ var DEFAULT_STATE = {
   weight: '', wUnit: 'lb', hUnit: 'ft', hFt: '', hIn: '', hCm: '',
   supps: [], customSupps: [], suppDraft: '',
   conditions: [], customConditions: [], condDraft: '',
-  removed: [], editPlan: false,
+  removed: [], added: [], editPlan: false,
   email: '', sent: false,
   quizAttemptId: '', quizStartTracked: false, quizFinishTracked: false,
   emailSubmitTracked: false
@@ -301,7 +301,7 @@ var MAX_GOALS = 3;
 // half-finished session, or by nothing at all. Coerce every field to the shape
 // the rest of this file assumes, so one bad value can never blank the results
 // page. Anything unrecognisable falls back to the default rather than throwing.
-var LIST_KEYS = ['goals','clarify','supps','customSupps','conditions','customConditions','removed'];
+var LIST_KEYS = ['goals','clarify','supps','customSupps','conditions','customConditions','removed','added'];
 var TEXT_KEYS = ['age','sex','weight','hFt','hIn','hCm','email','suppDraft','condDraft','quizAttemptId'];
 var FLAG_KEYS = ['sent','editPlan','quizStartTracked','quizFinishTracked','emailSubmitTracked'];
 
@@ -345,7 +345,8 @@ function persist(){
     step:S.step, goals:S.goals, clarify:S.clarify, age:S.age, sex:S.sex,
     weight:S.weight, wUnit:S.wUnit, hUnit:S.hUnit, hFt:S.hFt, hIn:S.hIn, hCm:S.hCm,
     supps:S.supps, customSupps:S.customSupps, conditions:S.conditions,
-    customConditions:S.customConditions, removed:S.removed, email:S.email, sent:S.sent,
+    customConditions:S.customConditions, removed:S.removed, added:S.added,
+    email:S.email, sent:S.sent,
     quizAttemptId:S.quizAttemptId, quizStartTracked:S.quizStartTracked,
     quizFinishTracked:S.quizFinishTracked, emailSubmitTracked:S.emailSubmitTracked
   })); }catch(e){}
@@ -480,13 +481,24 @@ function formatSupplementLine(item){
 
 function buildReadableResultsSummary(resultData){
   var lines = [];
-  var planItems = resultData.plan || [];
+  // What we would actually ship — not the whole protocol. Actives the user
+  // already takes are only here if they asked for them with "Add to box".
+  var boxItems = resultData.box || resultData.plan || [];
 
   lines.push('Daily pack:');
-  if(planItems.length){
-    planItems.forEach(function(item){ lines.push(formatSupplementLine(item)); });
+  if(boxItems.length){
+    boxItems.forEach(function(item){ lines.push(formatSupplementLine(item)); });
   } else {
     lines.push('None');
+  }
+
+  var optional = resultData.optional || [];
+  if(optional.length){
+    lines.push('');
+    lines.push('--- IN THE PROTOCOL, NOT IN THE BOX (already taking, not added) ---');
+    optional.forEach(function(item){
+      lines.push('[not in box] ' + item.name + (item.dosage ? ' — ' + item.dosage : ''));
+    });
   }
 
   var flags = resultData.subRestrictions || [];
@@ -720,6 +732,15 @@ function buildResults(){
   var removedPlan = (S.removed || []);
   plan = plan.filter(function(p){ return removedPlan.indexOf(p.name) === -1; });
 
+  /* Plan vs box. An active they already take is shown as a card — it is part of
+     their protocol — but it is NOT shipped unless they ask for it with
+     "Add to box". Everything else is in the box by default. `plan` drives the
+     supplement cards; `box` drives "What's inside", the count and the order. */
+  var addedIds = (S.added || []);
+  plan.forEach(function(p){ p.inBox = !p.alreadyTaking || addedIds.indexOf(p.id) !== -1; });
+  var box = plan.filter(function(p){ return p.inBox; });
+  var optional = plan.filter(function(p){ return !p.inBox; });
+
   /* substances they take that are NOT on our shelf but still interact — flagged
      only. Shelf items they take are handled by the engine, which keeps the ones
      that serve a selected goal in the box. */
@@ -794,7 +815,7 @@ function buildResults(){
     heightLabel: heightLabel, weightLabel: weightLabel,
     hasNutrition: kcal > 0,
     kcal: kcal || '–', protein: protein ? protein + 'g' : '–', fat: fat ? fat + 'g' : '–', carbs: carbs ? carbs + 'g' : '–',
-    plan: plan, recNew: plan, subRestrictions: subRestrictions,
+    plan: plan, recNew: plan, box: box, optional: optional, subRestrictions: subRestrictions,
     directions: directions, notes: notes,
     status: R.status, action: R.action, verdicts: R.verdicts,
     viablePlans: R.viablePlans, deadPlans: R.deadPlans, deferReasons: R.deferReasons,
@@ -942,10 +963,30 @@ function syncNext(){
 }
 
 /* ---------- render: finish screen ---------- */
-function recCard(r){
+
+/* Something they already take is part of their protocol but is not shipped
+   unless they ask for it. The card carries the control; same pill shape as the
+   "Edit" button on the pack, so nothing new is introduced to the page. */
+function addToBoxControl(r){
+  if(!r.alreadyTaking) return '';
+  return r.inBox
+    ? '<div style="margin-top:12px;display:flex;align-items:center;gap:9px;flex-wrap:wrap">'
+      +   '<button data-act="remove-from-box" data-arg="' + esc(r.id) + '" style="border:none;background:#14655B;color:#fff;border-radius:999px;padding:7px 14px;font-size:12px;font-weight:800;cursor:pointer">✓ In your box</button>'
+      +   '<span style="font-size:12.5px;color:#7A867E">Tap to take it back out.</span>'
+      + '</div>'
+    : '<div style="margin-top:12px;display:flex;align-items:center;gap:9px;flex-wrap:wrap">'
+      +   '<button data-act="add-to-box" data-arg="' + esc(r.id) + '" style="border:1.5px solid rgba(20,101,91,.3);background:#fff;color:#14655B;border-radius:999px;padding:7px 14px;font-size:12px;font-weight:800;cursor:pointer">+ Add to box</button>'
+      +   '<span style="font-size:12.5px;color:#7A867E">Not in your box – you already take it.</span>'
+      + '</div>';
+}
+
+// noBoxControl: the pause screen has no purchase path, so nothing there is
+// "in the box" — it shows the plan without the add/remove control.
+function recCard(r, noBoxControl){
   // Name and the "already taking" badge share the left half of .rec-top, so the
   // row still has the two flex children its space-between layout expects.
-  return '<div class="rec-card"><div class="rec-top">'
+  return '<div class="rec-card">'
+    + '<div class="rec-top">'
     + '<span style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;min-width:0">'
     +   '<span class="rec-name">' + esc(r.name) + '</span>'
     +   (r.alreadyTaking ? '<span class="plan-new">ALREADY TAKING</span>' : '')
@@ -956,6 +997,7 @@ function recCard(r){
     + ((r.effects || []).length
         ? '<p class="rec-reason">' + r.effects.map(esc).join(' ') + '</p>' : '')
     + (r.practical ? '<p class="rec-reason" style="color:#8A6D1F">' + esc(r.practical) + '</p>' : '')
+    + (noBoxControl ? '' : addToBoxControl(r))
     + '</div>';
 }
 
@@ -1025,7 +1067,7 @@ function pauseScreen(R){
   if(R.plan.length){
     h += secHead('What we’d put together for you')
       + '<div style="opacity:.55;display:flex;flex-direction:column;gap:10px;margin-top:14px">'
-      + R.plan.map(recCard).join('')
+      + R.plan.map(function(p){ return recCard(p, true); }).join('')
       + '</div>';
   }
 
@@ -1112,10 +1154,16 @@ function finishScreen(R){
       }).join('')
     + '</div>';
 
-  /* your supplements */
+  /* your supplements — the whole protocol. Cards for actives they already take
+     carry an "Add to box" control; only what is in the box gets shipped. */
   h += secHead('Your supplements')
-    + '<p style="margin:12px 0 0;padding-left:17px;font-size:15px;line-height:1.55;color:#33403A"><span style="font-weight:800;color:#14655B">' + R.plan.length + ' supplements</span> in one daily pack, chosen for your goals and profile.</p>'
-    + '<div style="display:flex;flex-direction:column;gap:10px;margin-top:14px">' + R.plan.map(recCard).join('') + '</div>';
+    + '<p style="margin:12px 0 0;padding-left:17px;font-size:15px;line-height:1.55;color:#33403A"><span style="font-weight:800;color:#14655B">' + R.box.length + ' supplements</span> in one daily pack, chosen for your goals and profile.'
+    + (R.optional.length
+        ? ' You already take ' + (R.optional.length > 1 ? R.optional.length + ' more' : 'one more') + ' – add ' + (R.optional.length > 1 ? 'them' : 'it') + ' to your box below if you’d rather we supplied ' + (R.optional.length > 1 ? 'them' : 'it') + '.'
+        : '')
+    + '</p>'
+    + '<div style="display:flex;flex-direction:column;gap:10px;margin-top:14px">'
+    + R.plan.map(function(p){ return recCard(p); }).join('') + '</div>';
 
   /* worth checking — user's own supplements that overlap or interact (flag only) */
   if(R.subRestrictions.length){
@@ -1166,7 +1214,11 @@ function finishScreen(R){
     + '<div style="margin:26px auto 0;max-width:290px;background:#F7F2E9;border-radius:20px;padding:22px 18px">'
     + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px"><span style="font-size:11px;font-weight:800;letter-spacing:.14em;color:#A98E4E">WHAT’S INSIDE</span>'
     + '<button data-act="toggle-edit-plan" style="border:1.5px solid rgba(20,101,91,.3);background:#fff;color:#14655B;border-radius:999px;padding:5px 13px;font-size:11.5px;font-weight:800;cursor:pointer">' + (S.editPlan ? 'Done' : 'Edit') + '</button></div>'
-    + '<div style="display:flex;flex-direction:column;gap:8px">' + planCol(R.plan) + '</div>'
+    + '<div style="display:flex;flex-direction:column;gap:8px">'
+    +   (R.box.length
+          ? planCol(R.box)
+          : '<p style="margin:0;font-size:12.5px;line-height:1.5;color:#7A867E">You already take everything your goals need. Tap “Add to box” on any supplement above if you’d rather we supplied it.</p>')
+    + '</div>'
     + (S.editPlan ? '<p style="margin:14px 0 0;text-align:center;font-size:11.5px;line-height:1.45;color:#7A867E">Tap × to remove a supplement.' + ((S.removed && S.removed.length) ? ' <button data-act="restore-plan" style="border:none;background:none;color:#14655B;font-weight:800;text-decoration:underline;text-underline-offset:2px;cursor:pointer;font-size:11.5px;padding:0">Restore all</button>' : '') + '</p>' : '')
     + '</div>'
 
@@ -1187,15 +1239,23 @@ function finishScreen(R){
   var noCharge = '<p style="margin:12px 0 0;font-size:12px;color:#7A867E">No payment is taken at this stage.</p>';
 
   /* One step: the email and the purchase hand-off are the same action, so
-     the button stays inert until the address is usable. */
+     the button stays inert until the address is usable. An empty box has
+     nothing to sell, so the offer is replaced rather than priced. */
   var validEmail = /.+@.+\..+/.test(S.email);
-  h += '<div style="margin-top:30px;background:#F7F2E9;border-radius:20px;padding:24px 20px;text-align:center">'
-    + offer
-    + '<p style="margin:18px 0 10px;font-size:14.5px;line-height:1.5;font-weight:700;color:#1E3B34">Enter your email</p>'
-    + '<input type="email" id="inEmail" value="' + esc(S.email) + '" placeholder="your@email.com" style="width:100%;border:1.5px solid rgba(20,101,91,.25);border-radius:14px;padding:16px 18px;font-size:16px;background:#fff;color:#1E3B34;text-align:center">'
-    + '<button id="btnEmail" data-act="continue-purchase"' + (validEmail ? '' : ' disabled') + ' style="width:100%;margin-top:12px;border:none;background:' + (validEmail ? '#14655B' : '#A9BAB3') + ';color:#fff;border-radius:14px;padding:17px;font-size:17px;font-weight:800;cursor:' + (validEmail ? 'pointer' : 'not-allowed') + '">Continue to purchase</button>'
-    + noCharge
-    + '</div>';
+  if(!R.box.length){
+    h += '<div style="margin-top:30px;background:#F7F2E9;border-radius:20px;padding:24px 20px;text-align:center">'
+      + '<h3 style="font-family:\'Domine\',serif;font-weight:700;font-size:23px;line-height:1.2;margin:0;color:#1E3B34;text-wrap:balance">Your box is empty</h3>'
+      + '<p style="margin:9px auto 0;max-width:300px;font-size:14.5px;line-height:1.55;color:#4A574F">You already take everything your goals need, so there is nothing for us to send. Add anything you’d rather we supplied and the price will appear here.</p>'
+      + '</div>';
+  } else {
+    h += '<div style="margin-top:30px;background:#F7F2E9;border-radius:20px;padding:24px 20px;text-align:center">'
+      + offer
+      + '<p style="margin:18px 0 10px;font-size:14.5px;line-height:1.5;font-weight:700;color:#1E3B34">Enter your email</p>'
+      + '<input type="email" id="inEmail" value="' + esc(S.email) + '" placeholder="your@email.com" style="width:100%;border:1.5px solid rgba(20,101,91,.25);border-radius:14px;padding:16px 18px;font-size:16px;background:#fff;color:#1E3B34;text-align:center">'
+      + '<button id="btnEmail" data-act="continue-purchase"' + (validEmail ? '' : ' disabled') + ' style="width:100%;margin-top:12px;border:none;background:' + (validEmail ? '#14655B' : '#A9BAB3') + ';color:#fff;border-radius:14px;padding:17px;font-size:17px;font-weight:800;cursor:' + (validEmail ? 'pointer' : 'not-allowed') + '">Continue to purchase</button>'
+      + noCharge
+      + '</div>';
+  }
 
   h += '<div style="text-align:center;margin-top:26px">'
     + '<a href="home.html" data-act="landing-click" style="font-size:15px;font-weight:700;color:#C4D2CA;text-decoration:underline;text-underline-offset:3px">Learn more about Welme</a>'
@@ -1581,6 +1641,12 @@ function handleAction(act, arg, e){
     case 'toggle-edit-plan': set({ editPlan: !S.editPlan }); break;
     case 'remove-supp': if(arg) set({ removed: (S.removed || []).concat(arg) }); break;
     case 'restore-plan': set({ removed: [] }); break;
+    case 'add-to-box':
+      if(arg && (S.added || []).indexOf(arg) === -1) set({ added: (S.added || []).concat(arg) });
+      break;
+    case 'remove-from-box':
+      if(arg) set({ added: (S.added || []).filter(function(x){ return x !== arg; }) });
+      break;
     case 'submit-email': submitEmail(); break;
     case 'continue-purchase': submitEmailAndPurchase(); break;
     case 'landing-click':
@@ -1590,7 +1656,7 @@ function handleAction(act, arg, e){
     case 'restart':
       set({ step:0, goals:[], clarify:[], age:'', sex:'',
         weight:'', wUnit:'lb', hUnit:'ft', hFt:'', hIn:'', hCm:'', supps:[], customSupps:[],
-        suppDraft:'', conditions:[], customConditions:[], condDraft:'', removed:[], editPlan:false, email:'', sent:false,
+        suppDraft:'', conditions:[], customConditions:[], condDraft:'', removed:[], added:[], editPlan:false, email:'', sent:false,
         quizAttemptId:'', quizStartTracked:false, quizFinishTracked:false, emailSubmitTracked:false });
       window.scrollTo(0,0);
       break;
