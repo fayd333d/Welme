@@ -23,8 +23,10 @@
     // without them a user stranded on the last question and a user who read
     // their plan and left look identical in the export. plan_pause and
     // plan_switch were already being sent and silently dropped here.
+    // protocol_seen goes further: it separates reaching the results from
+    // actually reading them to the end.
     results: {
-      results_view: true, results_error: true,
+      results_view: true, results_error: true, protocol_seen: true,
       plan_pause: true, plan_switch: true,
       landing_click: true, email_submit: true, purchase_click: true
     }
@@ -32,6 +34,7 @@
 
   // Events that describe a specific user's answers, so the outcome can be
   // traced back to (and replayed from) the inputs that produced it.
+  // protocol_seen is not one: it is a scroll signal, carrying no answers.
   var PROFILE_EVENTS = {
     quiz_finish: true, results_view: true, results_error: true,
     plan_pause: true, plan_switch: true
