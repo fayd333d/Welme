@@ -315,7 +315,8 @@ var MAX_GOALS = 3;
 // page. Anything unrecognisable falls back to the default rather than throwing.
 var LIST_KEYS = ['goals','clarify','supps','customSupps','conditions','customConditions','removed','added'];
 var TEXT_KEYS = ['age','sex','weight','hFt','hIn','hCm','email','suppDraft','condDraft','quizAttemptId'];
-var FLAG_KEYS = ['sent','editPlan','quizStartTracked','quizFinishTracked','emailSubmitTracked'];
+var FLAG_KEYS = ['sent','editPlan','purchaseClicked','quizStartTracked','quizFinishTracked',
+                 'emailSubmitTracked','protocolSeenTracked'];
 
 function normaliseState(s){
   LIST_KEYS.forEach(function(k){
@@ -468,8 +469,14 @@ function ensureQuizStarted(){
   if(S.step >= 4) return;
   if(!S.quizAttemptId){
     S.quizAttemptId = createAttemptId();
+    // Every "once only" flag is scoped to the attempt, not to the browser.
+    // Without the last two, a second run through the funnel on the same
+    // device recorded quiz_start and quiz_finish but stayed silent for
+    // protocol_seen and email_submit.
     S.quizStartTracked = false;
     S.quizFinishTracked = false;
+    S.protocolSeenTracked = false;
+    S.emailSubmitTracked = false;
     persist();
   }
   if(!S.quizStartTracked && trackingAvailable()){
