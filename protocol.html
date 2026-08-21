@@ -1272,13 +1272,13 @@ function finishScreen(R){
       + offer
       + '<p style="margin:18px auto 10px;max-width:300px;font-size:14.5px;line-height:1.5;font-weight:700;color:#1E3B34">Enter your email so we can send you the order details</p>'
       + '<input type="email" id="inEmail" value="' + esc(S.email) + '" placeholder="your@email.com" style="width:100%;border:1.5px solid rgba(20,101,91,.25);border-radius:14px;padding:16px 18px;font-size:16px;background:#fff;color:#1E3B34;text-align:center">'
-      + '<button id="btnEmail" data-act="submit-email"' + (validEmail ? '' : ' disabled') + ' style="width:100%;margin-top:12px;border:none;background:' + (validEmail ? '#14655B' : '#A9BAB3') + ';color:#fff;border-radius:14px;padding:17px;font-size:17px;font-weight:800;cursor:' + (validEmail ? 'pointer' : 'not-allowed') + '">Send me the order details</button>'
+      + '<button id="btnEmail" data-act="submit-email"' + (validEmail ? '' : ' disabled') + ' style="width:100%;margin-top:12px;border:none;background:' + (validEmail ? '#14655B' : '#A9BAB3') + ';color:#fff;border-radius:14px;padding:17px;font-size:17px;font-weight:800;cursor:' + (validEmail ? 'pointer' : 'not-allowed') + '">Send me the order details <span aria-hidden="true">→</span></button>'
       + noCharge
       + '</div>';
   } else {
     h += card
       + offer
-      + '<button data-act="purchase" style="width:100%;margin-top:20px;border:none;background:#14655B;color:#fff;border-radius:14px;padding:17px;font-size:17px;font-weight:800;cursor:pointer">Get my box</button>'
+      + '<button data-act="purchase" style="width:100%;margin-top:20px;border:none;background:#14655B;color:#fff;border-radius:14px;padding:17px;font-size:17px;font-weight:800;cursor:pointer">Get my box <span aria-hidden="true">→</span></button>'
       + nextEmail
       + '</div>';
   }
