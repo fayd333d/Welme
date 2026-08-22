@@ -125,6 +125,10 @@ src="https://www.facebook.com/tr?id=1028962489819655&ev=PageView&noscript=1"
     <div id="hdrProg"></div>
   </div>
   <div id="screen" class="screen"></div>
+  <!-- Sticky offer bar lives outside #screen: that element keeps a transform
+       from its fadeUp animation, which would make position:fixed inside it
+       resolve against the screen box instead of the viewport. -->
+  <div id="stickyBar"></div>
 </div>
 
 <script src="welme-tracking.js"></script>
@@ -634,13 +638,32 @@ function trackQuizFinish(){
 /* Purchase intent. There is no hand-off to the order page any more — the
    email capture takes the button's place in the card and the order details
    go out by email, so this only records the click and advances the card. */
-function purchaseClick(){
+function purchaseClick(fromBar){
   if(trackingAvailable()){
     window.WelmeTracking.trackEvent({ page:'results', event:'purchase_click' }, { keepalive:true });
   }
   try{ if(window.fbq) fbq('track', 'InitiateCheckout'); }catch(e){}
   try{ if(window.gtag) gtag('event', 'begin_checkout'); }catch(e){}
+  /* Tapped from the sticky bar, the email field it reveals is five screens
+     away, so carry them to it. The scroll is deferred rather than done here:
+     rendering the results is asynchronous, so at this point the card in the
+     DOM is the old one, about to be replaced. renderResults performs it once
+     the new screen is painted. */
+  if(fromBar) pendingOfferScroll = true;
   set({ purchaseClicked: true });
+}
+
+var pendingOfferScroll = false;
+
+function runPendingOfferScroll(){
+  if(!pendingOfferScroll) return;
+  pendingOfferScroll = false;
+  var card = document.getElementById('offerCard');
+  if(!card) return;
+  window.requestAnimationFrame(function(){
+    try{ card.scrollIntoView({ behavior:'smooth', block:'center' }); }
+    catch(e){ card.scrollIntoView(); }
+  });
 }
 
 function trackLandingClickAndGo(){
@@ -1246,7 +1269,7 @@ function finishScreen(R){
   };
   var noCharge = reassure('No payment is taken at this stage.');
   var nextEmail = reassure('Next: your email. No payment at this step.');
-  var card = '<div style="margin-top:30px;background:#F7F2E9;border-radius:20px;padding:24px 20px;text-align:center">';
+  var card = '<div id="offerCard" style="margin-top:30px;background:#F7F2E9;border-radius:20px;padding:24px 20px;text-align:center">';
 
   /* Purchase first, email second: the button is always live, and asking for
      the address only after the click keeps the offer from being gated. An
@@ -1300,8 +1323,37 @@ function finishScreen(R){
     + '<p style="margin:16px 0 0;font-size:12px;line-height:1.55;color:#8A968E">Welme provides informational wellness guidance only, not medical diagnoses or treatment. Consult a healthcare professional before starting any treatments.</p>'
     + '</div>';
 
+  /* Keeps the footer clear of the sticky bar that sits over it. */
+  if(stickyBarWanted(R)) h += '<div style="height:88px"></div>';
+
   h += '</div>';
   return h;
+}
+
+/* The offer card sits ~89% of the way down a results page that runs to nearly
+   six screens on a phone, so without a sticky bar most people reach the end
+   without ever seeing a price or a way to buy. It carries the same action as
+   the card's own button and retires once used — from then on the card is the
+   thing to interact with. */
+function stickyBarWanted(R){
+  if(!R || R.status === 'pause') return false;   // paused: we are not selling
+  return !!(R.box && R.box.length) && !S.purchaseClicked && !S.sent;
+}
+
+function stickyBarHtml(R){
+  if(!stickyBarWanted(R)) return '';
+  return '<div style="position:fixed;left:50%;transform:translateX(-50%);bottom:0;z-index:30;'
+    +   'width:100%;max-width:430px;background:rgba(247,242,233,.97);backdrop-filter:blur(10px);'
+    +   'border-top:1px solid rgba(20,101,91,.16);box-shadow:0 -6px 20px rgba(20,50,40,.10);'
+    +   'padding:12px 16px;padding-bottom:calc(12px + env(safe-area-inset-bottom));'
+    +   'display:flex;align-items:center;gap:12px">'
+    + '<div style="flex:1;min-width:0;text-align:left">'
+    + '<div style="font-family:\'Domine\',serif;font-weight:700;font-size:21px;line-height:1;color:#14655B">$' + boxPrice(R.box.length)
+    + '<span style="font-family:\'Hanken Grotesk\',sans-serif;font-size:12.5px;font-weight:700;color:#5A655D">/month</span></div>'
+    + '<div style="font-size:11px;line-height:1.3;color:#7A867E;margin-top:3px">No payment at this step</div>'
+    + '</div>'
+    + '<button data-act="purchase-bar" style="flex:none;border:none;background:#14655B;color:#fff;border-radius:12px;padding:14px 18px;font-size:15.5px;font-weight:800;cursor:pointer;white-space:nowrap">Get my box <span aria-hidden="true">→</span></button>'
+    + '</div>';
 }
 
 /* ---------- the quiz → results transition ----------
@@ -1408,8 +1460,16 @@ function paintScreen(html){
   if(!scr) return false;
   try{ renderHeader(); }catch(e){}
   scr.innerHTML = html;
+  /* Cleared on every paint, so the bar can never outlive the results screen
+     that owns it; renderResults puts it back when there is an offer to show. */
+  paintStickyBar('');
   try{ bindScreenInputs(); }catch(e){}
   return true;
+}
+
+function paintStickyBar(html){
+  var el = document.getElementById('stickyBar');
+  if(el) el.innerHTML = html;
 }
 
 function paintResultsError(reason, err){
@@ -1458,7 +1518,12 @@ function renderResults(){
           try{ html = finishScreen(R); }
           catch(e){ reason = 'render:' + (e && e.message); }
         }
-        if(html && paintScreen(html)){ trackResultsView(''); return; }
+        if(html && paintScreen(html)){
+          try{ paintStickyBar(stickyBarHtml(R)); }catch(e){}
+          try{ runPendingOfferScroll(); }catch(e){}
+          trackResultsView('');
+          return;
+        }
 
         // The plan resolved but the page didn't: show the plan anyway.
         if(R){
@@ -1673,7 +1738,8 @@ function handleAction(act, arg, e){
       if(arg) set({ added: (S.added || []).filter(function(x){ return x !== arg; }) });
       break;
     case 'submit-email': submitEmail(); break;
-    case 'purchase': purchaseClick(); break;
+    case 'purchase': purchaseClick(false); break;
+    case 'purchase-bar': purchaseClick(true); break;
     case 'landing-click':
       e.preventDefault();
       trackLandingClickAndGo();
