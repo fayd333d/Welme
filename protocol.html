@@ -125,6 +125,10 @@ src="https://www.facebook.com/tr?id=1028962489819655&ev=PageView&noscript=1"
     <div id="hdrProg"></div>
   </div>
   <div id="screen" class="screen"></div>
+  <!-- Sticky offer bar lives outside #screen: that element keeps a transform
+       from its fadeUp animation, which would make position:fixed inside it
+       resolve against the screen box instead of the viewport. -->
+  <div id="stickyBar"></div>
 </div>
 
 <script src="welme-tracking.js"></script>
@@ -288,10 +292,10 @@ function takingIds(){
 /* Monthly price of the box, shown on the results page. Single source of
    truth — the results copy and the purchase button both read it. */
 /* Box price scales with how many supplements are in the plan: $39 at the
-   4-supplement floor up to $54 at 9, $3 a step. Clamped at both ends so a
+   4-supplement floor up to $49 at 9, $2 a step. Clamped at both ends so a
    plan outside that range still prices sensibly. */
 var BOX_MIN_SUPPS = 4, BOX_MAX_SUPPS = 9;
-var BOX_MIN_PRICE = 39, BOX_MAX_PRICE = 54;
+var BOX_MIN_PRICE = 39, BOX_MAX_PRICE = 49;
 var BOX_PRICE_STEP = (BOX_MAX_PRICE - BOX_MIN_PRICE) / (BOX_MAX_SUPPS - BOX_MIN_SUPPS);
 
 function boxPrice(count){
@@ -1246,7 +1250,7 @@ function finishScreen(R){
   };
   var noCharge = reassure('No payment is taken at this stage.');
   var nextEmail = reassure('Next: your email. No payment at this step.');
-  var card = '<div style="margin-top:30px;background:#F7F2E9;border-radius:20px;padding:24px 20px;text-align:center">';
+  var card = '<div id="offerCard" style="margin-top:30px;background:#F7F2E9;border-radius:20px;padding:24px 20px;text-align:center">';
 
   /* Purchase first, email second: the button is always live, and asking for
      the address only after the click keeps the offer from being gated. An
@@ -1300,8 +1304,65 @@ function finishScreen(R){
     + '<p style="margin:16px 0 0;font-size:12px;line-height:1.55;color:#8A968E">Welme provides informational wellness guidance only, not medical diagnoses or treatment. Consult a healthcare professional before starting any treatments.</p>'
     + '</div>';
 
+  /* Keeps the footer clear of the sticky bar that sits over it. */
+  if(stickyBarWanted(R)) h += '<div style="height:88px"></div>';
+
   h += '</div>';
   return h;
+}
+
+/* The offer card sits ~89% of the way down a results page that runs to nearly
+   six screens on a phone, so without a sticky bar most people reach the end
+   without ever seeing a price or a way to buy. It carries the same action as
+   the card's own button and retires once used — from then on the card is the
+   thing to interact with. */
+function stickyBarWanted(R){
+  if(!R || R.status === 'pause') return false;   // paused: we are not selling
+  return !!(R.box && R.box.length) && !S.purchaseClicked && !S.sent;
+}
+
+function stickyBarHtml(R){
+  if(!stickyBarWanted(R)) return '';
+  /* Button only. The price belongs in the card, where the sentence that
+     justifies it sits right above it; a number shouted from the first screen
+     arrives with no reasoning attached. */
+  return '<div id="offerBar" style="position:fixed;left:50%;transform:translateX(-50%);bottom:0;z-index:30;'
+    +   'width:100%;max-width:430px;background:rgba(247,242,233,.97);backdrop-filter:blur(10px);'
+    +   'border-top:1px solid rgba(20,101,91,.16);box-shadow:0 -6px 20px rgba(20,50,40,.10);'
+    +   'padding:12px 16px;padding-bottom:calc(12px + env(safe-area-inset-bottom));'
+    +   'transition:opacity .2s ease">'
+    + '<button data-act="offer-jump" style="width:100%;border:none;background:#14655B;color:#fff;border-radius:14px;padding:16px;font-size:17px;font-weight:800;cursor:pointer">Get my box <span aria-hidden="true">→</span></button>'
+    + '</div>';
+}
+
+/* The bar takes them to the offer rather than opening the email step, so the
+   price is read with its reasoning and purchase_click stays a clean signal of
+   intent from the card itself. Tracked separately so "nobody taps the bar" is
+   distinguishable from "they tap it and stop at the card".
+   NOTE: offer_jump must be added to the Apps Script allow-list or the sheet
+   will silently drop it. */
+function jumpToOffer(){
+  if(trackingAvailable()){
+    window.WelmeTracking.trackEvent({ page:'results', event:'offer_jump' });
+  }
+  var card = document.getElementById('offerCard');
+  if(!card) return;
+  try{ card.scrollIntoView({ behavior:'smooth', block:'center' }); }
+  catch(e){ card.scrollIntoView(); }
+}
+
+/* Two "Get my box" buttons on screen at once — the bar's, which scrolls, and
+   the card's, which acts — read as the same control behaving inconsistently.
+   The bar steps aside once the card it points to is actually in view. */
+function watchOfferVisibility(){
+  var bar = document.getElementById('offerBar');
+  var card = document.getElementById('offerCard');
+  if(!bar || !card || !window.IntersectionObserver) return;
+  new window.IntersectionObserver(function(entries){
+    var showing = entries[0] && entries[0].isIntersecting;
+    bar.style.opacity = showing ? '0' : '1';
+    bar.style.pointerEvents = showing ? 'none' : 'auto';
+  }, { threshold: 0.35 }).observe(card);
 }
 
 /* ---------- the quiz → results transition ----------
@@ -1408,8 +1469,16 @@ function paintScreen(html){
   if(!scr) return false;
   try{ renderHeader(); }catch(e){}
   scr.innerHTML = html;
+  /* Cleared on every paint, so the bar can never outlive the results screen
+     that owns it; renderResults puts it back when there is an offer to show. */
+  paintStickyBar('');
   try{ bindScreenInputs(); }catch(e){}
   return true;
+}
+
+function paintStickyBar(html){
+  var el = document.getElementById('stickyBar');
+  if(el) el.innerHTML = html;
 }
 
 function paintResultsError(reason, err){
@@ -1458,7 +1527,11 @@ function renderResults(){
           try{ html = finishScreen(R); }
           catch(e){ reason = 'render:' + (e && e.message); }
         }
-        if(html && paintScreen(html)){ trackResultsView(''); return; }
+        if(html && paintScreen(html)){
+          try{ paintStickyBar(stickyBarHtml(R)); watchOfferVisibility(); }catch(e){}
+          trackResultsView('');
+          return;
+        }
 
         // The plan resolved but the page didn't: show the plan anyway.
         if(R){
@@ -1674,6 +1747,7 @@ function handleAction(act, arg, e){
       break;
     case 'submit-email': submitEmail(); break;
     case 'purchase': purchaseClick(); break;
+    case 'offer-jump': jumpToOffer(); break;
     case 'landing-click':
       e.preventDefault();
       trackLandingClickAndGo();

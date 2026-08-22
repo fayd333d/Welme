@@ -26,7 +26,7 @@
     // protocol_seen goes further: it separates reaching the results from
     // actually reading them to the end.
     results: {
-      results_view: true, results_error: true, protocol_seen: true,
+      results_view: true, results_error: true, protocol_seen: true, offer_jump: true,
       plan_pause: true, plan_switch: true,
       landing_click: true, email_submit: true, purchase_click: true
     }
