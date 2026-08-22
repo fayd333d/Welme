@@ -292,10 +292,10 @@ function takingIds(){
 /* Monthly price of the box, shown on the results page. Single source of
    truth — the results copy and the purchase button both read it. */
 /* Box price scales with how many supplements are in the plan: $39 at the
-   4-supplement floor up to $54 at 9, $3 a step. Clamped at both ends so a
+   4-supplement floor up to $49 at 9, $2 a step. Clamped at both ends so a
    plan outside that range still prices sensibly. */
 var BOX_MIN_SUPPS = 4, BOX_MAX_SUPPS = 9;
-var BOX_MIN_PRICE = 39, BOX_MAX_PRICE = 54;
+var BOX_MIN_PRICE = 39, BOX_MAX_PRICE = 49;
 var BOX_PRICE_STEP = (BOX_MAX_PRICE - BOX_MIN_PRICE) / (BOX_MAX_SUPPS - BOX_MIN_SUPPS);
 
 function boxPrice(count){
