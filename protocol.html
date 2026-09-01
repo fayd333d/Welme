@@ -292,10 +292,10 @@ function takingIds(){
 /* Monthly price of the box, shown on the results page. Single source of
    truth — the results copy and the purchase button both read it. */
 /* Box price scales with how many supplements are in the plan: $39 at the
-   4-supplement floor up to $49 at 9, $2 a step. Clamped at both ends so a
+   4-supplement floor up to $44 at 9, $1 a step. Clamped at both ends so a
    plan outside that range still prices sensibly. */
 var BOX_MIN_SUPPS = 4, BOX_MAX_SUPPS = 9;
-var BOX_MIN_PRICE = 39, BOX_MAX_PRICE = 49;
+var BOX_MIN_PRICE = 39, BOX_MAX_PRICE = 44;
 var BOX_PRICE_STEP = (BOX_MAX_PRICE - BOX_MIN_PRICE) / (BOX_MAX_SUPPS - BOX_MIN_SUPPS);
 
 function boxPrice(count){
@@ -825,10 +825,7 @@ function buildResults(){
     ? 'Because you flagged ' + joinList(allConds.slice(0,3).map(function(c){ return B(c.toLowerCase()); })) + (allConds.length > 3 ? ' and more' : '') + ', your plan leans to gentler forms and more conservative doses, and flags anything worth a pharmacist’s review.'
     : '';
 
-  var tip = (SUGG[primaryGoal] || {}).hack;
-  var p4 = tip ? '<b style="color:#A98E4E">One habit that helps:</b> ' + esc(tip) : '';
-
-  var reviewParasHtml = [p1, p2, p3, p4].filter(Boolean);
+  var reviewParasHtml = [p1, p2, p3].filter(Boolean);
   var reviewHtml = reviewParasHtml.map(function(t){ return '<p style="margin:14px 12px 0 17px;font-size:15px;line-height:1.62;color:#33403A">' + t + '</p>'; }).join('');
   var review = reviewHtml.replace(/<[^>]+>/g, '');
 
@@ -1143,23 +1140,6 @@ function finishScreen(R){
      actually read. */
   h += R.reviewHtml;
 
-  /* protocol direction */
-  h += secHead('Protocol direction')
-    + '<div style="display:flex;flex-direction:column;gap:12px;margin-top:16px">'
-    + R.directions.map(function(d){
-        return '<div style="background:#FFFDF8;border:1px solid rgba(20,101,91,.12);border-radius:16px;padding:18px">'
-          + '<div style="display:flex;gap:14px;align-items:flex-start">'
-          + '<div style="flex:none;width:44px;height:44px;border-radius:12px;background:#EAF3EE;display:flex;align-items:center;justify-content:center;color:#14655B">' + d.icon + '</div>'
-          + '<div style="flex:1;min-width:0"><div style="font-size:16.5px;font-weight:800;color:#1E3B34">' + esc(d.goalTitle) + '</div>'
-          + '<p style="margin:5px 0 0;font-size:14.5px;line-height:1.55;color:#4A574F">' + esc(d.text) + '</p></div></div>'
-          + '<div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:12px">'
-          + d.tags.map(function(t){ return '<span style="background:#EAF3EE;color:#14655B;border-radius:999px;padding:5px 12px;font-size:12.5px;font-weight:700">' + esc(t) + '</span>'; }).join('')
-          + '</div>'
-          + '<p style="margin:10px 0 0;font-size:14px;line-height:1.5;color:#4A574F"><span style="font-weight:800;color:#A98E4E">Try this:</span> ' + esc(d.hack) + '</p>'
-          + '</div>';
-      }).join('')
-    + '</div>';
-
   /* your supplements — the whole protocol. Cards for actives they already take
      carry an "Add to box" control; only what is in the box gets shipped. */
   h += secHead('Your supplements')
@@ -1196,11 +1176,6 @@ function finishScreen(R){
         }).join('')
       + '</div>';
   }
-
-  /* sub-complaint advice — below the plan, separate from the product content.
-     Never gates or delays the purchase. */
-  h += adviceSection(R);
-  h += pharmacistLine();
 
   h += '</div>';  /* close body-content inset wrapper */
   h += '</div>';
@@ -1323,15 +1298,12 @@ function stickyBarWanted(R){
 
 function stickyBarHtml(R){
   if(!stickyBarWanted(R)) return '';
-  /* Button only. The price belongs in the card, where the sentence that
-     justifies it sits right above it; a number shouted from the first screen
-     arrives with no reasoning attached. */
   return '<div id="offerBar" style="position:fixed;left:50%;transform:translateX(-50%);bottom:0;z-index:30;'
     +   'width:100%;max-width:430px;background:rgba(247,242,233,.97);backdrop-filter:blur(10px);'
     +   'border-top:1px solid rgba(20,101,91,.16);box-shadow:0 -6px 20px rgba(20,50,40,.10);'
     +   'padding:12px 16px;padding-bottom:calc(12px + env(safe-area-inset-bottom));'
     +   'transition:opacity .2s ease">'
-    + '<button data-act="offer-jump" style="width:100%;border:none;background:#14655B;color:#fff;border-radius:14px;padding:16px;font-size:17px;font-weight:800;cursor:pointer">Get my box <span aria-hidden="true">→</span></button>'
+    + '<button data-act="offer-jump" style="width:100%;border:none;background:#14655B;color:#fff;border-radius:14px;padding:16px;font-size:17px;font-weight:800;cursor:pointer">Get my box – $' + boxPrice(R.box.length) + '<span style="font-weight:700;font-size:14px">/mo</span> <span aria-hidden="true">→</span></button>'
     + '</div>';
 }
 
